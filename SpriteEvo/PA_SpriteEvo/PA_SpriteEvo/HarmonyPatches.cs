@@ -1,6 +1,7 @@
 ﻿using AK_DLL;
 using HarmonyLib;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace PA_SpriteEvo
             Instance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
-    
+
     /*
     [HarmonyPatch(typeof(Spine38.Unity.SpineAtlasAsset), "CreateRuntimeInstance", new Type[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Material), typeof(bool) } )]
     public class Patch_SpineAtlasAsset
@@ -33,9 +34,9 @@ namespace PA_SpriteEvo
             return true;
         }
     }*/
-    
+
     [HarmonyPatch(typeof(UIRoot_Entry), "DoMainMenu")]
-    public class Patch_UIRoot 
+    public class Patch_UIRoot
     {
         [HarmonyPrefix]
         public static bool Prefix(UIRoot_Entry __instance)
@@ -65,11 +66,23 @@ namespace PA_SpriteEvo
                 OperatorDocument doc = pawn.GetDoc();
                 if (doc != null)
                 {
-                    string defName = "AK_Spine_Dusk_dynillust_Nian";
                     if (!AssetManager.AllAssetsLoaded)
                     {
                         return;
                     }
+
+                    List<SpinePackDef> list = DefDatabase<SpinePackDef>.AllDefsListForReading;
+                    string defName = "AK_Spine_Dusk_dynillust_Nian";
+                    foreach (SpinePackDef def in list)
+                    {
+                        string[] parts = def.defName.Split('_');
+                        if (doc.operatorID.EndsWith(parts[2]))
+                        {
+                            defName = def.defName;
+                            break;
+                        }
+                    }
+
                     SpineAssetPack pack = AssetManager.spine38_Database?.TryGetValue(defName); ;
                     if (pack == null)
                     {
@@ -79,11 +92,11 @@ namespace PA_SpriteEvo
 
                     //GameObject obj = GameObject.Find(pack.def.defName);
                     GameObject obj = AssetManager.ObjectDatabase.TryGetValue(pack.def.defName);
-                    if (obj == null) 
+                    if (obj == null)
                     {
                         SpineFramework_Tool.Create_AnimationTextureInstance(pack, pawn);
                     }
-                    if (obj != null) 
+                    if (obj != null)
                     {
                         //obj.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
                         obj?.SetActive(pawn.Drafted || pawn.Downed);
