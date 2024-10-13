@@ -196,7 +196,7 @@ namespace PA_SpriteEvo
                     textures = new Texture2D[spinedef.props.textures.Count];
                     for (int i = 0; i < spinedef.props.textures.Count; i++)
                     {
-                        Texture2D texture = Resources.Load<Texture2D>(spinedef.props.textures[i]);
+                        Texture2D texture = Resources.Load<Texture2D>(Path.Combine(JSONPath, spinedef.props.textures[i]));
                         textures[i] = texture;
                     }
                     if (spinedef.props.shader == "Spine-Skeleton.shader")
