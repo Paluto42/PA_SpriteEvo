@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\1.5 AK_DLL 最新\Rely\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\..\1.5 AK_DLL 最新\Rely\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AK_DLL">
@@ -40,7 +40,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\1.5 AK_DLL 最新\Rely\Assembly-CSharp.dll</HintPath>
+      <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
