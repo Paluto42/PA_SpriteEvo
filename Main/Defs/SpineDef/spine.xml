@@ -51,7 +51,7 @@
     <PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Nian_dynillust_E2</defName>
         <offset>(0,0,0)</offset>
-		<uioffset>(0,12,-18)</uioffset>
+		<uioffset>(0,8,-18)</uioffset>
         <scale>(15,15)</scale>
         <props>
             <assetBundle>asset_dyn_suifamily</assetBundle>
@@ -117,9 +117,9 @@
     </PA_SpriteEvo.SpinePackDef>
 
 	<PA_SpriteEvo.SpinePackDef>
-        <defName>AK_Spine_Chyue_dynillust_E2</defName>
+        <defName>AK_Spine_Chongyue_dynillust_E2</defName>
         <offset>(0,0,0)</offset>
-		<uioffset>(0,12,-18)</uioffset>
+		<uioffset>(0,10.5,-18)</uioffset>
         <scale>(15,15)</scale>
         <props>
             <assetBundle>asset_dyn_suifamily</assetBundle>
@@ -134,7 +134,7 @@
     </PA_SpriteEvo.SpinePackDef>
 
 	<PA_SpriteEvo.SpinePackDef>
-        <defName>AK_Spine_Chyue_dynillust_Nian</defName>
+        <defName>AK_Spine_Chongyue_dynillust_Nian</defName>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,8,-30)</uioffset>
 		<scale>(10,10)</scale>
@@ -152,8 +152,8 @@
 	<PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Shu_dynillust_E2</defName>
         <offset>(0,0,0)</offset>
-		<uioffset>(0,8,-30)</uioffset>
-		<scale>(10,10)</scale>
+		<uioffset>(0,8,-20)</uioffset>
+		<scale>(15,15)</scale>
         <props>
             <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2025_shu.atlas.txt</atlas>
