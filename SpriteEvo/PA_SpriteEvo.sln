@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PA_SpriteEvo", "PA_SpriteEvo\PA_SpriteEvo.csproj", "{C9B6F456-3071-4CB4-B782-944BC428BA27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spine38", "Spine38\Spine38.csproj", "{23A5C3B0-B715-4D3B-B534-E7EDA3B6C1F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spine41", "Spine41\Spine41.csproj", "{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C9B6F456-3071-4CB4-B782-944BC428BA27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9B6F456-3071-4CB4-B782-944BC428BA27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9B6F456-3071-4CB4-B782-944BC428BA27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9B6F456-3071-4CB4-B782-944BC428BA27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23A5C3B0-B715-4D3B-B534-E7EDA3B6C1F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A5C3B0-B715-4D3B-B534-E7EDA3B6C1F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A5C3B0-B715-4D3B-B534-E7EDA3B6C1F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A5C3B0-B715-4D3B-B534-E7EDA3B6C1F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BFBD913E-3862-4EA3-A228-B59AD9B35D53}
+	EndGlobalSection
+EndGlobal
