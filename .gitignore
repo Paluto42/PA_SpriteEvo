@@ -16,3 +16,9 @@ Library
 Instance/
 /Source/PA_SpriteEvo/bin
 /Source/PA_SpriteEvo/obj
+/Source/Spine38/bin
+/Source/Spine38/obj
+/Source/Spine41/bin
+/Source/Spine41/obj
+*.pdb
+*.dll
