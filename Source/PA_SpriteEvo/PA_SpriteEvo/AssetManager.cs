@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
 using Verse;
 
@@ -176,17 +175,20 @@ namespace PA_SpriteEvo
                 //JSON读取
                 else
                 {
-                    string JSONPath = PATH_Spine.FirstOrDefault((string x) => File.Exists(Path.Combine(x, spinedef.props.folderName)));
+                    string JSONPath = PATH_Spine.FirstOrDefault((string x) => Directory.Exists(Path.Combine(x, spinedef.props.folderName)));
                     if (JSONPath == null)
                     {
+                        Log.Message("PA.SpineFramework  : JSON Path " + spinedef.props.folderName + " Not Found!");
                         continue;
                     }
-                    string atlasPath = Path.Combine(JSONPath, spinedef.props.atlas);
-                    string skelPath = Path.Combine(JSONPath, spinedef.props.skeleton);
-                    if (atlasPath == null || skelPath == null)
+                    string folderPath = Path.Combine(JSONPath, spinedef.props.folderName);
+                    string atlasPath = Path.Combine(folderPath, spinedef.props.atlas);
+                    string skelPath = Path.Combine(folderPath, spinedef.props.skeleton);
+                    if (!File.Exists(atlasPath) || !File.Exists(skelPath))
                     {
                         continue;
                     }
+                    Log.Warning("PA.SpineFramework  : Load JSON Data From Folder : " + spinedef.props.folderName);
                     string altas = File.ReadAllText(atlasPath);
                     string json = File.ReadAllText(skelPath);
                     atlasAsset = new TextAsset(altas);
@@ -196,8 +198,24 @@ namespace PA_SpriteEvo
                     textures = new Texture2D[spinedef.props.textures.Count];
                     for (int i = 0; i < spinedef.props.textures.Count; i++)
                     {
-                        Texture2D texture = Resources.Load<Texture2D>(Path.Combine(JSONPath, spinedef.props.textures[i]));
+                        Texture2D texture = Resources.Load<Texture2D>(Path.Combine(folderPath, spinedef.props.textures[i]));
                         textures[i] = texture;
+                    }
+                    if (textures.NullOrEmpty())
+                    {
+                        Log.Error("[PA]" + spinedef.defName + "Texture2D[] Not Found");
+                        continue;
+                    }
+                    else
+                    {
+                        //您猜怎么着 直接从文件加载的贴图 没有name属性！
+                        string[] message = new string[textures.Length];
+                        for (int i = 0; i < message.Length; i++) 
+                        {
+                            message[i] = spinedef.props.textures[i];
+                        }
+                        string result = string.Join("   ", message);
+                        Log.Message(spinedef.defName + " :   " + result);
                     }
                     if (spinedef.props.shader == "Spine-Skeleton.shader")
                     {
@@ -217,7 +235,6 @@ namespace PA_SpriteEvo
             {
                 Log.Error("PA.SpineFramework : No Any Spine Asset Found !");
             }
-            //
         }
         private static void SavePackToVersionDatabase(SpinePackDef spinedef, SpineAssetPack pack) 
         {
