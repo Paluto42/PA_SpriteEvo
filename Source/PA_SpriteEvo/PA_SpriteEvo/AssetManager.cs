@@ -30,15 +30,14 @@ namespace PA_SpriteEvo
         static AssetManager() 
         {
             LoadAllSpineShader();
-            //LoadResloveAllAssetBundle();
         }
-        private static string GetDefLog(Texture2D[] texs) 
+        private static string GetAssetLog(Texture2D[] texs) 
         {
             string[] message = texs.Select(t => $"{t.name}.png").ToArray();  
             string result = string.Join("   ", message);
             return result;
         }
-        private static string GetDefLog(Material[] mats)
+        private static string GetAssetLog(Material[] mats)
         {
             string[] message = mats.Select(m => $"{m.name}.mat").ToArray();
             string result = string.Join("   ", message);
@@ -140,7 +139,7 @@ namespace PA_SpriteEvo
                         }
                         else
                         {
-                            Log.Message(spinedef.defName + " :   " + GetDefLog(textures));
+                            Log.Message(spinedef.defName + " :   " + GetAssetLog(textures));
                         }
                         SpineAssetPack texPack = new SpineAssetPack(atlasAsset, skeletonAsset, textures, shader, spinedef, useAlpha: spinedef.props.StraightAlphaInput);
                         SavePackToVersionDatabase(spinedef, texPack);
@@ -160,7 +159,7 @@ namespace PA_SpriteEvo
                         }
                         else
                         {
-                            Log.Message(spinedef.defName + " :   " + GetDefLog(materials));
+                            Log.Message(spinedef.defName + " :   " + GetAssetLog(materials));
                         }
                         SpineAssetPack matPack = new SpineAssetPack(atlasAsset, skeletonAsset, materials, spinedef, useAlpha: spinedef.props.StraightAlphaInput);
                         SavePackToVersionDatabase(spinedef, matPack);
