@@ -12,7 +12,7 @@ namespace PA_SpriteEvo
 {
     internal class LoadManager
     {
-        public static string CombineFilesName(Texture2D[] texs)
+        /*public static string CombineFilesName(Texture2D[] texs)
         {
             string[] message = texs.Select(t => $"{t.name}.png").ToArray();
             string result = string.Join("   ", message);
@@ -23,7 +23,7 @@ namespace PA_SpriteEvo
             string[] message = mats.Select(m => $"{m.name}.mat").ToArray();
             string result = string.Join("   ", message);
             return result;
-        }
+        }*/
         public static Texture2D LoadTexture(FileInfo file)
         {
             Texture2D texture2D = null;

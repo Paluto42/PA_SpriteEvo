@@ -32,6 +32,8 @@ namespace PA_SpriteEvo
             public bool StraightAlphaInput = false;
         }
 
+        public SkelFormat skelFormat = SkelFormat.Binary;
+
         public Vector3 offset = new Vector3(0f, 0f, 0f);
 
         public Vector3 uioffset = new Vector3(0f, 0f, 0f);
@@ -47,8 +49,6 @@ namespace PA_SpriteEvo
         public string interactAnimationName = "Interact";
 
         public string specialAnimationName = "Special";
-
-        public SkelFormat skelFormat = SkelFormat.Binary;
 
         public Properties_SpinePack props;
     }

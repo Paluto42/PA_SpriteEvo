@@ -1,5 +1,4 @@
-﻿using RimWorld.IO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +9,7 @@ namespace PA_SpriteEvo
     [StaticConstructorOnStartup]
     internal static class AssetManager
     {
-        public static string Spine_Path = "Asset/";
+        public static string Spine_Dict = "Asset/";
 
         public static bool AllAssetsLoaded = false;
 
@@ -40,14 +39,14 @@ namespace PA_SpriteEvo
             string SpinePath = Path.Combine(modbase.RootDir, "Asset", "spine38");
             if (SpinePath == null)
             {
-                Log.Error("PA.SpineFramework Critical Error: Missing Spine Assets  " + SpinePath);
+                Log.Error("PA.SpineFramework: Critical Error: Missing Spine Assets " + SpinePath);
             }
             AssetBundle ab = AssetBundle.LoadFromFile(SpinePath);
             Shader Skeleton = ab.LoadAsset<Shader>("Spine-Skeleton");
             if (Skeleton != null && Spine_Skeleton == null)
             {
                 Spine_Skeleton = Skeleton;
-                Log.Message("PA.SpineFramework  Spine/Skeleton.Shader Loaded");
+                Log.Message("PA.SpineFramework: Spine/Skeleton.Shader Loaded");
             }
             Shader[] shaders = ab.LoadAllAssets<Shader>();
             foreach (Shader s in shaders)
@@ -70,126 +69,120 @@ namespace PA_SpriteEvo
             {
                 return;
             }
-            List<SpinePackDef> list = DefDatabase<SpinePackDef>.AllDefsListForReading;
             List<AssetBundle> AssetBundle_Loaded = new List<AssetBundle>();
-            string[] PATH_Spine = Mods.Select(mod_spine => Path.Combine(mod_spine.RootDir, Spine_Path)).Where(Directory.Exists).ToArray();
-            foreach (SpinePackDef spinedef in list) 
+            List<SpinePackDef> packs = DefDatabase<SpinePackDef>.AllDefsListForReading;
+            foreach (SpinePackDef def in packs) 
             {
                 TextAsset atlasAsset;
                 TextAsset skeletonAsset;
                 Material[] materials = null;
                 Texture2D[] textures = null;
                 Shader shader = null;
+                string IndividualPath = Path.Combine(def.modContentPack.RootDir, Spine_Dict);
                 //二进制读取
-                if (spinedef.skelFormat == SkelFormat.Binary)
+                if (def.skelFormat == SkelFormat.Binary)
                 {
                     AssetBundle ab;
-                    if (!AssetBundle_Loaded.Exists((AssetBundle a) => a.name == spinedef.props.assetBundle))
+                    string assetBundleName = Path.GetFileName(def.props.assetBundle);
+                    if (!AssetBundle_Loaded.Exists((AssetBundle a) => a.name == assetBundleName))
                     {
-                        string abPath = PATH_Spine.FirstOrDefault((string x) => File.Exists(Path.Combine(x, spinedef.props.assetBundle)));
-                        if (abPath == null)
+                        string abPath = Path.Combine(IndividualPath, def.props.assetBundle);
+                        if (!File.Exists(abPath))
                         {
                             continue;
                         }
-                        ab = AssetBundle.LoadFromFile(Path.Combine(abPath, spinedef.props.assetBundle));
+                        ab = AssetBundle.LoadFromFile(abPath);
                         AssetBundle_Loaded.Add(ab);
-                        Log.Warning("PA.SpineFramework  : Load From Assetbundle  : " + Spine_Path + ab.name);
+                        Log.Warning("PA.SpineFramework: Loading From Assetbundle : " + Spine_Dict + ab.name);
                     }
                     else
                     {
-                        ab = AssetBundle_Loaded.First((AssetBundle a) => a.name == spinedef.props.assetBundle);
+                        ab = AssetBundle_Loaded.First((AssetBundle a) => a.name == assetBundleName);
                     }
                     if (SkeletonGraphic == null)
                     {
                         Material SkeletonGraphicDefault = ab.LoadAsset<Material>("SkeletonGraphicDefault");
                         SkeletonGraphic = SkeletonGraphicDefault;
                     }
-                    atlasAsset = ab?.LoadAsset<TextAsset>(spinedef.props.atlas);
-                    skeletonAsset = ab.LoadAsset<TextAsset>(spinedef.props.skeleton);
-                    if (spinedef.props.shader == "Spine-Skeleton.shader")
+                    atlasAsset = ab?.LoadAsset<TextAsset>(def.props.atlas);
+                    skeletonAsset = ab?.LoadAsset<TextAsset>(def.props.skeleton);
+                    if (def.props.shader == "Spine-Skeleton.shader")
                     {
                         shader = Spine_Skeleton;
                     }
                     else
                     {
-                        shader = spineShaderDatabase.TryGetValue(spinedef.props.shader);
+                        shader = spineShaderDatabase.TryGetValue(def.props.shader);
                     }
-                    List<string> texinfo = spinedef.props.textures;
-                    List<string> matinfo = spinedef.props.materials;
+                    List<string> texinfo = def.props.textures;
+                    List<string> matinfo = def.props.materials;
                     if (!texinfo.Empty())
                     {
-                        textures = new Texture2D[spinedef.props.textures.Count];
-                        for (int i = 0; i < spinedef.props.textures.Count; i++)
+                        textures = new Texture2D[def.props.textures.Count];
+                        for (int i = 0; i < def.props.textures.Count; i++)
                         {
-                            textures[i] = ab?.LoadAsset<Texture2D>(spinedef.props.textures[i]);
+                            textures[i] = ab?.LoadAsset<Texture2D>(def.props.textures[i]);
                         }
                         if (textures.NullOrEmpty())
                         {
-                            Log.Error("PA.SpineFramework " + spinedef.defName + " Invaild Texture2D Array");
+                            Log.Error("PA.SpineFramework: " + def.defName + " Invaild Texture2D Array");
                             continue;
                         }
-                        else
-                        {
-                            Log.Message("PA.SpineFramework " + spinedef.defName + " :   " + LoadManager.CombineFilesName(textures));
-                        }
-                        SpineAssetPack texPack = new SpineAssetPack(atlasAsset, skeletonAsset, textures, shader, spinedef, useAlpha: spinedef.props.StraightAlphaInput);
-                        SavePackToVersionDatabase(spinedef, texPack);
-                        //spine38_Database.Add(spinedef.defName, texPack);
+                        SpineAssetPack texPack = new SpineAssetPack(atlasAsset, skeletonAsset, textures, shader, def, useAlpha: def.props.StraightAlphaInput);
+                        SavePackToVersionDatabase(def, texPack);
+                        Log.Message("PA.SpineFramework: Successful Loaded " + def.defName + " with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
                     else if (!matinfo.Empty())
                     {
-                        materials = new Material[spinedef.props.materials.Count];
-                        for (int i = 0; i < spinedef.props.materials.Count; i++)
+                        materials = new Material[def.props.materials.Count];
+                        for (int i = 0; i < def.props.materials.Count; i++)
                         {
-                            materials[i] = ab?.LoadAsset<Material>(spinedef.props.materials[i]);
+                            materials[i] = ab?.LoadAsset<Material>(def.props.materials[i]);
                         }
                         if (materials.NullOrEmpty())
                         {
-                            Log.Error("PA.SpineFramework " + spinedef.defName + "Invaild Material Array");
+                            Log.Error("PA.SpineFramework: " + def.defName + " Invaild Material Array");
                             continue;
                         }
-                        else
-                        {
-                            Log.Message("PA.SpineFramework " + spinedef.defName + " :   " + LoadManager.CombineFilesName(materials));
-                        }
-                        SpineAssetPack matPack = new SpineAssetPack(atlasAsset, skeletonAsset, materials, spinedef, useAlpha: spinedef.props.StraightAlphaInput);
-                        SavePackToVersionDatabase(spinedef, matPack);
-                        //spine38_Database.Add(spinedef.defName, matPack);
+                        SpineAssetPack matPack = new SpineAssetPack(atlasAsset, skeletonAsset, materials, def, useAlpha: def.props.StraightAlphaInput);
+                        SavePackToVersionDatabase(def, matPack);
+                        Log.Message("PA.SpineFramework: Successful Loaded " + def.defName + " with " + materials.Length + (materials.Length > 1 ? " Materials" : " Material"));
                     }
                     else
                     {
+                        Log.Warning("PA.SpineFramework: " + def.defName + " Missing Material or Texture Info");
                         continue;
                     }
                 }
                 //JSON读取
                 else
                 {
-                    string JSONPath = PATH_Spine.FirstOrDefault((string x) => Directory.Exists(Path.Combine(x, spinedef.props.folderPath)));
-                    if (JSONPath == null)
+                    string JSONPath = Path.Combine(IndividualPath, def.props.folderPath);
+                    if (!Directory.Exists(JSONPath))
                     {
-                        Log.Error("PA.SpineFramework  : Failed Loading JSON : Invaild Path " + Spine_Path + spinedef.props.folderPath);
+                        Log.Error("PA.SpineFramework: Failed Loading JSON : Invaild Directory " + Spine_Dict + def.props.folderPath);
                         continue;
                     }
-                    string folderPath = Path.Combine(JSONPath, spinedef.props.folderPath);
-                    string atlasPath = Path.Combine(folderPath, spinedef.props.atlas);
-                    string skelPath = Path.Combine(folderPath, spinedef.props.skeleton);
+                    //string folderPath = Path.Combine(JSONPath, def.props.folderPath);
+                    string atlasPath = Path.Combine(JSONPath, def.props.atlas);
+                    string skelPath = Path.Combine(JSONPath, def.props.skeleton);
                     if (!File.Exists(atlasPath) || !File.Exists(skelPath))
                     {
                         continue;
                     }
-                    Log.Warning("PA.SpineFramework   Load JSON Data From : " + Spine_Path + spinedef.props.folderPath);
+                    Log.Warning("PA.SpineFramework: Loading JSON From Directory : " + Spine_Dict + def.props.folderPath);
                     atlasAsset = new TextAsset(File.ReadAllText(atlasPath));
                     skeletonAsset = new TextAsset(File.ReadAllText(skelPath));
-                    atlasAsset.name = Path.GetFileNameWithoutExtension(spinedef.props.atlas);
-                    skeletonAsset.name = Path.GetFileNameWithoutExtension(spinedef.props.skeleton);
+                    atlasAsset.name = Path.GetFileNameWithoutExtension(def.props.atlas);
+                    skeletonAsset.name = Path.GetFileNameWithoutExtension(def.props.skeleton);
                     //
-                    textures = new Texture2D[spinedef.props.textures.Count];
-                    for (int i = 0; i < spinedef.props.textures.Count; i++)
-                    { 
-                        string texPath = Path.Combine(folderPath, spinedef.props.textures[i]);
+                    textures = new Texture2D[def.props.textures.Count];
+                    for (int i = 0; i < def.props.textures.Count; i++)
+                    {
+                        string texPath = Path.Combine(JSONPath, def.props.textures[i]);
                         if (!File.Exists(texPath))
                         {
-                            Log.Error("PA.SpineFramework  Invaild Image Path : " + Spine_Path + spinedef.props.folderPath + "/" + spinedef.props.textures[i]);
+                            Log.Error("PA.SpineFramework: Invaild Image Path : " + Spine_Dict + def.props.folderPath + "/" + def.props.textures[i]);
                             continue;
                         }
                         Texture2D texture = LoadManager.LoadTexture(new FileInfo(texPath));
@@ -197,30 +190,27 @@ namespace PA_SpriteEvo
                     }
                     if (textures.NullOrEmpty())
                     {
-                        Log.Error("PA.SpineFramework " + spinedef.defName + "Texture Not Found in : " + Spine_Path + spinedef.props.folderPath);
+                        Log.Error("PA.SpineFramework: " + def.defName + "Texture Not Found in : " + Spine_Dict + def.props.folderPath);
                         continue;
                     }
-                    else
-                    {
-                        Log.Message("PA.SpineFramework " + spinedef.defName + " :   " + LoadManager.CombineFilesName(textures));
-                    }
-                    if (spinedef.props.shader == "Spine-Skeleton.shader")
+                    if (def.props.shader == "Spine-Skeleton.shader")
                     {
                         shader = Spine_Skeleton;
                     }
                     else
                     {
-                        shader = spineShaderDatabase.TryGetValue(spinedef.props.shader);
+                        shader = spineShaderDatabase.TryGetValue(def.props.shader);
                     }
-                    SpineAssetPack texPack = new SpineAssetPack(atlasAsset, skeletonAsset, textures, shader, spinedef, useAlpha: spinedef.props.StraightAlphaInput);
-                    SavePackToVersionDatabase(spinedef, texPack);
+                    SpineAssetPack texPack = new SpineAssetPack(atlasAsset, skeletonAsset, textures, shader, def, useAlpha: def.props.StraightAlphaInput);
+                    SavePackToVersionDatabase(def, texPack);
+                    Log.Message("PA.SpineFramework: Successful Loaded " + def.defName + " with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                 }
             }
             AllAssetsLoaded = true;
-            Log.Message("PA.SpineFramework : Spine Assets Initialized");
+            Log.Message("PA.SpineFramework: Spine Assets Initialized");
             if (spine38_Database.NullOrEmpty())
             {
-                Log.Error("PA.SpineFramework : No Any Spine Asset Found !");
+                Log.Error("PA.SpineFramework: No Any Spine Asset Found !");
             }
         }
         private static void SavePackToVersionDatabase(SpinePackDef spinedef, SpineAssetPack pack) 
