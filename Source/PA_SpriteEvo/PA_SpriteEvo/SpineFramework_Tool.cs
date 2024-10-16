@@ -62,25 +62,25 @@ namespace PA_SpriteEvo
             return resultData;
         }
         ///<summary>获取一个模型实例的定位点Bone</summary>
-        internal static Spine38.Bone RootBone(this Spine38.Unity.SkeletonAnimation instance) 
+        public static Spine38.Bone RootBone(this Spine38.Unity.SkeletonAnimation instance) 
         {
             return instance.skeleton.RootBone;
         }
-        internal static Spine41.Bone RootBone(this Spine41.Unity.SkeletonAnimation instance)
+        public static Spine41.Bone RootBone(this Spine41.Unity.SkeletonAnimation instance)
         {
             return instance.skeleton.RootBone;
         }
         ///<summary>获取一个模型实例里的Bone (可能为Null)</summary>
-        internal static Spine38.Bone GetBone(this Spine38.Unity.SkeletonAnimation instance, string name) 
+        public static Spine38.Bone GetBone(this Spine38.Unity.SkeletonAnimation instance, string name) 
         {
             return instance.skeleton.FindBone(name);
         }
-        internal static Spine41.Bone GetBone(this Spine41.Unity.SkeletonAnimation instance, string name)
+        public static Spine41.Bone GetBone(this Spine41.Unity.SkeletonAnimation instance, string name)
         {
             return instance.skeleton.FindBone(name);
         }
         ///<summary>获取一个模型实例里的Bone的实际坐标 (不推荐在动画运动时使用)</summary>
-        internal static Vector3 GetBonePositon(this Spine38.Unity.SkeletonAnimation instance, string name)
+        public static Vector3 GetBonePositon(this Spine38.Unity.SkeletonAnimation instance, string name)
         {
             Spine38.Bone bone = instance.skeleton.FindBone(name);
             if (bone == null) 
@@ -89,7 +89,7 @@ namespace PA_SpriteEvo
             }
             return bone.GetWorldPosition(instance.transform);
         }
-        internal static Vector3 GetBonePositon(this Spine41.Unity.SkeletonAnimation instance, string name)
+        public static Vector3 GetBonePositon(this Spine41.Unity.SkeletonAnimation instance, string name)
         {
             Spine41.Bone bone = instance.skeleton.FindBone(name);
             if (bone == null)
@@ -97,6 +97,11 @@ namespace PA_SpriteEvo
                 return Vector3.zero;
             }
             return bone.GetWorldPosition(instance.transform);
+        }
+        public static void GetAnimationAsset(Spine38.Unity.SkeletonAnimation instance) 
+        {
+            //Spine38.Unity.SkeletonDataAsset ass;
+            //ass.GetAnimationStateData().SkeletonData.FindAnimation("");
         }
         ///<summary>创建一个用于输出RenderTexture的SkeletonAnimation实例对象并进行初始化</summary>
         internal static void Create_AnimationTextureInstance(SpineAssetPack pack, Pawn pawn, bool loop = true) 

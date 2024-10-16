@@ -67,6 +67,10 @@
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
@@ -91,11 +95,14 @@
   <ItemGroup>
     <Compile Include="PA_SpriteEvo\AssetManager.cs" />
     <Compile Include="PA_SpriteEvo\HarmonyPatches.cs" />
+    <Compile Include="PA_SpriteEvo\LoadManager.cs" />
+    <Compile Include="PA_SpriteEvo\ParallelAnimation_Spine38.cs" />
     <Compile Include="PA_SpriteEvo\SpineAssetPack.cs" />
     <Compile Include="PA_SpriteEvo\SpineFramework_Tool.cs" />
     <Compile Include="PA_SpriteEvo\SpinePackDef.cs" />
     <Compile Include="PA_SpriteEvo\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PA_SpriteEvo\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spine38\Spine38.csproj">

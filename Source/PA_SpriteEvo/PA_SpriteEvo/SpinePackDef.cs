@@ -17,7 +17,7 @@ namespace PA_SpriteEvo
 
             public string assetBundle;
 
-            public string folderName;
+            public string folderPath;
 
             public string atlas;
 
