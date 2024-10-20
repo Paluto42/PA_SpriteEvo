@@ -2,7 +2,7 @@
 
 namespace PA_SpriteEvo
 {
-    ///<summary>对已导出的Spine脚本数据集提供实例封装</summary>
+    ///<summary>对已导出的Spine数据集合提供实例封装</summary>
     public class SpineAssetPack
     {
         public bool useMaterial;

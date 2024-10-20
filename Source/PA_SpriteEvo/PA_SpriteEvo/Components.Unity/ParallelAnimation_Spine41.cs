@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace PA_SpriteEvo
 {
+    //测试连播动态立绘用
     public class ParallelAnimation_Spine41 : MonoBehaviour
     {
         #region Inspector
@@ -18,7 +19,7 @@ namespace PA_SpriteEvo
         public string Animation_8;
         #endregion
 
-        SkeletonAnimation skeletonAnimation;
+        Spine41.Unity.SkeletonAnimation skeletonAnimation;
 
         void Start()
         {

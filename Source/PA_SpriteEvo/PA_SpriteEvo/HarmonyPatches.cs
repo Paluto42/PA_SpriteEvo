@@ -41,10 +41,10 @@ namespace PA_SpriteEvo
         [HarmonyPrefix]
         public static bool Prefix(UIRoot_Entry __instance)
         {
-            if (!AssetManager.AllAssetsLoaded)
+            if (!LoadManager.AllAssetsLoaded)
             {
-                AssetManager.ResloveAllAssetBundle();
-                AssetManager.AllAssetsLoaded = true;
+                LoadManager.ResloveAllAssetBundle();
+                LoadManager.AllAssetsLoaded = true;
             }
             return true;
         }
@@ -66,7 +66,7 @@ namespace PA_SpriteEvo
                 OperatorDocument doc = pawn.GetDoc();
                 if (doc != null)
                 {
-                    if (!AssetManager.AllAssetsLoaded)
+                    if (!LoadManager.AllAssetsLoaded)
                     {
                         return;
                     }
@@ -94,7 +94,7 @@ namespace PA_SpriteEvo
                     GameObject obj = AssetManager.ObjectDatabase.TryGetValue(pack.def.defName);
                     if (obj == null)
                     {
-                        SpineFramework_Tool.Create_AnimationTextureInstance(pack, pawn);
+                        pack.Create_AnimationTextureInstance();
                     }
                     if (obj != null)
                     {

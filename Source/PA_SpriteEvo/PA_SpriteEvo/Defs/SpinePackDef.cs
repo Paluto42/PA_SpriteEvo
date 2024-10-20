@@ -6,33 +6,32 @@ namespace PA_SpriteEvo
 {
     public enum SkelFormat
     {
-        Binary,
-        JSON
+        SkeletonBinary,
+        SkeletonJSON
+    }
+    public class Properties_SpinePack
+    {
+        public string version = "3.8";
+
+        public string atlas;
+
+        public string skeleton;
+
+        public string shader = "Spine-Skeleton.shader";
+
+        public List<string> textures = new List<string>();
+
+        public List<string> materials = new List<string>();
+
+        public bool StraightAlphaInput = false;
     }
     public class SpinePackDef : Def
     {
-        public class Properties_SpinePack
-        {
-            public string version = "3.8";
+        public SkelFormat skelFormat = SkelFormat.SkeletonBinary;
 
-            public string assetBundle;
+        public string assetBundle;
 
-            public string folderPath;
-
-            public string atlas;
-
-            public string skeleton;
-
-            public string shader = "Spine-Skeleton.shader";
-
-            public List<string> textures = new List<string>();
-
-            public List<string> materials = new List<string>();
-
-            public bool StraightAlphaInput = false;
-        }
-
-        public SkelFormat skelFormat = SkelFormat.Binary;
+        public string folderPath;
 
         public Vector3 offset = new Vector3(0f, 0f, 0f);
 

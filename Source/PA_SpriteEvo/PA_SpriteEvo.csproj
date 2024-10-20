@@ -93,16 +93,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PA_SpriteEvo\AssetExtensions.cs" />
     <Compile Include="PA_SpriteEvo\AssetManager.cs" />
+    <Compile Include="PA_SpriteEvo\Components.Unity\UniqueID_Thing.cs" />
+    <Compile Include="PA_SpriteEvo\Defs\BodyPartsDef.cs" />
+    <Compile Include="PA_SpriteEvo\Defs\HeadPartsDef.cs" />
     <Compile Include="PA_SpriteEvo\HarmonyPatches.cs" />
     <Compile Include="PA_SpriteEvo\LoadManager.cs" />
-    <Compile Include="PA_SpriteEvo\ParallelAnimation_Spine38.cs" />
+    <Compile Include="PA_SpriteEvo\Components.Unity\ParallelAnimation_Spine38.cs" />
     <Compile Include="PA_SpriteEvo\SpineAssetPack.cs" />
-    <Compile Include="PA_SpriteEvo\SpineFramework_Tool.cs" />
-    <Compile Include="PA_SpriteEvo\SpinePackDef.cs" />
+    <Compile Include="PA_SpriteEvo\Defs\SpinePackDef.cs" />
+    <Compile Include="PA_SpriteEvo\Components.Unity\GenPawn.cs" />
     <Compile Include="PA_SpriteEvo\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PA_SpriteEvo\ParallelAnimation_Spine41.cs" />
+    <Compile Include="PA_SpriteEvo\Components.Unity\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spine38\Spine38.csproj">
@@ -113,6 +117,9 @@
       <Project>{da3dbdc2-8712-45d9-8005-6c5e42236f8c}</Project>
       <Name>Spine41</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PA_SpriteEvo\SPE_Tool\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
