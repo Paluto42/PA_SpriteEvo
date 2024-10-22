@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace PA_SpriteEvo
+namespace PA_SpriteEvo.Unity
 {
     //测试连播动态立绘用
     public class ParallelAnimation_Spine41 : MonoBehaviour
@@ -26,8 +26,9 @@ namespace PA_SpriteEvo
             skeletonAnimation = GetComponent<SkeletonAnimation>();
             StartCoroutine(Routine());
         }
+
         //协程
-        IEnumerator Routine()
+        public virtual IEnumerator Routine()
         {
             skeletonAnimation.AnimationState.SetAnimation(0, Animation_0, true);
 

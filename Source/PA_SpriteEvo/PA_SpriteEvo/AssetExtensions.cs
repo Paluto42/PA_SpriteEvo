@@ -197,7 +197,7 @@ namespace PA_SpriteEvo
         }
         ///<summary>创建一个SkeletonAnimation实例对象并进行初始化</summary>
         ///
-        internal static GameObject Create_AnimationInstance(this SpineAssetPack pack, bool loop = true)
+        internal static GameObject Create_AnimationInstance (this SpineAssetPack pack, bool loop = true)
         {
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
             if (obj != null)

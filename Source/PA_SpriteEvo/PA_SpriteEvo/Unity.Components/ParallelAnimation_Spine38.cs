@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PA_SpriteEvo
+namespace PA_SpriteEvo.Unity
 {
-    //测试连播动态立绘用
+    //用来测试连播动态立绘的组件,记得删
     public class ParallelAnimation_Spine38 : MonoBehaviour
     {
         #region
