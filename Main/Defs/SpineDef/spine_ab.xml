@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
-    <!-- 本组只使用Spine3.8 版本 其他版本的Spine资源暂时不支持-->
+    <!-- 本组只使用Spine3.8 /4.1 版本 其他版本的Spine资源暂时不支持-->
     <!-- DefName格式: 组名/模组名 + Spine + ID--> 
 	<!-- skelFormat: 骨架数据的格式,选择二进制数据或者JSON格式-->
 	<!-- offset三维变量 指定场景内动画的偏移量 ,uioffset指定UI贴图的偏移量,Z轴调整投影距离-->
-    <!-- assetBundle/folderName: Asset_Spine/路径内的ab包文件全称 或者json文件夹名称-->
+    <!-- assetBundle/folderPath: Asset_Spine/路径内的ab包文件全称 或者json文件夹名称-->
     <!-- atlas: ab包里指定atlas数据的文件全称(带拓展名)-->
     <!-- skeleton: ab包里指定skeleton数据的文件全称(带拓展名)-->
     <!-- shader: 保持默认为Spine/Skeleton -->
@@ -13,13 +13,13 @@
 
     <PA_SpriteEvo.SpinePackDef>
 		<defName>AK_Spine_Dusk_dynillust_E2</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
 		<offset>(0,0,0)</offset>
 		<uioffset>(0,12,-18)</uioffset>
 		<scale>(15,15)</scale>
 		<!--rotation>(0,0,0)</rotation-->
 		<props>
 		    <!--version>3.8</version-->
-            <assetBundle>asset_dyn_suifamily</assetBundle>
 			<atlas>dyn_illust_char_2015_dusk.atlas.txt</atlas>
 			<skeleton>dyn_illust_char_2015_dusk.skel.bytes</skeleton>
 			<!--shader>Spine-Skeleton.shader</shader-->
@@ -33,11 +33,11 @@
 
     <PA_SpriteEvo.SpinePackDef>
 		<defName>AK_Spine_Dusk_dynillust_Nian</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
 		<offset>(0,0,0)</offset>
 		<uioffset>(0,8,-30)</uioffset>
 		<scale>(10,10)</scale>
 		<props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
 			<atlas>dyn_illust_char_2015_dusk_nian#7.atlas.txt</atlas>
 			<skeleton>dyn_illust_char_2015_dusk_nian#7.skel.bytes</skeleton>
 			<materials>
@@ -50,11 +50,11 @@
 
     <PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Nian_dynillust_E2</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,8,-18)</uioffset>
         <scale>(15,15)</scale>
         <props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2014_nian.atlas.txt</atlas>
             <skeleton>dyn_illust_char_2014_nian2.skel.bytes</skeleton>
             <materials>
@@ -67,11 +67,11 @@
 
 	<PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Nian_dynillust_Nian</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,8,-30)</uioffset>
 		<scale>(10,10)</scale>
         <props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2014_nian_nian#4.atlas.txt</atlas>
             <skeleton>dyn_illust_char_2014_nian_nian#4.skel.bytes</skeleton>
             <materials>
@@ -84,11 +84,11 @@
 
 	<PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Ling_dynillust_E2</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,12,-18)</uioffset>
         <scale>(15,15)</scale>
         <props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2023_ling.atlas.txt</atlas>
             <skeleton>dyn_illust_char_2023_ling.skel.bytes</skeleton>
             <materials>
@@ -101,11 +101,11 @@
 
 	<PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Ling_dynillust_Nian</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,8,-30)</uioffset>
 		<scale>(10,10)</scale>
         <props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2023_ling_ncg#1.atlas.txt</atlas>
             <skeleton>dyn_illust_char_2023_ling_ncg#1.skel.bytes</skeleton>
             <materials>
@@ -118,11 +118,11 @@
 
 	<PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Chongyue_dynillust_E2</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,10.5,-18)</uioffset>
         <scale>(15,15)</scale>
         <props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2024_chyue.atlas.txt</atlas>
             <skeleton>dyn_illust_char_2024_chyue.skel.bytes</skeleton>
             <materials>
@@ -135,11 +135,11 @@
 
 	<PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Chongyue_dynillust_Nian</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,8,-30)</uioffset>
 		<scale>(10,10)</scale>
         <props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2024_chyue_nian#10.atlas.txt</atlas>
             <skeleton>dyn_illust_char_2024_chyue_nian#10.skel.bytes</skeleton>
             <materials>
@@ -151,11 +151,11 @@
 
 	<PA_SpriteEvo.SpinePackDef>
         <defName>AK_Spine_Shu_dynillust_E2</defName>
+        <assetBundle>Spine/asset_dyn_suifamily</assetBundle>
         <offset>(0,0,0)</offset>
 		<uioffset>(0,8,-20)</uioffset>
 		<scale>(15,15)</scale>
         <props>
-            <assetBundle>asset_dyn_suifamily</assetBundle>
             <atlas>dyn_illust_char_2025_shu.atlas.txt</atlas>
             <skeleton>dyn_illust_char_2025_shu.skel.bytes</skeleton>
             <materials>
@@ -167,12 +167,12 @@
 
 	<!--PA_SpriteEvo.SpinePackDef>
 		<defName>AK_Spine_Dusk_dynillust_Nian</defName>
+        <skelFormat>JSON</skelFormat>
+        <folderName>JSON_Spine</folderName>
 		<offset>(0,8.5)</offset>
 		<scale>(10,10)</scale>
 		<rotation>(0,0,0)</rotation>
-		<skelFormat>JSON</skelFormat>
 		<props>
-            <folderName>JSON_Spine</folderName>
 			<atlas>dyn_illust_char_2015_dusk_nian#7.atlas.txt</atlas>
 			<skeleton>dyn_illust_char_2015_dusk_nian#7.skel.bytes</skeleton>
 			<textures>

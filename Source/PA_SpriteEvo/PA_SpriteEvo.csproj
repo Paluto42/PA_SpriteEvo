@@ -36,7 +36,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="AK_DLL">
-      <HintPath>E:\SteamLibrary\steamapps\workshop\content\294100\2910194921\1.4\Assemblies\AK_DLL.dll</HintPath>
+      <HintPath>E:\SteamLibrary\steamapps\workshop\content\294100\2910194921\1.5\Assemblies\AK_DLL.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
