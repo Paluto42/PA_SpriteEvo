@@ -1,0 +1,7 @@
+Sprite.North.FrontHair.SE_ChangAn.png
+size:1212,914
+filter:Linear,Linear
+pma:true
+B_前发的后发
+bounds:2,2,1208,910
+offsets:1,2,1210,937

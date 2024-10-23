@@ -1,0 +1,29 @@
+{
+"skeleton": { "hash": "j+u7DkaGvSM", "spine": "4.1.24", "x": -77, "y": -106, "width": 500, "height": 928 },
+"bones": [
+	{ "name": "FxRoot" },
+	{ "name": "FxHead", "parent": "FxRoot", "y": 400 },
+	{ "name": "FxBack", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxChest", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxLeftHand", "parent": "FxRoot" },
+	{ "name": "root", "parent": "FxRoot" },
+	{ "name": "FxRightHand", "parent": "FxRoot" },
+	{ "name": "FxFeet", "parent": "FxRoot", "x": -146.96, "y": -852.34 }
+],
+"slots": [
+	{ "name": "S_前发的前发", "bone": "root", "attachment": "S_前发的前发" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"S_前发的前发": {
+				"S_前发的前发": { "x": 173, "y": 358, "width": 500, "height": 928 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

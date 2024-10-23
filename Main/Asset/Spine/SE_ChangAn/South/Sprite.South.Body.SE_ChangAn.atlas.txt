@@ -1,0 +1,16 @@
+Sprite.South.Body.SE_ChangAn.png
+size:367,1816
+filter:Linear,Linear
+pma:true
+F_手臂（右
+bounds:2,1322,108,311
+offsets:1,1,110,320
+F_手臂（左
+bounds:112,1322,108,311
+offsets:1,1,110,320
+F_扔子
+bounds:2,1635,302,179
+offsets:2,12,306,193
+F_果体
+bounds:2,2,363,1318
+offsets:1,1,378,1320

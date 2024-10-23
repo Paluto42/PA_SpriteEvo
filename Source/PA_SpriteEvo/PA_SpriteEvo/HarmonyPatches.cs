@@ -41,10 +41,10 @@ namespace PA_SpriteEvo
         [HarmonyPrefix]
         public static bool Prefix(UIRoot_Entry __instance)
         {
-            if (!LoadManager.AllAssetsLoaded)
+            if (!AssetLoadManager.AllAssetsLoaded)
             {
-                LoadManager.ResloveAllAssetBundle();
-                LoadManager.AllAssetsLoaded = true;
+                AssetLoadManager.ResloveAllAssetBundle();
+                AssetLoadManager.AllAssetsLoaded = true;
             }
             return true;
         }
@@ -66,7 +66,7 @@ namespace PA_SpriteEvo
                 OperatorDocument doc = pawn.GetDoc();
                 if (doc != null)
                 {
-                    if (!LoadManager.AllAssetsLoaded)
+                    if (!AssetLoadManager.AllAssetsLoaded)
                     {
                         return;
                     }

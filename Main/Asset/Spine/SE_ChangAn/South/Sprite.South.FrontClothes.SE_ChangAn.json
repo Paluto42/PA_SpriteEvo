@@ -1,0 +1,33 @@
+{
+"skeleton": { "hash": "qHmlRzmTRQk", "spine": "4.1.24", "x": -634, "y": -600, "width": 1284, "height": 813 },
+"bones": [
+	{ "name": "FxRoot" },
+	{ "name": "FxHead", "parent": "FxRoot", "y": 400 },
+	{ "name": "FxBack", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxChest", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxLeftHand", "parent": "FxRoot", "x": 180 },
+	{ "name": "root", "parent": "FxRoot" },
+	{ "name": "FxRightHand", "parent": "FxRoot", "x": -180 },
+	{ "name": "FxFeet", "parent": "FxRoot", "y": -900 }
+],
+"slots": [
+	{ "name": "F_前衣服", "bone": "root", "attachment": "F_前衣服" },
+	{ "name": "F_挡扔子的", "bone": "root", "attachment": "F_挡扔子的" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"F_前衣服": {
+				"F_前衣服": { "x": 8, "y": -248.5, "width": 1284, "height": 703 }
+			},
+			"F_挡扔子的": {
+				"F_挡扔子的": { "x": 1, "y": 108, "width": 282, "height": 210 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

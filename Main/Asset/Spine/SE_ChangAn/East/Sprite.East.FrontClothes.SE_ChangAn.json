@@ -1,0 +1,41 @@
+{
+"skeleton": { "hash": "gLVGMxZfZo0", "spine": "4.1.24", "x": -401, "y": -845, "width": 631, "height": 1067 },
+"bones": [
+	{ "name": "FxRoot" },
+	{ "name": "FxHead", "parent": "FxRoot", "y": 400 },
+	{ "name": "FxBack", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxChest", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxLeftHand", "parent": "FxRoot" },
+	{ "name": "root", "parent": "FxRoot" },
+	{ "name": "FxRightHand", "parent": "FxRoot" },
+	{ "name": "FxFeet", "parent": "FxRoot", "x": -146.96, "y": -852.34 }
+],
+"slots": [
+	{ "name": "S_R衣服（上", "bone": "root", "attachment": "S_R衣服（上" },
+	{ "name": "S_R档扔子的", "bone": "root", "attachment": "S_R档扔子的" },
+	{ "name": "S_L衣服（上", "bone": "root", "attachment": "S_L衣服（上" },
+	{ "name": "S_L档扔子的", "bone": "root", "attachment": "S_L档扔子的" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"S_L档扔子的": {
+				"S_L档扔子的": { "x": 167, "y": 141, "width": 126, "height": 162 }
+			},
+			"S_L衣服（上": {
+				"S_L衣服（上": { "x": -91, "y": -357, "width": 620, "height": 976 }
+			},
+			"S_R档扔子的": {
+				"S_R档扔子的": { "x": 167, "y": 141, "width": 126, "height": 162 }
+			},
+			"S_R衣服（上": {
+				"S_R衣服（上": { "x": -91, "y": -357, "width": 620, "height": 976 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

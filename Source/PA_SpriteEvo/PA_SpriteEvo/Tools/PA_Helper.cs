@@ -17,5 +17,11 @@ namespace PA_SpriteEvo
             instance.transform.rotation = Quaternion.identity;
             return instance;
         }
+        internal static void SetParentSafely(this GameObject child, GameObject parent) 
+        {
+            child.transform.SetParent(parent.transform);
+            child.transform.localPosition = Vector3.zero;
+            child.transform.localRotation = Quaternion.identity;
+        }
     }
 }

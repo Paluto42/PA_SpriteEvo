@@ -1,0 +1,29 @@
+{
+"skeleton": { "hash": "B0rRdikUuq0", "spine": "4.1.24", "x": -154, "y": 330, "width": 397, "height": 494 },
+"bones": [
+	{ "name": "FxRoot" },
+	{ "name": "FxHead", "parent": "FxRoot", "y": 400 },
+	{ "name": "FxBack", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxChest", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxLeftHand", "parent": "FxRoot" },
+	{ "name": "root", "parent": "FxRoot" },
+	{ "name": "FxRightHand", "parent": "FxRoot" },
+	{ "name": "FxFeet", "parent": "FxRoot", "x": -146.96, "y": -852.34 }
+],
+"slots": [
+	{ "name": "S_脑袋", "bone": "root", "attachment": "S_脑袋" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"S_脑袋": {
+				"S_脑袋": { "x": 44.5, "y": 577, "width": 397, "height": 494 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

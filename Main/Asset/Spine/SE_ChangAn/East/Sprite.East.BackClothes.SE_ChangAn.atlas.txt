@@ -1,0 +1,10 @@
+Sprite.East.BackClothes.SE_ChangAn.png
+size:244,454
+filter:Linear,Linear
+pma:true
+S_L衣服（下
+bounds:2,2,240,450
+offsets:1,2,242,453
+S_R衣服（下
+bounds:2,2,240,450
+offsets:1,2,242,453

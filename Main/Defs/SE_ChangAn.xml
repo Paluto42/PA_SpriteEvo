@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+    <!--已实现自动文件属性填充，只需保持3个文件的名称前缀和目录名称一致-->
+
+    <!--前后头部-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_South_Head_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/South</folderPath>
+        <seriesname>Sprite.South.Head.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--South-->
+    <!--前发-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_South_FrontHair_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/South</folderPath>
+        <seriesname>Sprite.South.FrontHair.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <!--atlas>Sprite.South.FrontHair.SE_ChangAn.atlas.txt</atlas>
+            <skeleton>Sprite.South.FrontHair.SE_ChangAn.json</skeleton>
+            <textures>
+                <li>Sprite.South.FrontHair.SE_ChangAn.png</li>
+            </textures-->
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--后发-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_South_BackHair_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/South</folderPath>
+        <seriesname>Sprite.South.BackHair.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--眉毛-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_South_EyeBrow_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/South</folderPath>
+        <seriesname>Sprite.South.EyeBrow.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--左眼-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_South_LeftEye_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/South</folderPath>
+        <seriesname>Sprite.South.LeftEye.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+   <!--右眼-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_South_RightEye_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/South</folderPath>
+        <seriesname>Sprite.South.RightEye.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+    
+    <!--嘴巴-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_South_Mouth_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/South</folderPath>
+        <seriesname>Sprite.South.Mouth.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+    
+    <!--North-->
+    <!--前发-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_North_FrontHair_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/North</folderPath>
+        <seriesname>Sprite.North.FrontHair.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--后发-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_North_BackHair_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/North</folderPath>
+        <seriesname>Sprite.North.BackHair.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--East-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_East_Head_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/East</folderPath>
+        <seriesname>Sprite.East.Head.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--前发-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_East_FrontHair_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/East</folderPath>
+        <seriesname>Sprite.East.FrontHair.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--后发-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_East_BackHair_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/East</folderPath>
+        <seriesname>Sprite.East.BackHair.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+    <!--眉毛-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_East_EyeBrow_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/East</folderPath>
+        <seriesname>Sprite.East.EyeBrow.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+   <!--右眼-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_East_RightEye_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/East</folderPath>
+        <seriesname>Sprite.East.RightEye.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+    
+    <!--嘴巴-->
+    <PA_SpriteEvo.SpinePackDef>
+        <defName>Sprite_East_Mouth_SE_ChangAn</defName>
+        <skelFormat>SkeletonJSON</skelFormat>
+        <folderPath>Spine/SE_ChangAn/East</folderPath>
+        <seriesname>Sprite.East.Mouth.SE_ChangAn</seriesname>
+        <scale>(10,10)</scale>
+        <props>
+            <StraightAlphaInput>false</StraightAlphaInput>
+        </props>
+    </PA_SpriteEvo.SpinePackDef>
+
+</Defs>

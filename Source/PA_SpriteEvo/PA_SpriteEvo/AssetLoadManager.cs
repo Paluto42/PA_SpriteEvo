@@ -3,11 +3,12 @@ using System.Linq;
 using System.IO;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 namespace PA_SpriteEvo
 {
     [StaticConstructorOnStartup]
-    internal static class LoadManager
+    internal static class AssetLoadManager
     {
         public static bool AllAssetsLoaded = false;
 
@@ -22,7 +23,7 @@ namespace PA_SpriteEvo
         private static Dictionary<string, SpineAssetPack> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SpineAssetPack> Spine41_DB => AssetManager.spine41_Database;
         private static List<ModContentPack> Mods => LoadedModManager.RunningModsListForReading;
-        static LoadManager() 
+        static AssetLoadManager() 
         {
             LoadAllSpineShader();
         }
@@ -63,6 +64,7 @@ namespace PA_SpriteEvo
                 return;
             }
             List<AssetBundle> AssetBundle_Loaded = new List<AssetBundle>();
+            List<string> SkeletonJSON_Loaded = new List<string>();
             List<SpinePackDef> packs = DefDatabase<SpinePackDef>.AllDefsListForReading;
             foreach (SpinePackDef def in packs)
             {
@@ -97,8 +99,20 @@ namespace PA_SpriteEvo
                         Material SkeletonGraphicDefault = ab.LoadAsset<Material>("SkeletonGraphicDefault");
                         SkeletonGraphic = SkeletonGraphicDefault;
                     }
-                    atlasAsset = ab?.LoadAsset<TextAsset>(def.props.atlas);
-                    skeletonAsset = ab?.LoadAsset<TextAsset>(def.props.skeleton);
+                    string atlas;
+                    string skeleton;
+                    string autofillfilename = def.seriesname;
+                    if (def.props.atlas != null)
+                        atlas = def.props.atlas;
+                    else
+                        atlas = autofillfilename + ".atlas.txt";
+                    if (def.props.skeleton != null)
+                        skeleton = def.props.skeleton;
+                    else
+                        skeleton = autofillfilename + ".skel.bytes";
+
+                    atlasAsset = ab?.LoadAsset<TextAsset>(atlas);
+                    skeletonAsset = ab?.LoadAsset<TextAsset>(skeleton);
                     if (def.props.shader == "Spine-Skeleton.shader")
                     {
                         shader = Spine_Skeleton;
@@ -150,40 +164,79 @@ namespace PA_SpriteEvo
                 //JSON读取
                 else
                 {
-                    string JSONPath = Path.Combine(IndividualPath, def.folderPath);
-                    if (!Directory.Exists(JSONPath))
+                    string JSONPath;
+                    if (!SkeletonJSON_Loaded.Exists((string s) => s == def.folderPath))
                     {
-                        Log.Error("PA.SpineFramework: Failed Loading JSON : Invaild Directory " + Spine_Dict + def.folderPath);
-                        continue;
+                        JSONPath = Path.Combine(IndividualPath, def.folderPath);
+                        if (!Directory.Exists(JSONPath))
+                        {
+                            Log.Error("PA.SpineFramework: Failed Loading JSON : Invaild Directory " + Spine_Dict + def.folderPath);
+                            continue;
+                        }
+                        SkeletonJSON_Loaded.Add(def.folderPath);
+                        Log.Warning("PA.SpineFramework: Loading JSON From Directory : " + Spine_Dict + def.folderPath);
+                    }
+                    else 
+                    {
+                        string existsPath = SkeletonJSON_Loaded.First((string s) => s == def.folderPath);
+                        JSONPath = Path.Combine(IndividualPath, existsPath);
                     }
                     //string folderPath = Path.Combine(JSONPath, def.props.folderPath);
-                    string atlasPath = Path.Combine(JSONPath, def.props.atlas);
-                    string skelPath = Path.Combine(JSONPath, def.props.skeleton);
+                    string atlas;
+                    string skeleton;
+                    string autofillfilename = def.seriesname;
+
+                    if (def.props.atlas != null)
+                        atlas = def.props.atlas;
+                    else
+                        atlas = autofillfilename + ".atlas.txt";
+                    if (def.props.skeleton != null)
+                        skeleton = def.props.skeleton;
+                    else
+                        skeleton = autofillfilename + ".json";
+
+                    string atlasPath = Path.Combine(JSONPath, atlas);
+                    string skelPath = Path.Combine(JSONPath, skeleton);
                     if (!File.Exists(atlasPath) || !File.Exists(skelPath))
                     {
                         continue;
                     }
-                    Log.Warning("PA.SpineFramework: Loading JSON From Directory : " + Spine_Dict + def.folderPath);
                     atlasAsset = new TextAsset(File.ReadAllText(atlasPath));
                     skeletonAsset = new TextAsset(File.ReadAllText(skelPath));
-                    atlasAsset.name = Path.GetFileNameWithoutExtension(def.props.atlas);
-                    skeletonAsset.name = Path.GetFileNameWithoutExtension(def.props.skeleton);
+                    atlasAsset.name = Path.GetFileNameWithoutExtension(atlas);
+                    skeletonAsset.name = Path.GetFileNameWithoutExtension(skeleton);
                     //
-                    textures = new Texture2D[def.props.textures.Count];
-                    for (int i = 0; i < def.props.textures.Count; i++)
+                    if (!def.props.textures.NullOrEmpty())
                     {
-                        string texPath = Path.Combine(JSONPath, def.props.textures[i]);
+                        textures = new Texture2D[def.props.textures.Count];
+                        for (int i = 0; i < def.props.textures.Count; i++)
+                        {
+                            string texPath = Path.Combine(JSONPath, def.props.textures[i]);
+                            if (!File.Exists(texPath))
+                            {
+                                Log.Error("PA.SpineFramework: Invaild Image Path : " + Spine_Dict + def.folderPath + "/" + def.props.textures[i]);
+                                continue;
+                            }
+                            Texture2D texture = LoadTexture(new FileInfo(texPath));
+                            textures[i] = texture;
+                        }
+                    }
+                    else
+                    {
+                        string tex = autofillfilename + ".png";
+                        string texPath = Path.Combine(JSONPath, tex);
                         if (!File.Exists(texPath))
                         {
-                            Log.Error("PA.SpineFramework: Invaild Image Path : " + Spine_Dict + def.folderPath + "/" + def.props.textures[i]);
+                            Log.Error("PA.SpineFramework: Invaild AutoGenerated Image Path : " + Spine_Dict + def.folderPath + "/" + tex);
                             continue;
                         }
-                        Texture2D texture = LoadManager.LoadTexture(new FileInfo(texPath));
-                        textures[i] = texture;
+                        textures = new Texture2D[1];
+                        Texture2D texture = LoadTexture(new FileInfo(texPath));
+                        textures[0] = texture;
                     }
                     if (textures.NullOrEmpty())
                     {
-                        Log.Error("PA.SpineFramework: " + def.defName + "Texture Not Found in : " + Spine_Dict + def.folderPath);
+                        Log.Error("PA.SpineFramework: " + def.defName + " Texture Not Found in : " + Spine_Dict + def.folderPath);
                         continue;
                     }
                     if (def.props.shader == "Spine-Skeleton.shader")

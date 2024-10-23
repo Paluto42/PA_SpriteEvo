@@ -1,0 +1,7 @@
+Sprite.East.Head.SE_ChangAn.png
+size:398,496
+filter:Linear,Linear
+pma:true
+S_脑袋
+bounds:2,2,394,492
+offsets:2,1,397,494

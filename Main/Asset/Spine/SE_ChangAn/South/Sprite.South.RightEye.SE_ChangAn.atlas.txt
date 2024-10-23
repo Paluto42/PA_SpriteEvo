@@ -1,0 +1,13 @@
+Sprite.South.RightEye.SE_ChangAn.png
+size:290,73
+filter:Linear,Linear
+pma:true
+F_R眼白
+bounds:131,15,91,56
+offsets:0,0,100,62
+F_R眼皮1
+bounds:2,2,127,69
+F_R眼皮2
+bounds:224,52,64,19
+F_R高光
+bounds:224,21,59,29

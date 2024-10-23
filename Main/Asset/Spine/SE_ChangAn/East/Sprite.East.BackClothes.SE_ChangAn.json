@@ -1,0 +1,33 @@
+{
+"skeleton": { "hash": "vbP/LgumXvU", "spine": "4.1.24", "x": -299, "y": -692, "width": 242, "height": 453 },
+"bones": [
+	{ "name": "FxRoot" },
+	{ "name": "FxHead", "parent": "FxRoot", "y": 400 },
+	{ "name": "FxBack", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxChest", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxLeftHand", "parent": "FxRoot" },
+	{ "name": "root", "parent": "FxRoot" },
+	{ "name": "FxRightHand", "parent": "FxRoot" },
+	{ "name": "FxFeet", "parent": "FxRoot", "x": -146.96, "y": -852.34 }
+],
+"slots": [
+	{ "name": "S_R衣服（下", "bone": "root", "attachment": "S_R衣服（下" },
+	{ "name": "S_L衣服（下", "bone": "root", "attachment": "S_L衣服（下" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"S_L衣服（下": {
+				"S_L衣服（下": { "x": -178, "y": -465.5, "width": 242, "height": 453 }
+			},
+			"S_R衣服（下": {
+				"S_R衣服（下": { "x": -178, "y": -465.5, "width": 242, "height": 453 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

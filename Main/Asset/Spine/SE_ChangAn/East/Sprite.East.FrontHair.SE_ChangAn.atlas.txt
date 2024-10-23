@@ -1,0 +1,7 @@
+Sprite.East.FrontHair.SE_ChangAn.png
+size:485,923
+filter:Linear,Linear
+pma:true
+S_前发的前发
+bounds:2,2,481,919
+offsets:18,1,500,928

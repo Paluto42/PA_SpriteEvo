@@ -101,7 +101,7 @@
     <Compile Include="PA_SpriteEvo\Defs\BodyPartsDef.cs" />
     <Compile Include="PA_SpriteEvo\Defs\HeadPartsDef.cs" />
     <Compile Include="PA_SpriteEvo\HarmonyPatches.cs" />
-    <Compile Include="PA_SpriteEvo\LoadManager.cs" />
+    <Compile Include="PA_SpriteEvo\AssetLoadManager.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\ParallelAnimation_Spine38.cs" />
     <Compile Include="PA_SpriteEvo\SpineAssetPack.cs" />
     <Compile Include="PA_SpriteEvo\Defs\SpinePackDef.cs" />

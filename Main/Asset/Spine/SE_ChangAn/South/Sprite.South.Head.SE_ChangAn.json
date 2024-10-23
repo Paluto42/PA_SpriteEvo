@@ -1,0 +1,33 @@
+{
+"skeleton": { "hash": "Z86wasMiKWY", "spine": "4.1.24", "x": -164, "y": 353, "width": 329, "height": 430 },
+"bones": [
+	{ "name": "FxRoot" },
+	{ "name": "FxHead", "parent": "FxRoot", "y": 400 },
+	{ "name": "FxBack", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxChest", "parent": "FxRoot", "y": 185.18 },
+	{ "name": "FxLeftHand", "parent": "FxRoot", "x": 180 },
+	{ "name": "root", "parent": "FxHead", "y": -400 },
+	{ "name": "FxRightHand", "parent": "FxRoot", "x": -180 },
+	{ "name": "FxFeet", "parent": "FxRoot", "y": -900 }
+],
+"slots": [
+	{ "name": "F_脸", "bone": "root", "attachment": "F_脸" },
+	{ "name": "F_鼻子", "bone": "root", "attachment": "F_鼻子" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"F_脸": {
+				"F_脸": { "x": 0.5, "y": 568, "width": 329, "height": 430 }
+			},
+			"F_鼻子": {
+				"F_鼻子": { "x": -8.5, "y": 476, "width": 25, "height": 34 }
+			}
+		}
+	}
+],
+"animations": {
+	"animation": {}
+}
+}

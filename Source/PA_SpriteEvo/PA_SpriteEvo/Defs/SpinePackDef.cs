@@ -33,6 +33,8 @@ namespace PA_SpriteEvo
 
         public string folderPath;
 
+        public string seriesname;
+
         public Vector3 offset = new Vector3(0f, 0f, 0f);
 
         public Vector3 uioffset = new Vector3(0f, 0f, 0f);
@@ -49,6 +51,6 @@ namespace PA_SpriteEvo
 
         public string specialAnimationName = "Special";
 
-        public Properties_SpinePack props;
+        public Properties_SpinePack props = new Properties_SpinePack();
     }
 }

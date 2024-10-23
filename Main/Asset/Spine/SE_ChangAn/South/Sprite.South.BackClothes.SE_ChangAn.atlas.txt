@@ -1,0 +1,7 @@
+Sprite.South.BackClothes.SE_ChangAn.png
+size:1446,762
+filter:Linear,Linear
+pma:true
+F_后衣服
+bounds:2,2,1442,758
+offsets:1,1,1444,760

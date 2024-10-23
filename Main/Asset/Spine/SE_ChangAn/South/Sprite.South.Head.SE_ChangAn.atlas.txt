@@ -1,0 +1,10 @@
+Sprite.South.Head.SE_ChangAn.png
+size:356,432
+filter:Linear,Linear
+pma:true
+F_脸
+bounds:2,2,327,428
+offsets:1,1,329,430
+F_鼻子
+bounds:331,399,23,31
+offsets:1,1,25,34

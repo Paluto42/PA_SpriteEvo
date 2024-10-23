@@ -11,8 +11,8 @@ namespace PA_SpriteEvo
     public static class AssetExtensions
     {
         public static bool Is_StraightAlphaTexture = false;
-        public static Shader Spine_Skeleton => LoadManager.Spine_Skeleton;
-        public static Material Spine_SkeletonGraphic => LoadManager.SkeletonGraphic;
+        public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
+        public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
         public static Dictionary<string, GameObject> DynamicObjectDatabase => AssetManager.ObjectDatabase;
 
         ///<summary>获取一个模型实例的定位点Bone</summary>
@@ -197,8 +197,9 @@ namespace PA_SpriteEvo
         }
         ///<summary>创建一个SkeletonAnimation实例对象并进行初始化</summary>
         ///
-        internal static GameObject Create_AnimationInstance (this SpineAssetPack pack, bool loop = true)
+        internal static GameObject CreateAnimationInstance (this SpineAssetPack pack, bool loop = true)
         {
+            if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
             if (obj != null)
             {

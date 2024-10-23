@@ -1,0 +1,10 @@
+Sprite.South.FrontClothes.SE_ChangAn.png
+size:1561,687
+filter:Linear,Linear
+pma:true
+F_前衣服
+bounds:2,2,1282,683
+offsets:1,11,1284,703
+F_挡扔子的
+bounds:1286,477,273,208
+offsets:5,1,282,210
