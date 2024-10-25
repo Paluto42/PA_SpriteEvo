@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RimWorld;
+using System.Collections;
 using UnityEngine;
 using Verse;
 
@@ -17,37 +18,85 @@ namespace PA_SpriteEvo.Unity
         FxRootComp Comp_FxRoot;
         Pawn Caster => (Pawn)Comp_FxRoot.User;
 
+        public MonoBehaviour Attachment;
+
+        public GameObject SouthChild;
+        public GameObject NorthChild;
+        public GameObject EastChild;
+
         //组件被添加后立刻获取根节点FxRoot组件对象
-        void Awake() 
+        public virtual MonoBehaviour GetAttachment() 
+        {
+            return null;
+        }
+        public virtual IEnumerator HeadAnimationController()
+        {
+            yield return null;
+        }
+        public virtual void DoRotation(Rot4 rot) 
+        {
+            switch (rot.AsInt)
+            {
+                case 0:
+                    SouthChild?.SetActive(true);
+                    NorthChild?.SetActive(false);
+                    EastChild?.SetActive(false);
+                    break;
+                case 1:
+                    EastChild?.SetActive(true);
+                    SouthChild?.SetActive(false);
+                    NorthChild?.SetActive(false);
+                    break;
+                case 2:
+                    NorthChild?.SetActive(true);
+                    SouthChild?.SetActive(false);
+                    EastChild?.SetActive(false);
+                    break;
+                case 3:
+                    EastChild?.SetActive(true);
+                    SouthChild?.SetActive(false);
+                    NorthChild?.SetActive(false);
+                    break;
+                default:
+                    Log.Error("ToQuat with Rot = " + rot.AsInt);
+                    break;
+            }
+        }
+        public virtual void Awake()
         {
             Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
         }
-        void OnEnable() 
+        public virtual void OnEnable()
         {
             CanDrawNow = true;
         }
-        void OnDisable() 
-        {
-            CanDrawNow = false;
-        }
-        void OnDestory()
-        {
-            CanDrawNow = false;
-        }
         //Once预渲染操作
-        void Start()
+        public virtual void Start()
         {
             CanDrawNow = Current.ProgramState == ProgramState.Playing;
         }
-        void Update()
+        public virtual void FixedUpdate()
+        {
+        }
+        public virtual void Update()
         {
             if (!CanDrawNow) return;
             if (!HaveAllRotNode) return;
             if (Caster == null) return;
         }
-        public virtual IEnumerator HeadAnimationController()
+        public virtual void LateUpdate()
         {
-            yield return null;
+        }
+        public virtual void OnGUI()
+        {
+        }
+        public virtual void OnDisable()
+        {
+            CanDrawNow = false;
+        }
+        public virtual void OnDestory()
+        {
+            CanDrawNow = false;
         }
     }
 }

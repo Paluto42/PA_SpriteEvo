@@ -1,15 +1,30 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Verse;
 
-namespace PA_SpriteEvo.Unity
+namespace PA_SpriteEvo
 {
-    //处理动画的点击反馈事件
-    public class ClickEventComp : MonoBehaviour
+    public class FxExtraComp : MonoBehaviour
     {
+        //记得改成集合
+        public MonoBehaviour Attachment;
+        public virtual MonoBehaviour GetAttachment()
+        {
+            return null;
+        }
+        //实现三视角旋转必写
+        public virtual void DoRotation(Rot4 rot)
+        {
+        }
+        public virtual IEnumerator ExtraAnimationController()
+        {
+            yield return null;
+        }
         public virtual void Awake()
         {
         }
@@ -25,7 +40,7 @@ namespace PA_SpriteEvo.Unity
         public virtual void Update()
         {
         }
-        public virtual void LateUpdate()
+        public virtual void LateUpdate() 
         {
         }
         public virtual void OnGUI()

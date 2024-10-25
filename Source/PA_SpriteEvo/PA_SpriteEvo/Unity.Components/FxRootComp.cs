@@ -7,76 +7,75 @@ namespace PA_SpriteEvo.Unity
     public class FxRootComp : MonoBehaviour
     {
         #region Inspector
-        public Thing User;
+        public Thing User { get; set; }
 
         #endregion
         public bool CanDrawNow = false;
-        public bool HaveAllRotNode = false;
         GameObject Root => base.gameObject;
         //
         //不建议使用一切与Find有关的方法获取它们，而是加上组件后直接用SetChildren设置
-        public GameObject SouthChild;
-        public GameObject NorthChild;
-        public GameObject EastChild;
-        public void SetChildren(GameObject s, GameObject n, GameObject e)
+        public FxHeadComp FxHeadChild { get; set; }
+        public FxBodyComp FxBodyChild { get; set; }
+        public FxExtraComp FxExtraChild { get; set; }
+
+        //public GameObject SouthChild;
+        //public GameObject NorthChild;
+        //public GameObject EastChild;
+        public void SetChildren(FxHeadComp h, FxBodyComp b, FxExtraComp e = null)
         {
-            this.SouthChild = s;
-            this.NorthChild = n;
-            this.EastChild = e;
-            HaveAllRotNode = true;
+            this.FxHeadChild = h;
+            this.FxBodyChild = b;
+            this.FxExtraChild = e;
         }
-        void OnEnable()
+        public virtual void DoAllRotation(Rot4 rot)
+        {
+            FxHeadChild.DoRotation(rot);
+            FxBodyChild?.DoRotation(rot);
+            FxExtraChild.DoRotation(rot);
+        }
+        public virtual void DoTransform()
+        {
+            if (Root == null || User == null) return;
+            Root.transform.position = User.DrawPos;
+        }
+        public virtual void Awake()
+        {
+        }
+        public virtual void OnEnable()
         {
             CanDrawNow = true;
         }
-        void OnDisable()
-        {
-            CanDrawNow = false;
-        }
-        void OnDestory() 
-        {
-            CanDrawNow = false;
-        }
-        void Start()
+        public virtual void Start()
         {
             CanDrawNow = Current.ProgramState == ProgramState.Playing;
-            SouthChild?.SetActive(false);
-            NorthChild?.SetActive(false);
-            EastChild?.SetActive(false);
+            FxHeadChild?.gameObject?.SetActive(true);
+            FxBodyChild?.gameObject?.SetActive(true);
+            FxExtraChild?.gameObject?.SetActive(true);
         }
-        void Update() 
+        public virtual void FixedUpdate()
+        {
+        }
+        public virtual void Update()
         {
             if (!CanDrawNow) return;
             if (User == null) return;
 
-            Root.transform.position = User.DrawPos;
-
-            switch (User.Rotation.AsInt)
-            {
-                case 0:
-                    SouthChild?.SetActive(true);
-                    NorthChild?.SetActive(false);
-                    EastChild?.SetActive(false);
-                    break;
-                case 1:
-                    EastChild?.SetActive(true);
-                    SouthChild?.SetActive(false);
-                    NorthChild?.SetActive(false);
-                    break;
-                case 2:
-                    NorthChild?.SetActive(true);
-                    SouthChild?.SetActive(false);
-                    EastChild?.SetActive(false);
-                    break;
-                case 3:
-                    EastChild?.SetActive(true);
-                    SouthChild?.SetActive(false);
-                    NorthChild?.SetActive(false);
-                    break;
-                default:
-                    Log.Error("ToQuat with Rot = " + User.Rotation.AsInt);
-                    break;
-            }
+            DoTransform();
+            DoAllRotation(User.Rotation);
+        }
+        public virtual void LateUpdate()
+        {
+        }
+        public virtual void OnGUI()
+        {
+        }
+        public virtual void OnDisable()
+        {
+            CanDrawNow = false;
+        }
+        public virtual void OnDestory()
+        {
+            CanDrawNow = false;
         }
     }
 }

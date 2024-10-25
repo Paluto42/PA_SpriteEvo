@@ -95,7 +95,10 @@
   <ItemGroup>
     <Compile Include="PA_SpriteEvo\AssetExtensions.cs" />
     <Compile Include="PA_SpriteEvo\AssetManager.cs" />
+    <Compile Include="PA_SpriteEvo\Defs\PawnKindDef.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\ClickEventComp.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\FxBodyComp.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\FxExtraComp.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\FxHeadComp.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\FxRootComp.cs" />
     <Compile Include="PA_SpriteEvo\Defs\BodyPartsDef.cs" />

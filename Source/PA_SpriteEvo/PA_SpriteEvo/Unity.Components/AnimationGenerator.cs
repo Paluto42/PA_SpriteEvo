@@ -5,19 +5,20 @@ using Verse;
 namespace PA_SpriteEvo.Unity
 {
     /*Root模型结构:
-     *   Fx_Root 为根节点 是空物件，只负责更新坐标和切换旋转方向
+     *   根节点: Fx_Root ，只负责更新坐标和切换旋转方向
      *   {
-     *     Fx_Head 为第一层节点 是空物件 负责切换显示方位,使用HeadControllerComp组件控制下面的节点实现头部动画
+     *     //别问我为什么头和身体分开渲染，泰南也干了
+     *     第一层节点: Fx_Head  负责切换显示方位,使用HeadControllerComp组件控制下面的节点实现头部动画
      *     {
      *       South Head, North Head, East Head为第二层节点 是头部的SkeletonAnimation附件物体
      *       {
-     *         //Attachments
+     *         //Facial Attachments
      *         Front Hair, Back Hair, EyeBow, LeftEye, RightEye, Mouth等面部部件挂在下面,为第三层节点  
      *         
-     *     Fx_Body
+     *     第一层节点: Fx_Body
      *     {
      *     
-     *     Fx_Extra
+     *     第一层节点: Fx_Extra
      *     {
      */
     public static class AnimationGenerator
@@ -56,29 +57,30 @@ namespace PA_SpriteEvo.Unity
             if (t == null) return fx_root;
             //设置子物件
             FxRootComp rootcomp = fx_root.AddComponent<FxRootComp>();
-            rootcomp.SouthChild = fx_root.AddEmptyChild("South");
-            rootcomp.NorthChild = fx_root.AddEmptyChild("North");
-            rootcomp.EastChild = fx_root.AddEmptyChild("East");
             rootcomp.User = t;
             return fx_root;
         }
-        private static GameObject AddFxHead(this GameObject rotchild, SpineAssetPack headpack) 
+        private static GameObject AddFxHead(this GameObject fx_root, SpineAssetPack headpack) 
         {
             if (headpack == null) return null;
-            GameObject fxhead = AssetExtensions.CreateAnimationInstance(headpack, false);
-            fxhead.GetComponent<MeshRenderer>().sortingOrder = 1;
-            fxhead.AddComponent<FxHeadComp>();
-            fxhead.SetParentSafely(rotchild);
-            return fxhead;
+            if (fx_root.GetComponent<FxRootComp>()?.User is Pawn) 
+            {
+                GameObject fxhead = AssetExtensions.CreateAnimationInstance(headpack, false);
+                fxhead.GetComponent<MeshRenderer>().sortingOrder = 1;
+                fxhead.AddComponent<FxHeadComp>();
+                return fxhead;
+            }
+            return null;
         }
-        private static void AddFacialAttachment(this GameObject fxhead, SpineAssetPack pack, int layer = 0) 
+        private static GameObject AddFacialAttachment(this GameObject fxhead, SpineAssetPack pack, int layer = 0) 
         {
-            if (pack == null) return;
+            if (pack == null) return null;
             GameObject attachment = pack.CreateAnimationInstance(loop: false);
             attachment.GetComponent<MeshRenderer>().sortingOrder = layer;
             attachment.transform.SetParent(fxhead.transform);
             attachment.transform.localPosition = Vector3.zero;
             attachment.transform.localRotation = Quaternion.identity;
+            return attachment;
         }
         private static void SetSouthHead(this GameObject fx_head, SpineAssetPack pack, HeadPartsDef headDef) 
         {

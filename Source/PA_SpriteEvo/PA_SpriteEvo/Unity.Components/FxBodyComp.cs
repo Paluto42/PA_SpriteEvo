@@ -1,15 +1,29 @@
-﻿using System;
+﻿using PA_SpriteEvo.Unity;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Verse;
 
-namespace PA_SpriteEvo.Unity
+namespace PA_SpriteEvo
 {
-    //处理动画的点击反馈事件
-    public class ClickEventComp : MonoBehaviour
+    public abstract class FxBodyComp : MonoBehaviour
     {
+        public MonoBehaviour Attachment;
+        public virtual MonoBehaviour GetAttachment()
+        {
+            return null;
+        }
+        public virtual void DoRotation(Rot4 rot)
+        {
+        }
+        public virtual IEnumerator BodyAnimationController()
+        {
+            yield return null;
+        }
         public virtual void Awake()
         {
         }
