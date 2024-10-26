@@ -12,10 +12,12 @@ namespace PA_SpriteEvo
         public virtual void Awake()
         {
         }
+        //物件被激活时调用
         public virtual void OnEnable()
         {
         }
         // Start is called before the first frame update
+        //这玩意只有第一次激活调用 适合拿来初始化对象
         public virtual void Start()
         {
         }
@@ -32,6 +34,7 @@ namespace PA_SpriteEvo
         public virtual void OnGUI()
         {
         }
+        //物件被禁用时调用
         public virtual void OnDisable()
         {
         }

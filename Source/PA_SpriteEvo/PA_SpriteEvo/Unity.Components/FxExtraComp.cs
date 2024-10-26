@@ -11,6 +11,7 @@ namespace PA_SpriteEvo
 {
     public class FxExtraComp : BaseControllerComp
     {
+        //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
         public GameObject SouthChild { get; set; }
         public GameObject NorthChild { get; set; }

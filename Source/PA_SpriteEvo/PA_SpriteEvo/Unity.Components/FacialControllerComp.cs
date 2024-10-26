@@ -10,6 +10,7 @@ namespace PA_SpriteEvo
 {
     public class FacialControllerComp : BaseControllerComp
     {
+        //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
         public GameObject FrontHair { get; set; }
         public GameObject BackHair { get; set; }
@@ -44,13 +45,14 @@ namespace PA_SpriteEvo
             LeftEye?.SetActive(true);
             RightEye?.SetActive(true);
             Mouth?.SetActive(true);
+            StartCoroutine(EyesAnimationCoroutine());
         }
         // Start is called before the first frame update
         public override void Start()
         {
             leftEye_skeletonAnimation = LeftEye?.GetComponent<Spine41.Unity.SkeletonAnimation>();
             rightEye_skeletonAnimation = RightEye?.GetComponent<Spine41.Unity.SkeletonAnimation>();
-            StartCoroutine(EyesAnimationCoroutine());
+            //StartCoroutine(EyesAnimationCoroutine());
         }
         // Update is called once per frame
         public override void Update()
