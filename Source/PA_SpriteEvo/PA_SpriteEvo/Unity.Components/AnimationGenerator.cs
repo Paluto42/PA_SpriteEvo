@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection.Emit;
 using UnityEngine;
 using Verse;
 
@@ -25,122 +26,245 @@ namespace PA_SpriteEvo.Unity
     {
         private static Dictionary<string, SpineAssetPack> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SpineAssetPack> Spine41_DB => AssetManager.spine41_Database;
-        private static Dictionary<string, GameObject> Object_DB => AssetManager.ObjectDatabase;
+        private static Dictionary<Thing, GameObject> ThingObject_DB => AssetManager.ThingObjectDatabase;
 
-        public static void SetAnimationModel(Thing t, string name = null) 
+        private static List<PawnKindSpriteDef> PawnKindDB => DefDatabase<PawnKindSpriteDef>.AllDefsListForReading;
+
+        public static void CreatePawnAnimationModel(Thing t, PawnKindSpriteDef test, string name = null) 
         {
+            GameObject obj = ThingObject_DB.TryGetValue(t);
+            if (obj != null) return;
             Vector3 rot = new Vector3(90f, 0f, 0f);
             GameObject baseroot = Create_FxRootBase(rot, name);
-            GameObject fxroot = baseroot.SetFxRootAtThing(t);
-            Dictionary<string, SpineAssetPack> db;
-            /*if (t is Pawn p)
+            baseroot.SetFxRootAtThing(t);
+            if (t is Pawn p)
             {
-                SpineAssetPack s = db.TryGetValue(apr.n0);
-                fxroot.GetComponent<FxRootComp>().SouthChild.AddFxHead();
-                fxroot.GetComponent<FxRootComp>().NorthChild.AddFxHead();
-                fxroot.GetComponent<FxRootComp>().EastChild.AddFxHead();
-            }*/
+                if (test == null) return;
+                GameObject fxhead = baseroot.AddFxHead();
+                if (test.head.south != null)
+                {
+                    fxhead.SetSouthHead(test);
+                }
+                /*
+                if (test.head.east != null)
+                {
+                    fxhead.SetEastHead(test);
+                }
+                if (test.head.north != null)
+                {
+                    fxhead.SetNorthHead(test);
+                }
+                if (test.head.west != null)
+                {
+                    fxhead.SetWestHead(test);
+                }
+                */
+                //fxroot.AddFxBody();
+            }
+            ThingObject_DB.Add(t, baseroot);
         }
         private static GameObject Create_FxRootBase(Vector3 rotation, string name = null) 
         {
             GameObject root = new GameObject
             {
-                name = "FX_Root" + name
+                name = "FXRoot" + name
             };
             root.transform.rotation = Quaternion.Euler(rotation);
             root.SetActive(false);
             return root;
         }
-        private static GameObject SetFxRootAtThing(this GameObject fx_root, Thing t) 
+        private static void SetFxRootAtThing(this GameObject fx_root, Thing t) 
         {
-            if (fx_root == null) return null;
-            if (t == null) return fx_root;
+            if (fx_root == null || t == null) return;
             //设置子物件
             FxRootComp rootcomp = fx_root.AddComponent<FxRootComp>();
             rootcomp.User = t;
-            return fx_root;
+            return;
         }
-        private static GameObject AddFxHead(this GameObject fx_root, SpineAssetPack headpack) 
+        private static GameObject AddFxHead(this GameObject fx_root) 
         {
-            if (headpack == null) return null;
+            if (fx_root == null) return null;
             if (fx_root.GetComponent<FxRootComp>()?.User is Pawn) 
             {
-                GameObject fxhead = AssetExtensions.CreateAnimationInstance(headpack, false);
-                fxhead.GetComponent<MeshRenderer>().sortingOrder = 1;
-                fxhead.AddComponent<FxHeadComp>();
+                GameObject fxhead = fx_root.AddEmptyChild("FxHead");
+                FxHeadComp headcontroller = fxhead.AddComponent<FxHeadComp>();
+                fx_root.GetComponent<FxRootComp>().FxHeadController = headcontroller;
                 return fxhead;
             }
             return null;
         }
-        private static GameObject AddFacialAttachment(this GameObject fxhead, SpineAssetPack pack, int layer = 0) 
+        private static GameObject AddFxBody(this GameObject fx_root)
         {
+            if (fx_root == null) return null;
+            if (fx_root.GetComponent<FxRootComp>()?.User is Pawn)
+            {
+                GameObject fxbody = fx_root.AddEmptyChild("FxBody");
+                fxbody.AddComponent<FxBodyComp>();
+                return fxbody;
+            }
+            return null;
+        }
+        private static GameObject AddFacialAttachment(this GameObject head, SpineAssetPack pack, int layer = 0) 
+        {
+            if (head == null) return null;
             if (pack == null) return null;
             GameObject attachment = pack.CreateAnimationInstance(loop: false);
             attachment.GetComponent<MeshRenderer>().sortingOrder = layer;
-            attachment.transform.SetParent(fxhead.transform);
-            attachment.transform.localPosition = Vector3.zero;
-            attachment.transform.localRotation = Quaternion.identity;
+            attachment.SetParentSafely(head);
             return attachment;
         }
-        private static void SetSouthHead(this GameObject fx_head, SpineAssetPack pack, HeadPartsDef headDef) 
+        private static GameObject SetSouthHead(this GameObject fx_head, PawnKindSpriteDef def, int headlayer = 1) 
         {
-            if (fx_head == null) return;
-            if (pack == null) return;
+            if (fx_head == null) return null;
+            FacialParts southheadDef = def.head.south;
+            if (southheadDef == null || southheadDef.head == null) return null;
             Dictionary<string, SpineAssetPack> db;
-            if (headDef.version == "4.1") db = Spine41_DB;
+            if (def.version == "4.1") db = Spine41_DB;
             else db = Spine38_DB;
-            if (headDef.frontHair != null)
+            SpineAssetPack head_pack = db.TryGetValue(southheadDef.head.defName);
+            if (head_pack == null) 
             {
-                SpineAssetPack frontHair_Pack = db.TryGetValue(headDef.frontHair.defName);
+                Log.Error("southheadDef.head找不到!");
+                return null;
+            }
+            GameObject south_head = head_pack?.CreateAnimationInstance(loop: false);
+            south_head.GetComponent<MeshRenderer>().sortingOrder = headlayer;
+            south_head.SetParentSafely(fx_head);
+            fx_head.GetComponent<FxHeadComp>().SouthChild = south_head;
+            /*
+            if (southheadDef.frontHair != null)
+            {
+                SpineAssetPack frontHair_Pack = db.TryGetValue(southheadDef.frontHair.defName);
                 fx_head.AddFacialAttachment(frontHair_Pack, layer: 2);
             }
-            if (headDef.backHair != null)
+            if (southheadDef.backHair != null)
             {
-                SpineAssetPack backHair_Pack = db.TryGetValue(headDef.backHair.defName);
+                SpineAssetPack backHair_Pack = db.TryGetValue(southheadDef.backHair.defName);
                 fx_head.AddFacialAttachment(backHair_Pack, layer: 0);
             }
-            if (headDef.eyeBow != null)
+            if (southheadDef.eyeBow != null)
             {
-                SpineAssetPack eyeBow_Pack = db.TryGetValue(headDef.eyeBow.defName);
+                SpineAssetPack eyeBow_Pack = db.TryGetValue(southheadDef.eyeBow.defName);
                 fx_head.AddFacialAttachment(eyeBow_Pack, layer: 3);
             }
-            if (headDef.leftEye != null)
+            if (southheadDef.leftEye != null)
             {
-                SpineAssetPack leftEye_Pack = db.TryGetValue(headDef.leftEye.defName);
+                SpineAssetPack leftEye_Pack = db.TryGetValue(southheadDef.leftEye.defName);
                 fx_head.AddFacialAttachment(leftEye_Pack, layer: 2);
             }
-            if (headDef.rightEye != null)
+            if (southheadDef.rightEye != null)
             {
-                SpineAssetPack rightEye_Pack = db.TryGetValue(headDef.rightEye.defName);
+                SpineAssetPack rightEye_Pack = db.TryGetValue(southheadDef.rightEye.defName);
                 fx_head.AddFacialAttachment(rightEye_Pack, layer: 2);
             }
-            if (headDef.mouth != null)
+            if (southheadDef.mouth != null)
             {
-                SpineAssetPack mouth_Pack = db.TryGetValue(headDef.mouth.defName);
+                SpineAssetPack mouth_Pack = db.TryGetValue(southheadDef.mouth.defName);
+                fx_head.AddFacialAttachment(mouth_Pack, layer: 2);
+            }*/
+            return south_head;
+        }
+        private static GameObject SetEastHead(this GameObject fx_head, PawnKindSpriteDef def, int headlayer = 1)
+        {
+            if (fx_head == null) return null;
+            FacialParts eastheadDef = def.head.east;
+            if (eastheadDef == null || eastheadDef.head == null) return null;
+            Dictionary<string, SpineAssetPack> db;
+            if (def.version == "4.1") db = Spine41_DB;
+            else db = Spine38_DB;
+            SpineAssetPack head_pack = db.TryGetValue(eastheadDef.head.defName);
+            GameObject east_head = head_pack.CreateAnimationInstance(loop: false);
+            east_head.GetComponent<MeshRenderer>().sortingOrder = headlayer;
+            east_head.SetParentSafely(fx_head);
+            if (eastheadDef.frontHair != null)
+            {
+                SpineAssetPack frontHair_Pack = db.TryGetValue(eastheadDef.frontHair.defName);
+                fx_head.AddFacialAttachment(frontHair_Pack, layer: 2);
+            }
+            if (eastheadDef.backHair != null)
+            {
+                SpineAssetPack backHair_Pack = db.TryGetValue(eastheadDef.backHair.defName);
+                fx_head.AddFacialAttachment(backHair_Pack, layer: 0);
+            }
+            if (eastheadDef.eyeBow != null)
+            {
+                SpineAssetPack eyeBow_Pack = db.TryGetValue(eastheadDef.eyeBow.defName);
+                fx_head.AddFacialAttachment(eyeBow_Pack, layer: 3);
+            }
+            if (eastheadDef.rightEye != null)
+            {
+                SpineAssetPack rightEye_Pack = db.TryGetValue(eastheadDef.rightEye.defName);
+                fx_head.AddFacialAttachment(rightEye_Pack, layer: 2);
+            }
+            if (eastheadDef.mouth != null)
+            {
+                SpineAssetPack mouth_Pack = db.TryGetValue(eastheadDef.mouth.defName);
                 fx_head.AddFacialAttachment(mouth_Pack, layer: 2);
             }
+            return east_head;
         }
-        private static void SetEastHead(this GameObject fx_root, Dictionary<string, SpineAssetPack> db, HeadPartsDef headDef)
+        private static GameObject SetNorthHead(this GameObject fx_head, PawnKindSpriteDef def, int headlayer = 1)
         {
-
+            if (fx_head == null) return null;
+            FacialParts northheadDef = def.head.north;
+            if (northheadDef == null || northheadDef.head == null) return null;
+            Dictionary<string, SpineAssetPack> db;
+            if (def.version == "4.1") db = Spine41_DB;
+            else db = Spine38_DB;
+            SpineAssetPack head_Pack = db.TryGetValue(northheadDef.head.defName);
+            GameObject north_head = AssetExtensions.CreateAnimationInstance(head_Pack, false);
+            north_head.GetComponent<MeshRenderer>().sortingOrder = headlayer;
+            north_head.SetParentSafely(fx_head);
+            if (northheadDef.frontHair != null)
+            {
+                SpineAssetPack frontHair_Pack = db.TryGetValue(northheadDef.frontHair.defName);
+                fx_head.AddFacialAttachment(frontHair_Pack, layer: 2);
+            }
+            if (northheadDef.backHair != null)
+            {
+                SpineAssetPack backHair_Pack = db.TryGetValue(northheadDef.backHair.defName);
+                fx_head.AddFacialAttachment(backHair_Pack, layer: 0);
+            }
+            return north_head;
         }
-        private static void SetNorthHead(this GameObject fx_root, Dictionary<string, SpineAssetPack> db, HeadPartsDef headDef)
+        private static GameObject SetWestHead(this GameObject fx_head, PawnKindSpriteDef def, int headlayer = 1)
         {
-            SpineAssetPack head_Pack = db.TryGetValue(headDef.head.defName);
-            GameObject head = AssetExtensions.CreateAnimationInstance(head_Pack, false);
-            head.transform.SetParent(fx_root.transform);
-            if (headDef.frontHair != null)
+            if (fx_head == null) return null;
+            FacialParts westheadDef = def.head.east;
+            if (westheadDef == null || westheadDef.head == null) return null;
+            Dictionary<string, SpineAssetPack> db;
+            if (def.version == "4.1") db = Spine41_DB;
+            else db = Spine38_DB;
+            SpineAssetPack head_pack = db.TryGetValue(westheadDef.head.defName);
+            GameObject west_head = head_pack.CreateAnimationInstance(loop: false);
+            west_head.GetComponent<MeshRenderer>().sortingOrder = headlayer;
+            west_head.SetParentSafely(fx_head);
+            if (westheadDef.frontHair != null)
             {
-                SpineAssetPack frontHair_Pack = db.TryGetValue(headDef.frontHair.defName);
-                GameObject frontHair = AssetExtensions.CreateAnimationInstance(frontHair_Pack, false);
-                frontHair.transform.SetParent(head.transform);
+                SpineAssetPack frontHair_Pack = db.TryGetValue(westheadDef.frontHair.defName);
+                fx_head.AddFacialAttachment(frontHair_Pack, layer: 2);
             }
-            if (headDef.backHair != null)
+            if (westheadDef.backHair != null)
             {
-                SpineAssetPack backHair_Pack = db.TryGetValue(headDef.backHair.defName);
-                GameObject backHair = AssetExtensions.CreateAnimationInstance(backHair_Pack, false);
-                backHair.transform.SetParent(head.transform);
+                SpineAssetPack backHair_Pack = db.TryGetValue(westheadDef.backHair.defName);
+                fx_head.AddFacialAttachment(backHair_Pack, layer: 0);
             }
+            if (westheadDef.eyeBow != null)
+            {
+                SpineAssetPack eyeBow_Pack = db.TryGetValue(westheadDef.eyeBow.defName);
+                fx_head.AddFacialAttachment(eyeBow_Pack, layer: 3);
+            }
+            if (westheadDef.leftEye != null)
+            {
+                SpineAssetPack rightEye_Pack = db.TryGetValue(westheadDef.rightEye.defName);
+                fx_head.AddFacialAttachment(rightEye_Pack, layer: 2);
+            }
+            if (westheadDef.mouth != null)
+            {
+                SpineAssetPack mouth_Pack = db.TryGetValue(westheadDef.mouth.defName);
+                fx_head.AddFacialAttachment(mouth_Pack, layer: 2);
+            }
+            return west_head;
         }
     }
 }

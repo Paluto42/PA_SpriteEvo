@@ -9,20 +9,18 @@ namespace PA_SpriteEvo.Unity
     public class FxHeadComp : MonoBehaviour
     {
         #region Inspector
-        public bool CanDrawNow = false;
+        public GameObject SouthChild { get; set; }
+        public GameObject NorthChild { get; set; }
+        public GameObject WestChild { get; set; }
+        public GameObject EastChild { get; set; }
 
         public string version = "3.8";
         #endregion
-        bool HaveAllRotNode = false;
-
-        FxRootComp Comp_FxRoot;
-        Pawn Caster => (Pawn)Comp_FxRoot.User;
+        public bool CanDrawNow => Current.ProgramState == ProgramState.Playing;
+        FxRootComp Comp_FxRoot { get; set; }
+        Pawn User => (Pawn)Comp_FxRoot.User;
 
         public MonoBehaviour Attachment;
-
-        public GameObject SouthChild;
-        public GameObject NorthChild;
-        public GameObject EastChild;
 
         //组件被添加后立刻获取根节点FxRoot组件对象
         public virtual MonoBehaviour GetAttachment() 
@@ -37,23 +35,31 @@ namespace PA_SpriteEvo.Unity
         {
             switch (rot.AsInt)
             {
+                //后
                 case 0:
-                    SouthChild?.SetActive(true);
-                    NorthChild?.SetActive(false);
-                    EastChild?.SetActive(false);
-                    break;
-                case 1:
-                    EastChild?.SetActive(true);
-                    SouthChild?.SetActive(false);
-                    NorthChild?.SetActive(false);
-                    break;
-                case 2:
                     NorthChild?.SetActive(true);
                     SouthChild?.SetActive(false);
+                    WestChild.SetActive(false);
                     EastChild?.SetActive(false);
                     break;
-                case 3:
+                //右
+                case 1:
                     EastChild?.SetActive(true);
+                    WestChild?.SetActive(false);
+                    SouthChild?.SetActive(false);
+                    NorthChild?.SetActive(false);
+                    break;
+                //前
+                case 2:
+                    SouthChild?.SetActive(true);
+                    NorthChild?.SetActive(false);
+                    WestChild.SetActive(false);
+                    EastChild?.SetActive(false);
+                    break;
+                //左
+                case 3:
+                    WestChild?.SetActive(true);
+                    EastChild?.SetActive(false);
                     SouthChild?.SetActive(false);
                     NorthChild?.SetActive(false);
                     break;
@@ -64,16 +70,15 @@ namespace PA_SpriteEvo.Unity
         }
         public virtual void Awake()
         {
-            Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
+            //Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
         }
         public virtual void OnEnable()
         {
-            CanDrawNow = true;
         }
         //Once预渲染操作
         public virtual void Start()
         {
-            CanDrawNow = Current.ProgramState == ProgramState.Playing;
+            Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
         }
         public virtual void FixedUpdate()
         {
@@ -81,8 +86,8 @@ namespace PA_SpriteEvo.Unity
         public virtual void Update()
         {
             if (!CanDrawNow) return;
-            if (!HaveAllRotNode) return;
-            if (Caster == null) return;
+            if (User == null) return;
+            DoRotation(User.Rotation);
         }
         public virtual void LateUpdate()
         {
@@ -92,11 +97,13 @@ namespace PA_SpriteEvo.Unity
         }
         public virtual void OnDisable()
         {
-            CanDrawNow = false;
+            SouthChild?.SetActive(false);
+            NorthChild?.SetActive(false);
+            WestChild?.SetActive(false);
+            EastChild?.SetActive(false);
         }
         public virtual void OnDestory()
         {
-            CanDrawNow = false;
         }
     }
 }

@@ -12,6 +12,13 @@ namespace PA_SpriteEvo
 {
     public abstract class FxBodyComp : MonoBehaviour
     {
+        #region Inspector
+        public GameObject SouthChild { get; set; }
+        public GameObject NorthChild { get; set; }
+        public GameObject WestChild { get; set; }
+        public GameObject EastChild { get; set; }
+        #endregion
+
         public MonoBehaviour Attachment;
         public virtual MonoBehaviour GetAttachment()
         {

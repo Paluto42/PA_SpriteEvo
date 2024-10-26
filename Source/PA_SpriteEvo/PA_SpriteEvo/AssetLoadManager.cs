@@ -68,6 +68,11 @@ namespace PA_SpriteEvo
             List<SpinePackDef> packs = DefDatabase<SpinePackDef>.AllDefsListForReading;
             foreach (SpinePackDef def in packs)
             {
+                if (def.props.version == null)
+                {
+                    Log.Message($"PA.SpineFramework: Null Spine Version in {def.defName} ，Skip Load");
+                    continue;
+                }
                 TextAsset atlasAsset;
                 TextAsset skeletonAsset;
                 Material[] materials = null;

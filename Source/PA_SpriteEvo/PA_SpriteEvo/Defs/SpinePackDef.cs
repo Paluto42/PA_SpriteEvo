@@ -11,7 +11,7 @@ namespace PA_SpriteEvo
     }
     public class Properties_SpinePack
     {
-        public string version = "3.8";
+        public string version;
 
         public string atlas;
 
@@ -24,6 +24,14 @@ namespace PA_SpriteEvo
         public List<string> materials = new List<string>();
 
         public bool StraightAlphaInput = false;
+
+        public string skin = "default";
+
+        public string idleAnimationName = "Idle";
+
+        public string interactAnimationName = "Interact";
+
+        public string specialAnimationName = "Special";
     }
     public class SpinePackDef : Def
     {
@@ -42,14 +50,6 @@ namespace PA_SpriteEvo
         public Vector2 scale = new Vector2(1f, 1f);
 
         public Vector3 rotation = Vector3.zero;
-
-        public string skin = "default";
-
-        public string idleAnimationName = "Idle";
-
-        public string interactAnimationName = "Interact";
-
-        public string specialAnimationName = "Special";
 
         public Properties_SpinePack props = new Properties_SpinePack();
     }

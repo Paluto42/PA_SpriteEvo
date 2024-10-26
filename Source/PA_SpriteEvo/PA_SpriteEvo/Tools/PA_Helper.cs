@@ -14,7 +14,7 @@ namespace PA_SpriteEvo
             GameObject instance = new GameObject(name);
             instance.transform.SetParent(parent.transform);
             instance.transform.localPosition = Vector3.zero;
-            instance.transform.rotation = Quaternion.identity;
+            instance.transform.localRotation = Quaternion.identity;
             return instance;
         }
         internal static void SetParentSafely(this GameObject child, GameObject parent) 
@@ -22,6 +22,13 @@ namespace PA_SpriteEvo
             child.transform.SetParent(parent.transform);
             child.transform.localPosition = Vector3.zero;
             child.transform.localRotation = Quaternion.identity;
+        }
+        internal static void DestoryInNextFrame(this GameObject obj) 
+        {
+            if (obj != null) 
+            {
+                GameObject.Destroy(obj);
+            }
         }
     }
 }

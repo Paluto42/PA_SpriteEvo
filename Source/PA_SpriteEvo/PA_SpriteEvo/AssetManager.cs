@@ -15,6 +15,8 @@ namespace PA_SpriteEvo
 
         public static Dictionary<string, GameObject> ObjectDatabase = new Dictionary<string, GameObject>();
 
+        public static Dictionary<Thing, GameObject> ThingObjectDatabase = new Dictionary<Thing, GameObject>();
+
         public static Dictionary<string, SpineAssetPack> spine38_Database = new Dictionary<string, SpineAssetPack>();
 
         public static Dictionary<string, SpineAssetPack> spine41_Database = new Dictionary<string, SpineAssetPack>();

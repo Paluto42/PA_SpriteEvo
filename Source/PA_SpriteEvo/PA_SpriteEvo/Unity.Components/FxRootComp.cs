@@ -8,32 +8,24 @@ namespace PA_SpriteEvo.Unity
     {
         #region Inspector
         public Thing User { get; set; }
-
-        #endregion
-        public bool CanDrawNow = false;
-        GameObject Root => base.gameObject;
-        //
         //不建议使用一切与Find有关的方法获取它们，而是加上组件后直接用SetChildren设置
-        public FxHeadComp FxHeadChild { get; set; }
-        public FxBodyComp FxBodyChild { get; set; }
-        public FxExtraComp FxExtraChild { get; set; }
+        public FxHeadComp FxHeadController { get; set; }
+        public FxBodyComp FxBodyController { get; set; }
+        public FxExtraComp FxExtraController { get; set; }
+        #endregion
+        public bool CanDrawNow => Current.ProgramState == ProgramState.Playing;
+        GameObject Root => base.gameObject;
+        GameObject FxHeadChild => FxHeadController?.gameObject;
+        GameObject FxBodyChild => FxBodyController?.gameObject;
+        GameObject FxExtraChild => FxExtraController?.gameObject;
 
-        //public GameObject SouthChild;
-        //public GameObject NorthChild;
-        //public GameObject EastChild;
-        public void SetChildren(FxHeadComp h, FxBodyComp b, FxExtraComp e = null)
+        public virtual void DoRotation(Rot4 rot)
         {
-            this.FxHeadChild = h;
-            this.FxBodyChild = b;
-            this.FxExtraChild = e;
+            FxHeadController?.DoRotation(rot);
+            FxBodyController?.DoRotation(rot);
+            FxExtraController?.DoRotation(rot);
         }
-        public virtual void DoAllRotation(Rot4 rot)
-        {
-            FxHeadChild.DoRotation(rot);
-            FxBodyChild?.DoRotation(rot);
-            FxExtraChild.DoRotation(rot);
-        }
-        public virtual void DoTransform()
+        public virtual void DoMove()
         {
             if (Root == null || User == null) return;
             Root.transform.position = User.DrawPos;
@@ -43,14 +35,9 @@ namespace PA_SpriteEvo.Unity
         }
         public virtual void OnEnable()
         {
-            CanDrawNow = true;
         }
         public virtual void Start()
         {
-            CanDrawNow = Current.ProgramState == ProgramState.Playing;
-            FxHeadChild?.gameObject?.SetActive(true);
-            FxBodyChild?.gameObject?.SetActive(true);
-            FxExtraChild?.gameObject?.SetActive(true);
         }
         public virtual void FixedUpdate()
         {
@@ -59,9 +46,11 @@ namespace PA_SpriteEvo.Unity
         {
             if (!CanDrawNow) return;
             if (User == null) return;
-
-            DoTransform();
-            DoAllRotation(User.Rotation);
+            FxHeadChild?.SetActive(true);
+            FxBodyChild?.SetActive(true);
+            FxExtraChild?.SetActive(true);
+            DoMove();
+            DoRotation(User.Rotation);
         }
         public virtual void LateUpdate()
         {
@@ -71,11 +60,12 @@ namespace PA_SpriteEvo.Unity
         }
         public virtual void OnDisable()
         {
-            CanDrawNow = false;
+            FxHeadChild?.SetActive(false);
+            FxBodyChild?.SetActive(false);
+            FxExtraChild?.SetActive(false);
         }
         public virtual void OnDestory()
         {
-            CanDrawNow = false;
         }
     }
 }

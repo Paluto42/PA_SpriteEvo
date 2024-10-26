@@ -7,7 +7,6 @@ using System;
 
 namespace PA_SpriteEvo
 {
-    [StaticConstructorOnStartup]
     public static class AssetExtensions
     {
         public static bool Is_StraightAlphaTexture = false;
@@ -135,9 +134,9 @@ namespace PA_SpriteEvo
                 animation.gameObject.layer = 5;
                 animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
                 animation.transform.localScale = scale;
-                animation.skeleton.SetSkin(pack.def.skin); ;
+                animation.skeleton.SetSkin(pack.def.props.skin); ;
                 //TrackEntry 
-                animation.AnimationState.SetAnimation(0, pack.def.idleAnimationName, loop);
+                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, loop);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 //添加Camera
@@ -170,9 +169,9 @@ namespace PA_SpriteEvo
                 animation.gameObject.layer = 5;
                 animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
                 animation.transform.localScale = scale;
-                animation.skeleton.SetSkin(pack.def.skin); ;
+                animation.skeleton.SetSkin(pack.def.props.skin); ;
                 //TrackEntry 
-                animation.AnimationState.SetAnimation(0, pack.def.idleAnimationName, loop);
+                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, loop);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 //添加Camera
@@ -219,9 +218,9 @@ namespace PA_SpriteEvo
                 animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
                 //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
                 animation.transform.localScale = scale;
-                animation.skeleton.SetSkin(pack.def.skin); ;
+                animation.skeleton.SetSkin(pack.def.props.skin);
                 //TrackEntry 
-                animation.AnimationState.SetAnimation(0, pack.def.idleAnimationName, loop);
+                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, loop);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
@@ -240,7 +239,7 @@ namespace PA_SpriteEvo
                 animation.transform.localScale = scale;
                 //newObject.skeleton.SetSkin();
                 //TrackEntry 
-                animation.AnimationState.SetAnimation(0, "Idle", loop);
+                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, loop);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
