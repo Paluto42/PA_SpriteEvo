@@ -6,7 +6,7 @@ using Verse;
 namespace PA_SpriteEvo.Unity
 {
     //切记切记 一旦FxHeadComp组件被添加，就会自动获取上级FxRoot节点
-    public class FxHeadComp : MonoBehaviour
+    public class FxHeadComp : BaseControllerComp
     {
         #region Inspector
         public GameObject SouthChild { get; set; }
@@ -39,7 +39,7 @@ namespace PA_SpriteEvo.Unity
                 case 0:
                     NorthChild?.SetActive(true);
                     SouthChild?.SetActive(false);
-                    WestChild.SetActive(false);
+                    WestChild?.SetActive(false);
                     EastChild?.SetActive(false);
                     break;
                 //右
@@ -53,7 +53,7 @@ namespace PA_SpriteEvo.Unity
                 case 2:
                     SouthChild?.SetActive(true);
                     NorthChild?.SetActive(false);
-                    WestChild.SetActive(false);
+                    WestChild?.SetActive(false);
                     EastChild?.SetActive(false);
                     break;
                 //左
@@ -68,41 +68,42 @@ namespace PA_SpriteEvo.Unity
                     break;
             }
         }
-        public virtual void Awake()
+        public override void Awake()
         {
             //Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
         }
-        public virtual void OnEnable()
+        public override void OnEnable()
         {
         }
-        //Once预渲染操作
-        public virtual void Start()
+        // Start is called before the first frame update
+        public override void Start()
         {
             Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
         }
-        public virtual void FixedUpdate()
+        public override void FixedUpdate()
         {
         }
-        public virtual void Update()
+        // Update is called once per frame
+        public override void Update()
         {
             if (!CanDrawNow) return;
             if (User == null) return;
-            DoRotation(User.Rotation);
+            //DoRotation(User.Rotation);
         }
-        public virtual void LateUpdate()
+        public override void LateUpdate()
         {
         }
-        public virtual void OnGUI()
+        public override void OnGUI()
         {
         }
-        public virtual void OnDisable()
+        public override void OnDisable()
         {
             SouthChild?.SetActive(false);
             NorthChild?.SetActive(false);
             WestChild?.SetActive(false);
             EastChild?.SetActive(false);
         }
-        public virtual void OnDestory()
+        public override void OnDestory()
         {
         }
     }

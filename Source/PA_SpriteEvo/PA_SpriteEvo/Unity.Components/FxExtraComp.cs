@@ -9,7 +9,7 @@ using Verse;
 
 namespace PA_SpriteEvo
 {
-    public class FxExtraComp : MonoBehaviour
+    public class FxExtraComp : BaseControllerComp
     {
         #region Inspector
         public GameObject SouthChild { get; set; }
@@ -32,31 +32,33 @@ namespace PA_SpriteEvo
         {
             yield return null;
         }
-        public virtual void Awake()
+        public override void Awake()
         {
         }
-        public virtual void OnEnable()
+        public override void OnEnable()
         {
         }
-        public virtual void Start()
+        // Start is called before the first frame update
+        public override void Start()
         {
         }
-        public virtual void FixedUpdate()
+        public override void FixedUpdate()
         {
         }
-        public virtual void Update()
+        // Update is called once per frame
+        public override void Update()
         {
         }
-        public virtual void LateUpdate() 
+        public override void LateUpdate() 
         {
         }
-        public virtual void OnGUI()
+        public override void OnGUI()
         {
         }
-        public virtual void OnDisable()
+        public override void OnDisable()
         {
         }
-        public virtual void OnDestory()
+        public override void OnDestory()
         {
         }
     }

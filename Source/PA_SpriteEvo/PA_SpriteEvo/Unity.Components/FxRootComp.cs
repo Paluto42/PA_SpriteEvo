@@ -4,7 +4,7 @@ using Verse;
 namespace PA_SpriteEvo.Unity
 {
     //控制坐标更新和旋转方向的Root物件
-    public class FxRootComp : MonoBehaviour
+    public class FxRootComp : BaseControllerComp
     {
         #region Inspector
         public Thing User { get; set; }
@@ -30,41 +30,43 @@ namespace PA_SpriteEvo.Unity
             if (Root == null || User == null) return;
             Root.transform.position = User.DrawPos;
         }
-        public virtual void Awake()
+        public override void Awake()
         {
         }
-        public virtual void OnEnable()
+        public override void OnEnable()
         {
-        }
-        public virtual void Start()
-        {
-        }
-        public virtual void FixedUpdate()
-        {
-        }
-        public virtual void Update()
-        {
-            if (!CanDrawNow) return;
-            if (User == null) return;
             FxHeadChild?.SetActive(true);
             FxBodyChild?.SetActive(true);
             FxExtraChild?.SetActive(true);
+        }
+        // Start is called before the first frame update
+        public override void Start()
+        {
+        }
+        public override void FixedUpdate()
+        {
+        }
+        // Update is called once per frame
+        public override void Update()
+        {
+            if (!CanDrawNow) return;
+            if (User == null) return;
             DoMove();
             DoRotation(User.Rotation);
         }
-        public virtual void LateUpdate()
+        public override void LateUpdate()
         {
         }
-        public virtual void OnGUI()
+        public override void OnGUI()
         {
         }
-        public virtual void OnDisable()
+        public override void OnDisable()
         {
             FxHeadChild?.SetActive(false);
             FxBodyChild?.SetActive(false);
             FxExtraChild?.SetActive(false);
         }
-        public virtual void OnDestory()
+        public override void OnDestory()
         {
         }
     }
