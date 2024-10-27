@@ -10,27 +10,34 @@ namespace PA_SpriteEvo.Unity
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
+        public string version = "3.8";
+        public bool IsFilpX = false;
         public GameObject SouthChild { get; set; }
         public GameObject NorthChild { get; set; }
         public GameObject WestChild { get; set; }
         public GameObject EastChild { get; set; }
-
-        public string version = "3.8";
         #endregion
         public bool CanDrawNow => Current.ProgramState == ProgramState.Playing;
-        FxRootComp Comp_FxRoot { get; set; }
+        private FxRootComp Comp_FxRoot { get; set; }
+        private FacialControllerComp SouthControllerComp { get; set; }
+        private FacialControllerComp EastControllerComp { get; set; }
+        private FacialControllerComp NorthControllerComp { get; set; }
+        private FacialControllerComp WestControllerComp { get; set; }
         Pawn User => (Pawn)Comp_FxRoot.User;
 
-        public MonoBehaviour Attachment;
-
-        //组件被添加后立刻获取根节点FxRoot组件对象
-        public virtual MonoBehaviour GetAttachment() 
-        {
-            return null;
-        }
         public virtual IEnumerator HeadAnimationController()
         {
             yield return null;
+        }
+        public virtual void DoBlink() 
+        {
+        }
+        public virtual void DoFilpX(bool IsFlip) 
+        {
+            //第一种方法全部手动FlipX
+            //EastControllerComp?.DoFlipX(IsFlip);
+            //第二种方法 直接Transform旋转180 我感觉这个更靠谱
+            gameObject.transform.localRotation = IsFlip ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
         }
         public virtual void DoRotation(Rot4 rot) 
         {
@@ -46,6 +53,7 @@ namespace PA_SpriteEvo.Unity
                 //右
                 case 1:
                     EastChild?.SetActive(true);
+                    DoFilpX(false);
                     WestChild?.SetActive(false);
                     SouthChild?.SetActive(false);
                     NorthChild?.SetActive(false);
@@ -59,8 +67,16 @@ namespace PA_SpriteEvo.Unity
                     break;
                 //左
                 case 3:
-                    WestChild?.SetActive(true);
-                    EastChild?.SetActive(false);
+                    if (WestChild == null)
+                    {
+                        EastChild?.SetActive(true);
+                        DoFilpX(true);
+                    }
+                    else
+                    {
+                        WestChild?.SetActive(true);
+                        EastChild?.SetActive(false);
+                    }
                     SouthChild?.SetActive(false);
                     NorthChild?.SetActive(false);
                     break;
@@ -69,6 +85,7 @@ namespace PA_SpriteEvo.Unity
                     break;
             }
         }
+        //组件被添加后立刻获取根节点FxRoot组件对象
         public override void Awake()
         {
             //Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
@@ -80,6 +97,10 @@ namespace PA_SpriteEvo.Unity
         public override void Start()
         {
             Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
+            SouthControllerComp = SouthChild?.GetComponent<FacialControllerComp>();
+            EastControllerComp = EastChild?.GetComponent<FacialControllerComp>();
+            NorthControllerComp = NorthChild?.GetComponent<FacialControllerComp>();
+            WestControllerComp = WestChild?.GetComponent<FacialControllerComp>();
         }
         public override void FixedUpdate()
         {
@@ -89,7 +110,7 @@ namespace PA_SpriteEvo.Unity
         {
             if (!CanDrawNow) return;
             if (User == null) return;
-            //DoRotation(User.Rotation);
+            DoRotation(User.Rotation);
         }
         public override void LateUpdate()
         {

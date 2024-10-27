@@ -20,12 +20,12 @@ namespace PA_SpriteEvo.Unity
         GameObject FxBodyChild => FxBodyController?.gameObject;
         GameObject FxExtraChild => FxExtraController?.gameObject;
 
-        public virtual void DoRotation(Rot4 rot)
+        /*public virtual void DoRotation(Rot4 rot)
         {
             FxHeadController?.DoRotation(rot);
             FxBodyController?.DoRotation(rot);
             FxExtraController?.DoRotation(rot);
-        }
+        }*/
         public virtual void DoMove()
         {
             if (Root == null || User == null) return;
@@ -53,7 +53,6 @@ namespace PA_SpriteEvo.Unity
             if (!CanDrawNow) return;
             if (User == null) return;
             DoMove();
-            DoRotation(User.Rotation);
         }
         public override void LateUpdate()
         {

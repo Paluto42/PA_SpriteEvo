@@ -9,6 +9,11 @@ namespace PA_SpriteEvo
 {
     internal static class PA_Helper
     {
+        internal static void SetScaleX(this Spine41.Skeleton skeleton, float x)
+        {
+            if (x == 1f || x == -1f)
+            skeleton.ScaleX = x;
+        }
         internal static GameObject AddEmptyChild(this GameObject parent, string name)
         {
             GameObject instance = new GameObject(name);

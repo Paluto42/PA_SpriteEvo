@@ -97,6 +97,7 @@
     <Compile Include="PA_SpriteEvo\AssetManager.cs" />
     <Compile Include="PA_SpriteEvo\Defs\PawnKindSpriteDef.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\BaseControllerComp.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\BodyControllerComp.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\ClickEventComp.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\FacialControllerComp.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\FxBodyComp.cs" />

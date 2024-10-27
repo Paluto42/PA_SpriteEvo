@@ -196,7 +196,7 @@ namespace PA_SpriteEvo
         }
         ///<summary>创建一个SkeletonAnimation实例对象并进行初始化</summary>
         ///
-        internal static GameObject CreateAnimationInstance (this SpineAssetPack pack, bool loop = true)
+        internal static GameObject CreateAnimationInstance (this SpineAssetPack pack, string animationName = null, bool Isloop = true)
         {
             if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
@@ -220,7 +220,11 @@ namespace PA_SpriteEvo
                 animation.transform.localScale = scale;
                 animation.skeleton.SetSkin(pack.def.props.skin);
                 //TrackEntry 
-                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, loop);
+                if (animationName == null)
+                {
+                    animationName = pack.def.props.idleAnimationName;
+                }
+                animation.AnimationState.SetAnimation(0, animationName, Isloop);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
@@ -239,7 +243,7 @@ namespace PA_SpriteEvo
                 animation.transform.localScale = scale;
                 //newObject.skeleton.SetSkin();
                 //TrackEntry 
-                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, loop);
+                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, Isloop);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);

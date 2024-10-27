@@ -1,48 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Verse;
-using static PA_SpriteEvo.PawnKindSpriteDef;
 
 namespace PA_SpriteEvo
 {
-    public class FacialParts
+    public enum AttachmentTag 
     {
-        public SpinePackDef head;
-        //Node childrens 前发,后发,眉毛,左眼,右眼,嘴巴
-        public SpinePackDef frontHair;
-        public SpinePackDef backHair;
-        public SpinePackDef eyeBow;
-        public SpinePackDef leftEye;
-        public SpinePackDef rightEye;
-        public SpinePackDef mouth;
+        None = 0,
+        FrontHair = 1,
+        BackHair = 2,
+        EyeBow = 3,
+        LeftEye = 4,
+        RightEye = 5,
+        Mouth = 6,
+        FrontClothes = 7,
+        BackClothes = 8
     }
-    public class BodyParts
+    public class Attachment 
     {
-        public SpinePackDef body;
+        public SpinePackDef attachment;
+        public AttachmentTag tag = AttachmentTag.None;
+        public int layer = 0;
+    } 
+    public class ParentWithAttachment
+    {
+        public SpinePackDef parent;
+        public List<Attachment> attachments = new List<Attachment>();
     }
-    public class Head
+    public class VWH_Model
     {
-        public FacialParts south;
-        public FacialParts north;
-        public FacialParts west;
-        public FacialParts east;
-    }
-    public class Body
-    {
-        public BodyParts south;
-        public BodyParts north;
-        public BodyParts west;
-        public BodyParts east;
+        public ParentWithAttachment south;
+        public ParentWithAttachment north;
+        public ParentWithAttachment west;
+        public ParentWithAttachment east;
     }
     public class PawnKindSpriteDef : Def
     {
         public string version = "4.1";
 
-        public Head head;
+        public VWH_Model head;
 
-        public Body body;
+        public VWH_Model body;
     }
 }

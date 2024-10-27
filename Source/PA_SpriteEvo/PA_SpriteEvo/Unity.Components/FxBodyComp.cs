@@ -10,7 +10,8 @@ using Verse;
 
 namespace PA_SpriteEvo
 {
-    public abstract class FxBodyComp : BaseControllerComp
+    //绑在身上的身体控件
+    public class FxBodyComp : BaseControllerComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -19,14 +20,59 @@ namespace PA_SpriteEvo
         public GameObject WestChild { get; set; }
         public GameObject EastChild { get; set; }
         #endregion
+        public bool CanDrawNow => Current.ProgramState == ProgramState.Playing;
+        private FxRootComp Comp_FxRoot { get; set; }
+        Pawn User => (Pawn)Comp_FxRoot.User;
 
-        public MonoBehaviour Attachment;
-        public virtual MonoBehaviour GetAttachment()
+        public virtual void DoFilpX(bool IsFlip)
         {
-            return null;
+            gameObject.transform.localRotation = IsFlip ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
         }
         public virtual void DoRotation(Rot4 rot)
         {
+            switch (rot.AsInt)
+            {
+                //后
+                case 0:
+                    NorthChild?.SetActive(true);
+                    SouthChild?.SetActive(false);
+                    WestChild?.SetActive(false);
+                    EastChild?.SetActive(false);
+                    break;
+                //右
+                case 1:
+                    EastChild?.SetActive(true);
+                    DoFilpX(false);
+                    WestChild?.SetActive(false);
+                    SouthChild?.SetActive(false);
+                    NorthChild?.SetActive(false);
+                    break;
+                //前
+                case 2:
+                    SouthChild?.SetActive(true);
+                    NorthChild?.SetActive(false);
+                    WestChild?.SetActive(false);
+                    EastChild?.SetActive(false);
+                    break;
+                //左
+                case 3:
+                    if (WestChild == null)
+                    {
+                        EastChild?.SetActive(true);
+                        DoFilpX(true);
+                    }
+                    else
+                    {
+                        WestChild?.SetActive(true);
+                        EastChild?.SetActive(false);
+                    }
+                    SouthChild?.SetActive(false);
+                    NorthChild?.SetActive(false);
+                    break;
+                default:
+                    Log.Error("ToQuat with Rot = " + rot.AsInt);
+                    break;
+            }
         }
         public virtual IEnumerator BodyAnimationController()
         {
@@ -41,6 +87,7 @@ namespace PA_SpriteEvo
         // Start is called before the first frame update
         public override void Start()
         {
+            Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
         }
         public override void FixedUpdate()
         {
@@ -48,6 +95,9 @@ namespace PA_SpriteEvo
         // Update is called once per frame
         public override void Update()
         {
+            if (!CanDrawNow) return;
+            if (User == null) return;
+            DoRotation(User.Rotation);
         }
         public override void LateUpdate()
         {
@@ -57,6 +107,10 @@ namespace PA_SpriteEvo
         }
         public override void OnDisable()
         {
+            SouthChild?.SetActive(false);
+            NorthChild?.SetActive(false);
+            WestChild?.SetActive(false);
+            EastChild?.SetActive(false);
         }
         public override void OnDestory()
         {
