@@ -77,7 +77,7 @@ namespace PA_SpriteEvo
             GameObject obj = AssetManager.ObjectDatabase.TryGetValue(pack.def.defName);
             if (obj == null)
             {
-                pack.Create_AnimationTextureInstance();
+                pack.Create_AnimationTextureInstanceExclusively();
             }
             if (obj != null)
             {
@@ -113,7 +113,7 @@ namespace PA_SpriteEvo
             }
             if (obj != null)
             {
-                obj?.SetActive(pawn.Drafted || pawn.Downed);
+                obj?.SetActive(!pawn.Downed || !pawn.Dead);
             }
         }
         [HarmonyPrefix]

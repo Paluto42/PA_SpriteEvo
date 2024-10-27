@@ -113,16 +113,30 @@ namespace PA_SpriteEvo
             }
             return skeleton;
         }
-       
-        ///<summary>创建一个用于输出RenderTexture的SkeletonAnimation实例对象并进行初始化</summary>
-        internal static void Create_AnimationTextureInstance(this SpineAssetPack pack, bool loop = true)
+        ///<summary>(具有全局唯一性地)初始化创建一个用于输出RenderTexture的SkeletonAnimation实例对象后返回该运行时实例</summary>
+        internal static GameObject Create_AnimationTextureInstanceExclusively(this SpineAssetPack pack, bool loop = true) 
         {
+            if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
             if (obj != null)
             {
-                Log.Error("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
-                return;
+                Log.Warning("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
+                return null;
             }
+            GameObject instance = Create_AnimationTextureInstance(pack, loop);
+            DynamicObjectDatabase.Add(pack.def.defName, instance);
+            return instance;
+        }
+        ///<summary>创建一个用于输出RenderTexture的SkeletonAnimation实例对象并进行初始化</summary>
+        public static GameObject Create_AnimationTextureInstance(this SpineAssetPack pack, bool loop = true)
+        {
+            if (pack == null) return null;
+            /*GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
+            if (obj != null)
+            {
+                Log.Error("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
+                return null;
+            }*/
             Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, pack.def.scale.y * 0.1f, 1f);
             string version = pack.def.props.version;
             if (version == "3.8")
@@ -158,7 +172,8 @@ namespace PA_SpriteEvo
                 cam.depth = Current.Camera.depth - 1f;
                 cam.targetTexture = new RenderTexture(1024, 1024, 32, RenderTextureFormat.ARGB32, 0);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
-                DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
+                //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
+                return animation.gameObject;
             }
             else if (version == "4.1")
             {
@@ -191,20 +206,35 @@ namespace PA_SpriteEvo
                 cam.depth = Current.Camera.depth - 1f;
                 cam.targetTexture = new RenderTexture(1000, 1000, 32, RenderTextureFormat.ARGB32, 0);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
-                DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
+                //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
+                return animation.gameObject;
             }
+            return null;
         }
-        ///<summary>创建一个SkeletonAnimation实例对象并进行初始化</summary>
-        ///
-        internal static GameObject CreateAnimationInstance (this SpineAssetPack pack, string animationName = null, bool Isloop = true)
+        ///<summary>(具有全局唯一性地)初始化创建一个SkeletonAnimation实例对象后返回该运行时实例</summary>
+        public static GameObject CreateAnimationInstanceExclusively(this SpineAssetPack pack, string animationName = null, bool Isloop = true)
         {
             if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
             if (obj != null)
             {
-                Log.Error("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
+                Log.Warning("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
                 return null;
             }
+            GameObject instance = CreateAnimationInstance(pack, animationName, Isloop);
+            DynamicObjectDatabase.Add(pack.def.defName, instance);
+            return instance;
+        }
+        ///<summary>创建一个SkeletonAnimation实例对象并进行初始化</summary>
+        internal static GameObject CreateAnimationInstance (this SpineAssetPack pack, string animationName = null, bool Isloop = true)
+        {
+            if (pack == null) return null;
+            /*GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
+            if (obj != null)
+            {
+                Log.Error("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
+                return null;
+            }*/
             Vector3 offset = new Vector3(pack.def.offset.x, 0, pack.def.offset.y);
             Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, pack.def.scale.y * 0.1f, 1f);
             string version = pack.def.props.version;
@@ -228,7 +258,7 @@ namespace PA_SpriteEvo
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
-                DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
+                //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
                 return animation.gameObject;
             }
             else if (version == "4.1")
@@ -247,7 +277,7 @@ namespace PA_SpriteEvo
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
-                DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
+                //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
                 return animation.gameObject;
             }
             return null;
