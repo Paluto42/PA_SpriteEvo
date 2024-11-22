@@ -3,10 +3,10 @@ using System.Collections;
 using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo.Unity
+namespace SpriteEvo.Unity
 {
     //切记切记 一旦FxHeadComp组件被添加，就会自动获取上级FxRoot节点
-    public class FxHeadComp : BaseControllerComp
+    public class FxHeadWorker : BaseControllWorker
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -18,11 +18,11 @@ namespace PA_SpriteEvo.Unity
         public GameObject EastChild { get; set; }
         #endregion
         public bool CanDrawNow => Current.ProgramState == ProgramState.Playing;
-        private FxRootComp Comp_FxRoot { get; set; }
-        private FacialControllerComp SouthControllerComp { get; set; }
-        private FacialControllerComp EastControllerComp { get; set; }
-        private FacialControllerComp NorthControllerComp { get; set; }
-        private FacialControllerComp WestControllerComp { get; set; }
+        private FxRootWorker Comp_FxRoot { get; set; }
+        private FacialControllWorker SouthControllerComp { get; set; }
+        private FacialControllWorker EastControllerComp { get; set; }
+        private FacialControllWorker NorthControllerComp { get; set; }
+        private FacialControllWorker WestControllerComp { get; set; }
         Pawn User => (Pawn)Comp_FxRoot.User;
 
         public virtual IEnumerator HeadAnimationController()
@@ -40,7 +40,8 @@ namespace PA_SpriteEvo.Unity
             gameObject.transform.localRotation = IsFlip ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
         }
         public virtual void DoRotation(Rot4 rot) 
-        {
+        {   //第二种方法 使用SetAnimation 直接Reload
+            //第一种方法 生成3面的物件逐个开关
             switch (rot.AsInt)
             {
                 //后
@@ -96,11 +97,11 @@ namespace PA_SpriteEvo.Unity
         // Start is called before the first frame update
         public override void Start()
         {
-            Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
-            SouthControllerComp = SouthChild?.GetComponent<FacialControllerComp>();
-            EastControllerComp = EastChild?.GetComponent<FacialControllerComp>();
-            NorthControllerComp = NorthChild?.GetComponent<FacialControllerComp>();
-            WestControllerComp = WestChild?.GetComponent<FacialControllerComp>();
+            Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootWorker>();
+            SouthControllerComp = SouthChild?.GetComponent<FacialControllWorker>();
+            EastControllerComp = EastChild?.GetComponent<FacialControllWorker>();
+            NorthControllerComp = NorthChild?.GetComponent<FacialControllWorker>();
+            WestControllerComp = WestChild?.GetComponent<FacialControllWorker>();
         }
         public override void FixedUpdate()
         {

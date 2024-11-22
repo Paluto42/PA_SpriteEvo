@@ -7,8 +7,8 @@
     <ProjectGuid>{C9B6F456-3071-4CB4-B782-944BC428BA27}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PA_SpriteEvo</RootNamespace>
-    <AssemblyName>PA_SpriteEvo</AssemblyName>
+    <RootNamespace>SpriteEvo</RootNamespace>
+    <AssemblyName>SpriteEvo</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -93,21 +93,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PA_SpriteEvo\AssetExtensions.cs" />
-    <Compile Include="PA_SpriteEvo\AssetManager.cs" />
+    <Compile Include="PA_SpriteEvo\Manager\AssetExtensions.cs" />
+    <Compile Include="PA_SpriteEvo\Manager\AssetManager.cs" />
     <Compile Include="PA_SpriteEvo\Defs\PawnKindSpriteDef.cs" />
-    <Compile Include="PA_SpriteEvo\Unity.Components\BaseControllerComp.cs" />
-    <Compile Include="PA_SpriteEvo\Unity.Components\BodyControllerComp.cs" />
+    <Compile Include="PA_SpriteEvo\Manager\ISkeletonLoader.cs" />
+    <Compile Include="PA_SpriteEvo\Nodes\SpineObjectNodeProperties.cs" />
+    <Compile Include="PA_SpriteEvo\Nodes\SpineObjectNodeProperties_Parent.cs" />
+    <Compile Include="PA_SpriteEvo\Tools\MergeDemo.cs" />
+    <Compile Include="PA_SpriteEvo\Tools\SkeletonMerger.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\BaseControllWorker.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\BodyControllWorker.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\ClickEventComp.cs" />
-    <Compile Include="PA_SpriteEvo\Unity.Components\FacialControllerComp.cs" />
-    <Compile Include="PA_SpriteEvo\Unity.Components\FxBodyComp.cs" />
-    <Compile Include="PA_SpriteEvo\Unity.Components\FxExtraComp.cs" />
-    <Compile Include="PA_SpriteEvo\Unity.Components\FxHeadComp.cs" />
-    <Compile Include="PA_SpriteEvo\Unity.Components\FxRootComp.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\FacialControllWorker.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\FxBodyWorker.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\FxExtraWorker.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\FxHeadWorker.cs" />
+    <Compile Include="PA_SpriteEvo\Unity.Components\FxRootWorker.cs" />
     <Compile Include="PA_SpriteEvo\Harmony\HarmonyPatches.cs" />
-    <Compile Include="PA_SpriteEvo\AssetLoadManager.cs" />
+    <Compile Include="PA_SpriteEvo\Manager\AssetLoadManager.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\ParallelAnimation_Spine38.cs" />
-    <Compile Include="PA_SpriteEvo\SpineAssetPack.cs" />
+    <Compile Include="PA_SpriteEvo\Manager\SpineAssetPack.cs" />
     <Compile Include="PA_SpriteEvo\Defs\SpinePackDef.cs" />
     <Compile Include="PA_SpriteEvo\Unity.Components\AnimationGenerator.cs" />
     <Compile Include="PA_SpriteEvo\Tools\PA_Helper.cs" />

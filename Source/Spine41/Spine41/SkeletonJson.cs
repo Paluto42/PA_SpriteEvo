@@ -34,6 +34,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 #if WINDOWS_STOREAPP
 using System.Threading.Tasks;
@@ -113,8 +114,10 @@ namespace Spine41 {
 			}
 
 			// Bones.
-			if (root.ContainsKey("bones")) {
-				foreach (Dictionary<string, Object> boneMap in (List<Object>)root["bones"]) {
+			if (root.ContainsKey("bones")) 
+			{
+				foreach (Dictionary<string, Object> boneMap in (List<Object>)root["bones"]) 
+				{
 					BoneData parent = null;
 					if (boneMap.ContainsKey("parent")) {
 						parent = skeletonData.FindBone((string)boneMap["parent"]);
@@ -279,7 +282,8 @@ namespace Spine41 {
 
 			// Skins.
 			if (root.ContainsKey("skins")) {
-				foreach (Dictionary<string, object> skinMap in (List<object>)root["skins"]) {
+				foreach (Dictionary<string, object> skinMap in (List<object>)root["skins"]) 
+				{
 					Skin skin = new Skin((string)skinMap["name"]);
 					if (skinMap.ContainsKey("bones")) {
 						foreach (string entryName in (List<Object>)skinMap["bones"]) {
@@ -311,11 +315,15 @@ namespace Spine41 {
 						}
 					}
 					skin.constraints.TrimExcess();
-					if (skinMap.ContainsKey("attachments")) {
-						foreach (KeyValuePair<string, Object> slotEntry in (Dictionary<string, Object>)skinMap["attachments"]) {
+					if (skinMap.ContainsKey("attachments")) 
+					{
+						foreach (KeyValuePair<string, Object> slotEntry in (Dictionary<string, Object>)skinMap["attachments"]) 
+						{
 							int slotIndex = FindSlotIndex(skeletonData, slotEntry.Key);
-							foreach (KeyValuePair<string, Object> entry in ((Dictionary<string, Object>)slotEntry.Value)) {
-								try {
+							foreach (KeyValuePair<string, Object> entry in ((Dictionary<string, Object>)slotEntry.Value)) 
+							{
+								try 
+								{
 									Attachment attachment = ReadAttachment((Dictionary<string, Object>)entry.Value, skin, slotIndex, entry.Key, skeletonData);
 									if (attachment != null) skin.SetAttachment(slotIndex, entry.Key, attachment);
 								} catch (Exception e) {
@@ -361,8 +369,10 @@ namespace Spine41 {
 
 			// Animations.
 			if (root.ContainsKey("animations")) {
-				foreach (KeyValuePair<string, Object> entry in (Dictionary<string, Object>)root["animations"]) {
-					try {
+				foreach (KeyValuePair<string, Object> entry in (Dictionary<string, Object>)root["animations"]) 
+				{
+					try 
+					{
 						ReadAnimation((Dictionary<string, Object>)entry.Value, entry.Key, skeletonData);
 					} catch (Exception e) {
 						throw new Exception("Error reading animation: " + entry.Key + "\n" + e.Message, e);
@@ -777,7 +787,8 @@ namespace Spine41 {
 
 			// Bone timelines.
 			if (map.ContainsKey("bones")) {
-				foreach (KeyValuePair<string, Object> entry in (Dictionary<string, Object>)map["bones"]) {
+				foreach (KeyValuePair<string, Object> entry in (Dictionary<string, Object>)map["bones"]) 
+				{
 					string boneName = entry.Key;
 					int boneIndex = -1;
 					BoneData[] bones = skeletonData.bones.Items;

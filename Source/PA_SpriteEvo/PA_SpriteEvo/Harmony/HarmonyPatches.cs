@@ -1,6 +1,6 @@
 ﻿using AK_DLL;
 using HarmonyLib;
-using PA_SpriteEvo.Unity;
+using SpriteEvo.Unity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Reflection;
 using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo
+namespace SpriteEvo
 {
     [StaticConstructorOnStartup]
     internal class HarmonyPatches
@@ -77,7 +77,7 @@ namespace PA_SpriteEvo
             GameObject obj = AssetManager.ObjectDatabase.TryGetValue(pack.def.defName);
             if (obj == null)
             {
-                pack.Create_AnimationTextureInstanceExclusively();
+                pack.Create_GlobalAnimationTextureInstance();
             }
             if (obj != null)
             {

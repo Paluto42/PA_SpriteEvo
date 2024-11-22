@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo
+namespace SpriteEvo
 {
-    public class FxExtraComp : BaseControllerComp
+    public class FxExtraWorker : BaseControllWorker
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector

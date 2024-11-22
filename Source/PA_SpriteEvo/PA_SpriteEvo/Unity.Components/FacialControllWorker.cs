@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo
+namespace SpriteEvo
 {
     //绑在头部的面部控件
-    public class FacialControllerComp : BaseControllerComp
+    public class FacialControllWorker : BaseControllWorker
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector

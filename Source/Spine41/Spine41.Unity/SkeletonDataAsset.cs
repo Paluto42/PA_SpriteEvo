@@ -75,7 +75,7 @@ namespace Spine41.Unity {
 		#endregion
 
 		SkeletonData skeletonData;
-		AnimationStateData stateData;
+        AnimationStateData stateData;
 
 		#region Runtime Instantiation
 		/// <summary>
@@ -280,6 +280,9 @@ namespace Spine41.Unity {
 			};
 			return json.ReadSkeletonData(input);
 		}
-	}
+
+		internal SkeletonData skeletonDataInternal() { return skeletonData; }
+
+    }
 
 }

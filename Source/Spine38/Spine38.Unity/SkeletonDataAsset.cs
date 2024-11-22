@@ -258,6 +258,9 @@ namespace Spine38.Unity {
 			};
 			return json.ReadSkeletonData(input);
 		}
-	}
+
+        internal SkeletonData skeletonDataInternal() { return skeletonData; }
+
+    }
 
 }

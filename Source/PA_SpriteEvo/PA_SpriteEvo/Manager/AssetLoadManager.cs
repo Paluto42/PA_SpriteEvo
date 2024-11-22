@@ -5,7 +5,7 @@ using UnityEngine;
 using Verse;
 using Verse.AI;
 
-namespace PA_SpriteEvo
+namespace SpriteEvo
 {
     [StaticConstructorOnStartup]
     internal static class AssetLoadManager

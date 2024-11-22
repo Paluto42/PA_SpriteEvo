@@ -1,4 +1,4 @@
-﻿using PA_SpriteEvo.Unity;
+﻿using SpriteEvo.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo
+namespace SpriteEvo
 {
     //绑在身上的身体控件
-    public class FxBodyComp : BaseControllerComp
+    public class FxBodyWorker : BaseControllWorker
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -21,7 +21,7 @@ namespace PA_SpriteEvo
         public GameObject EastChild { get; set; }
         #endregion
         public bool CanDrawNow => Current.ProgramState == ProgramState.Playing;
-        private FxRootComp Comp_FxRoot { get; set; }
+        private FxRootWorker Comp_FxRoot { get; set; }
         Pawn User => (Pawn)Comp_FxRoot.User;
 
         public virtual void DoFilpX(bool IsFlip)
@@ -87,7 +87,7 @@ namespace PA_SpriteEvo
         // Start is called before the first frame update
         public override void Start()
         {
-            Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootComp>();
+            Comp_FxRoot = transform.parent?.gameObject?.GetComponent<FxRootWorker>();
         }
         public override void FixedUpdate()
         {

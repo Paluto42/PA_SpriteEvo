@@ -175,7 +175,7 @@ namespace Spine41 {
 			}
 		}
 
-		private struct SkinKey {
+		public struct SkinKey {
 			internal readonly int slotIndex;
 			internal readonly string name;
 			internal readonly int hashCode;
@@ -200,5 +200,7 @@ namespace Spine41 {
 				return e.hashCode;
 			}
 		}
-	}
+
+		internal Dictionary<SkinKey, SkinEntry> AttachmentsInternal() { return attachments; }
+    }
 }

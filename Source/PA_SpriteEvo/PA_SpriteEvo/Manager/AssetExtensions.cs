@@ -5,7 +5,7 @@ using Spine38.Unity;
 using Spine41.Unity;
 using System;
 
-namespace PA_SpriteEvo
+namespace SpriteEvo
 {
     public static class AssetExtensions
     {
@@ -13,7 +13,7 @@ namespace PA_SpriteEvo
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
         public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
         public static Dictionary<string, GameObject> DynamicObjectDatabase => AssetManager.ObjectDatabase;
-
+        #region 一些小拓展方法
         ///<summary>获取一个模型实例的定位点Bone</summary>
         public static Spine38.Bone RootBone(this Spine38.Unity.SkeletonAnimation instance)
         {
@@ -68,53 +68,9 @@ namespace PA_SpriteEvo
             }
             return IList;
         }
-        ///<summary>通过SpineAssetPack实例 来创建SkeletonData Asset</summary>
-        public static Spine38.Unity.SkeletonDataAsset Create_SkeletonDataAsset38(this SpineAssetPack pack)
-        {
-            if (pack == null)
-            {
-                Log.Error("SpineAssetPack 为空引用");
-                return null;
-            }
-            Spine38.Unity.SkeletonDataAsset skeleton;
-            if (pack.useMaterial)
-            {
-                Spine38.Unity.SpineAtlasAsset atlas = Spine38.Unity.SpineAtlasAsset.CreateRuntimeInstance(pack.atlasData, pack.materials, initialize: true);
-                skeleton = Spine38.Unity.SkeletonDataAsset.CreateRuntimeInstance(pack.skeletonData, atlas, initialize: true);
-            }
-            else
-            {
-                //Is_StraightAlphaTexture = pack.useStraightAlpha;
-                Spine38.Unity.SpineAtlasAsset atlas = Spine38.Unity.SpineAtlasAsset.CreateRuntimeInstance(pack.atlasData, pack.textures, pack.shader, initialize: true);
-                skeleton = Spine38.Unity.SkeletonDataAsset.CreateRuntimeInstance(pack.skeletonData, atlas, initialize: true);
-                //Is_StraightAlphaTexture = false;
-            }
-            return skeleton;
-        }
-        public static Spine41.Unity.SkeletonDataAsset Create_SkeletonDataAsset41(this SpineAssetPack pack)
-        {
-            if (pack == null)
-            {
-                Log.Error("SpineAssetPack 为空引用");
-                return null;
-            }
-            Spine41.Unity.SkeletonDataAsset skeleton;
-            if (pack.useMaterial)
-            {
-                Spine41.Unity.SpineAtlasAsset atlas = Spine41.Unity.SpineAtlasAsset.CreateRuntimeInstance(pack.atlasData, pack.materials, initialize: true);
-                skeleton = Spine41.Unity.SkeletonDataAsset.CreateRuntimeInstance(pack.skeletonData, atlas, initialize: true);
-            }
-            else
-            {
-                //Is_StraightAlphaTexture = pack.useStraightAlpha;
-                Spine41.Unity.SpineAtlasAsset atlas = Spine41.Unity.SpineAtlasAsset.CreateRuntimeInstance(pack.atlasData, pack.textures, pack.shader, initialize: true);
-                skeleton = Spine41.Unity.SkeletonDataAsset.CreateRuntimeInstance(pack.skeletonData, atlas, initialize: true);
-                //Is_StraightAlphaTexture = false;
-            }
-            return skeleton;
-        }
+        #endregion
         ///<summary>(具有全局唯一性地)初始化创建一个用于输出RenderTexture的SkeletonAnimation实例对象后返回该运行时实例</summary>
-        internal static GameObject Create_AnimationTextureInstanceExclusively(this SpineAssetPack pack, bool loop = true) 
+        internal static GameObject Create_GlobalAnimationTextureInstance(this SpineAssetPack pack, bool loop = true) 
         {
             if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
@@ -131,17 +87,13 @@ namespace PA_SpriteEvo
         public static GameObject Create_AnimationTextureInstance(this SpineAssetPack pack, bool loop = true)
         {
             if (pack == null) return null;
-            /*GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
-            if (obj != null)
-            {
-                Log.Error("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
-                return null;
-            }*/
             Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, pack.def.scale.y * 0.1f, 1f);
             string version = pack.def.props.version;
             if (version == "3.8")
             {
+                
                 Spine38.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset38();
+                if (skeleton == null) { return null; }
                 Spine38.Unity.SkeletonAnimation animation = Spine38.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
                 animation.gameObject.name = pack.def.defName;
@@ -178,6 +130,7 @@ namespace PA_SpriteEvo
             else if (version == "4.1")
             {
                 Spine41.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset41();
+                if (skeleton == null) { return null; }
                 Spine41.Unity.SkeletonAnimation animation = Spine41.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
                 animation.gameObject.name = pack.def.defName;
@@ -212,7 +165,7 @@ namespace PA_SpriteEvo
             return null;
         }
         ///<summary>(具有全局唯一性地)初始化创建一个SkeletonAnimation实例对象后返回该运行时实例</summary>
-        public static GameObject CreateAnimationInstanceExclusively(this SpineAssetPack pack, string animationName = null, bool Isloop = true)
+        public static GameObject CreateGlobalAnimationInstance(this SpineAssetPack pack, string animationName = null, bool Isloop = true)
         {
             if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);

@@ -1,18 +1,18 @@
 ﻿using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo.Unity
+namespace SpriteEvo.Unity
 {
     //控制坐标更新和旋转方向的Root物件
-    public class FxRootComp : BaseControllerComp
+    public class FxRootWorker : BaseControllWorker
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
         public Thing User { get; set; }
         //不建议使用一切与Find有关的方法获取它们，而是加上组件后直接用SetChildren设置
-        public FxHeadComp FxHeadController { get; set; }
-        public FxBodyComp FxBodyController { get; set; }
-        public FxExtraComp FxExtraController { get; set; }
+        public FxHeadWorker FxHeadController { get; set; }
+        public FxBodyWorker FxBodyController { get; set; }
+        public FxExtraWorker FxExtraController { get; set; }
         #endregion
         public bool CanDrawNow => Current.ProgramState == ProgramState.Playing;
         GameObject Root => base.gameObject;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace PA_SpriteEvo.Unity
+namespace SpriteEvo.Unity
 {
     //处理动画的点击反馈事件
     public class ClickEventComp : MonoBehaviour

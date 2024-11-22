@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PA_SpriteEvo.Unity
+namespace SpriteEvo.Unity
 {
     //用来测试连播动态立绘的组件,记得删
     public class ParallelAnimation_Spine38 : MonoBehaviour

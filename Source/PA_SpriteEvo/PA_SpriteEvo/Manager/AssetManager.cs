@@ -2,7 +2,7 @@
 using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo
+namespace SpriteEvo
 {
     [StaticConstructorOnStartup]
     internal static class AssetManager

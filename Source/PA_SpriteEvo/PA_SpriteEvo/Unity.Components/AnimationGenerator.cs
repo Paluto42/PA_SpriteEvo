@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Security.Cryptography;
 using UnityEngine;
 using Verse;
 
-namespace PA_SpriteEvo.Unity
+namespace SpriteEvo.Unity
 {
     /*Root模型结构:
      *   根节点: Fx_Root ，只负责更新坐标
@@ -23,6 +21,7 @@ namespace PA_SpriteEvo.Unity
      *     第一层节点: Fx_Extra
      *     {
      */
+    //由于Sorting Layer的鬼畜，不得不使用单独的Camera直接拿到贴图渲染。
     public static class AnimationGenerator
     {
         private static Dictionary<string, SpineAssetPack> Spine38_DB => AssetManager.spine38_Database;
@@ -77,18 +76,18 @@ namespace PA_SpriteEvo.Unity
         {
             if (fx_root == null || t == null) return;
             //设置子物件
-            FxRootComp rootcomp = fx_root.AddComponent<FxRootComp>();
+            FxRootWorker rootcomp = fx_root.AddComponent<FxRootWorker>();
             rootcomp.User = t;
             return;
         }
         private static GameObject AddFxHead(this GameObject fx_root) 
         {
             if (fx_root == null) return null;
-            if (fx_root.GetComponent<FxRootComp>()?.User is Pawn) 
+            if (fx_root.GetComponent<FxRootWorker>()?.User is Pawn) 
             {
                 GameObject fxhead = fx_root.AddEmptyChild("FxHead");
-                FxHeadComp headcontroller = fxhead.AddComponent<FxHeadComp>();
-                fx_root.GetComponent<FxRootComp>().FxHeadController = headcontroller;
+                FxHeadWorker headcontroller = fxhead.AddComponent<FxHeadWorker>();
+                fx_root.GetComponent<FxRootWorker>().FxHeadController = headcontroller;
                 return fxhead;
             }
             return null;
@@ -96,11 +95,11 @@ namespace PA_SpriteEvo.Unity
         private static GameObject AddFxBody(this GameObject fx_root)
         {
             if (fx_root == null) return null;
-            if (fx_root.GetComponent<FxRootComp>()?.User is Pawn)
+            if (fx_root.GetComponent<FxRootWorker>()?.User is Pawn)
             {
                 GameObject fxbody = fx_root.AddEmptyChild("FxBody");
-                FxBodyComp bodycontroller = fxbody.AddComponent<FxBodyComp>();
-                fx_root.GetComponent<FxRootComp>().FxBodyController = bodycontroller;
+                FxBodyWorker bodycontroller = fxbody.AddComponent<FxBodyWorker>();
+                fx_root.GetComponent<FxRootWorker>().FxBodyController = bodycontroller;
                 return fxbody;
             }
             return null;
@@ -114,7 +113,7 @@ namespace PA_SpriteEvo.Unity
             attachment.SetParentSafely(parent);
             return attachment;
         }
-        private static void RecordFacialAttachmentToComp(this GameObject fx, FacialControllerComp fcc, AttachmentTag tag) 
+        private static void RecordFacialAttachmentToComp(this GameObject fx, FacialControllWorker fcc, AttachmentTag tag) 
         {
             int s = (int)tag;
             switch (s) 
@@ -141,7 +140,7 @@ namespace PA_SpriteEvo.Unity
                     break;
             }
         }
-        private static void RecordBodyAttachmentToComp(this GameObject fx, BodyControllerComp bcc, AttachmentTag tag)
+        private static void RecordBodyAttachmentToComp(this GameObject fx, BodyControllWorker bcc, AttachmentTag tag)
         {
             int s = (int)tag;
             switch (s)
@@ -171,21 +170,21 @@ namespace PA_SpriteEvo.Unity
             GameObject headrotate = head_pack?.CreateAnimationInstance(Isloop: false);
             headrotate.GetComponent<MeshRenderer>().sortingOrder = headlayer;
             headrotate.SetParentSafely(fxhead);
-            FacialControllerComp fcc = headrotate.AddComponent<FacialControllerComp>();
+            FacialControllWorker fcc = headrotate.AddComponent<FacialControllWorker>();
             fcc.rot = rot;
             switch (rot.AsInt)
             {
                 case 0:
-                    fxhead.GetComponent<FxHeadComp>().NorthChild = headrotate;
+                    fxhead.GetComponent<FxHeadWorker>().NorthChild = headrotate;
                     break;
                 case 1:
-                    fxhead.GetComponent<FxHeadComp>().EastChild = headrotate;
+                    fxhead.GetComponent<FxHeadWorker>().EastChild = headrotate;
                     break;
                 case 2:
-                    fxhead.GetComponent<FxHeadComp>().SouthChild = headrotate;
+                    fxhead.GetComponent<FxHeadWorker>().SouthChild = headrotate;
                     break;
                 case 3:
-                    fxhead.GetComponent<FxHeadComp>().WestChild = headrotate;
+                    fxhead.GetComponent<FxHeadWorker>().WestChild = headrotate;
                     break;
                 default:
                     break;
@@ -280,21 +279,21 @@ namespace PA_SpriteEvo.Unity
             GameObject bodyrotate = AssetExtensions.CreateAnimationInstance(body_pack, Isloop: false);
             bodyrotate.GetComponent<MeshRenderer>().sortingOrder = bodylayer;
             bodyrotate.SetParentSafely(fxbody);
-            BodyControllerComp bcc = bodyrotate.AddComponent<BodyControllerComp>();
+            BodyControllWorker bcc = bodyrotate.AddComponent<BodyControllWorker>();
             bcc.rot = rot;
             switch (rot.AsInt)
             {
                 case 0:
-                    fxbody.GetComponent<FxBodyComp>().NorthChild = bodyrotate;
+                    fxbody.GetComponent<FxBodyWorker>().NorthChild = bodyrotate;
                     break;
                 case 1:
-                    fxbody.GetComponent<FxBodyComp>().EastChild = bodyrotate;
+                    fxbody.GetComponent<FxBodyWorker>().EastChild = bodyrotate;
                     break;
                 case 2:
-                    fxbody.GetComponent<FxBodyComp>().SouthChild = bodyrotate;
+                    fxbody.GetComponent<FxBodyWorker>().SouthChild = bodyrotate;
                     break;
                 case 3:
-                    fxbody.GetComponent<FxBodyComp>().WestChild = bodyrotate;
+                    fxbody.GetComponent<FxBodyWorker>().WestChild = bodyrotate;
                     break;
                 default:
                     break;

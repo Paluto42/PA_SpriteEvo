@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace PA_SpriteEvo.Unity
+namespace SpriteEvo.Unity
 {
     //测试连播动态立绘用
     public class ParallelAnimation_Spine41 : MonoBehaviour
