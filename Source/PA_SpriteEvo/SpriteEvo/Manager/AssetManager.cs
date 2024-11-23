@@ -11,15 +11,15 @@ namespace SpriteEvo
 
         public static Material SkeletonGraphic;
 
-        public static Dictionary<string, Shader> SpineShaderDatabase = new Dictionary<string, Shader>();
+        public static Dictionary<string, Shader> SpineShaderDatabase = new();
 
-        public static Dictionary<string, GameObject> ObjectDatabase = new Dictionary<string, GameObject>();
+        public static Dictionary<string, GameObject> ObjectDatabase = new();
 
-        public static Dictionary<Thing, GameObject> ThingObjectDatabase = new Dictionary<Thing, GameObject>();
+        public static Dictionary<Thing, GameObject> ThingObjectDatabase = new();
 
-        public static Dictionary<string, SpineAssetPack> spine38_Database = new Dictionary<string, SpineAssetPack>();
+        public static Dictionary<string, SpineAssetPack> spine38_Database = new();
 
-        public static Dictionary<string, SpineAssetPack> spine41_Database = new Dictionary<string, SpineAssetPack>();
+        public static Dictionary<string, SpineAssetPack> spine41_Database = new();
 
     }
 }

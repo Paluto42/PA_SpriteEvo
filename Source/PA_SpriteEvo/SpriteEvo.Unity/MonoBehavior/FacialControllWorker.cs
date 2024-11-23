@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpriteEvo.Unity;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,10 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace SpriteEvo
+namespace SpriteEvo.Unity
 {
     //绑在头部的面部控件
-    public class FacialControllWorker : BaseControllWorker
+    public class FacialControllWorker : BaseControllComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector

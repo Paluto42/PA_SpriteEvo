@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SpriteEvo
+namespace SpriteEvo.Unity
 {
-    public class BaseControllWorker : MonoBehaviour
+    public class BaseControllComp : MonoBehaviour
     {
         public virtual void Awake()
         {

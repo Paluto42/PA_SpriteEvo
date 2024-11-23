@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpriteEvo.Unity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,13 +11,13 @@ namespace SpriteEvo
     [StaticConstructorOnStartup]
     public class SpineObjectNodeProperties
     {
-        public Type workerClass = typeof(BaseControllWorker);
+        public Type workerClass = typeof(BaseControllComp);
 
         public AttachmentTag tag;
 
         public List<SpineObjectNodeProperties> children;
 
-        private BaseControllWorker workerInt;
+        private BaseControllComp workerInt;
 
         public void EnsureInitialized() 
         {
@@ -25,9 +26,9 @@ namespace SpriteEvo
                 workerInt = GetWorker(workerClass);
             }
         }
-        public static BaseControllWorker GetWorker(Type type)
+        public static BaseControllComp GetWorker(Type type)
         {
-            return (BaseControllWorker)Activator.CreateInstance(type);
+            return (BaseControllComp)Activator.CreateInstance(type);
         }
     }
 }

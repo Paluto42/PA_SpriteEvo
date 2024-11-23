@@ -63,8 +63,8 @@ namespace SpriteEvo
             {
                 return;
             }
-            List<AssetBundle> AssetBundle_Loaded = new List<AssetBundle>();
-            List<string> SkeletonJSON_Loaded = new List<string>();
+            List<AssetBundle> AssetBundle_Loaded = new();
+            List<string> SkeletonJSON_Loaded = new();
             List<SpinePackDef> packs = DefDatabase<SpinePackDef>.AllDefsListForReading;
             foreach (SpinePackDef def in packs)
             {

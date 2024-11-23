@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -93,6 +96,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpriteEvo.Unity\AnimationID.cs" />
+    <Compile Include="SpriteEvo\GC\GC_ThingAnimationManager.cs" />
     <Compile Include="SpriteEvo\Manager\AssetExtensions.cs" />
     <Compile Include="SpriteEvo\Manager\AssetManager.cs" />
     <Compile Include="SpriteEvo\Defs\PawnKindSpriteDef.cs" />
@@ -104,24 +109,26 @@
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonBinaryMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonJsonMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonMerger.cs" />
-    <Compile Include="SpriteEvo.Unity\BaseControllWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\BodyControllWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\ClickEventComp.cs" />
-    <Compile Include="SpriteEvo.Unity\FacialControllWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\FxBodyWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\FxExtraWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\FxHeadWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\FxRootWorker.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\BaseControllComp.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\BodyControllWorker.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\ClickEventComp.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\FacialControllWorker.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxBodyWorker.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxExtraWorker.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxHeadWorker.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxRootWorker.cs" />
     <Compile Include="SpriteEvo\Harmony\HarmonyPatches.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadManager.cs" />
-    <Compile Include="SpriteEvo.Unity\ParallelAnimation_Spine38.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
+    <Compile Include="SpriteEvo\Mod\PA_Mod.cs" />
+    <Compile Include="SpriteEvo\Mod\PA_ModSettings.cs" />
     <Compile Include="SpriteEvo\SpineAssetPack.cs" />
     <Compile Include="SpriteEvo\Defs\SpinePackDef.cs" />
     <Compile Include="SpriteEvo.Unity\AnimationGenerator.cs" />
     <Compile Include="SpriteEvo\Tools\PA_Helper.cs" />
     <Compile Include="SpriteEvo\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpriteEvo.Unity\ParallelAnimation_Spine41.cs" />
+    <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spine38\Spine38.csproj">
@@ -133,8 +140,6 @@
       <Name>Spine41</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SpriteEvo.Extensions\Unity\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

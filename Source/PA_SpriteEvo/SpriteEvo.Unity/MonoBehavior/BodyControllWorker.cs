@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 
-namespace SpriteEvo
+namespace SpriteEvo.Unity
 {
-    public class BodyControllWorker : BaseControllWorker
+    public class BodyControllWorker : BaseControllComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector

@@ -19,9 +19,9 @@ namespace SpriteEvo
 
         public string shader = "Spine-Skeleton.shader";
 
-        public List<string> textures = new List<string>();
+        public List<string> textures = new();
 
-        public List<string> materials = new List<string>();
+        public List<string> materials = new();
 
         public bool StraightAlphaInput = false;
 
@@ -43,14 +43,14 @@ namespace SpriteEvo
 
         public string seriesname;
 
-        public Vector3 offset = new Vector3(0f, 0f, 0f);
+        public Vector3 offset = new(0f, 0f, 0f);
 
-        public Vector3 uioffset = new Vector3(0f, 0f, 0f);
+        public Vector3 uioffset = new(0f, 0f, 0f);
 
-        public Vector2 scale = new Vector2(1f, 1f);
+        public Vector2 scale = new(1f, 1f);
 
         public Vector3 rotation = Vector3.zero;
 
-        public Properties_SpinePack props = new Properties_SpinePack();
+        public Properties_SpinePack props = new();
     }
 }
