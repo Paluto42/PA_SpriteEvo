@@ -75,7 +75,7 @@ namespace Spine41.Unity {
 		#endregion
 
 		SkeletonData skeletonData;
-        AnimationStateData stateData;
+		AnimationStateData stateData;
 
 		#region Runtime Instantiation
 		/// <summary>

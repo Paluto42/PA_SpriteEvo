@@ -188,7 +188,7 @@ namespace Spine41 {
 	/// <summary>
 	/// The base class for all timelines.</summary>
 	public abstract class Timeline {
-		internal string[] propertyIds;
+        private readonly string[] propertyIds;
 		internal readonly float[] frames;
 
 		/// <param name="propertyIds">Unique identifiers for the properties the timeline modifies.</param>
@@ -463,7 +463,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref="Bone.Rotation"/>.</summary>
 	public class RotateTimeline : CurveTimeline1, IBoneTimeline {
-		internal int boneIndex;
+		readonly int boneIndex;
 
 		public RotateTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, (int)Property.Rotate + "|" + boneIndex) {
@@ -511,7 +511,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref"Bone.X"/> and <see cref"Bone.Y"/>.</summary>
 	public class TranslateTimeline : CurveTimeline2, IBoneTimeline {
-		internal int boneIndex;
+        readonly int boneIndex;
 
 		public TranslateTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, //
@@ -591,7 +591,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref"Bone.X"/>.</summary>
 	public class TranslateXTimeline : CurveTimeline1, IBoneTimeline {
-		internal int boneIndex;
+        readonly int boneIndex;
 
 		public TranslateXTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, (int)Property.X + "|" + boneIndex) {
@@ -640,7 +640,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref"Bone.Y"/>.</summary>
 	public class TranslateYTimeline : CurveTimeline1, IBoneTimeline {
-        internal int boneIndex;
+        readonly int boneIndex;
 
 		public TranslateYTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, (int)Property.Y + "|" + boneIndex) {
@@ -805,7 +805,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref="Bone.ScaleX">.</summary>
 	public class ScaleXTimeline : CurveTimeline1, IBoneTimeline {
-        internal int boneIndex;
+        readonly int boneIndex;
 
 		public ScaleXTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, (int)Property.ScaleX + "|" + boneIndex) {
@@ -882,7 +882,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref="Bone.ScaleY">.</summary>
 	public class ScaleYTimeline : CurveTimeline1, IBoneTimeline {
-        internal int boneIndex;
+        readonly int boneIndex;
 
 		public ScaleYTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, (int)Property.ScaleY + "|" + boneIndex) {
@@ -1035,7 +1035,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref="Bone.ShearX"/>.</summary>
 	public class ShearXTimeline : CurveTimeline1, IBoneTimeline {
-        internal int boneIndex;
+        readonly int boneIndex;
 
 		public ShearXTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, (int)Property.ShearX + "|" + boneIndex) {
@@ -1084,7 +1084,7 @@ namespace Spine41 {
 
 	/// <summary>Changes a bone's local <see cref="Bone.ShearY"/>.</summary>
 	public class ShearYTimeline : CurveTimeline1, IBoneTimeline {
-        internal int boneIndex;
+        readonly int boneIndex;
 
 		public ShearYTimeline (int frameCount, int bezierCount, int boneIndex)
 			: base(frameCount, bezierCount, (int)Property.ShearY + "|" + boneIndex) {

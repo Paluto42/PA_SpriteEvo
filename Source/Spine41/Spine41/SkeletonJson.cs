@@ -97,7 +97,8 @@ namespace Spine41 {
 			SkeletonData skeletonData = new SkeletonData();
 
 			Dictionary<string, object> root = Json.Deserialize(reader) as Dictionary<string, Object>;
-			if (root == null) throw new Exception("Invalid JSON.");
+
+            if (root == null) throw new Exception("Invalid JSON.");
 
 			// Skeleton.
 			if (root.ContainsKey("skeleton")) {
@@ -389,7 +390,7 @@ namespace Spine41 {
 			return skeletonData;
 		}
 
-		private Attachment ReadAttachment (Dictionary<string, Object> map, Skin skin, int slotIndex, string name, SkeletonData skeletonData) {
+		protected Attachment ReadAttachment (Dictionary<string, Object> map, Skin skin, int slotIndex, string name, SkeletonData skeletonData) {
 			float scale = this.scale;
 			name = GetString(map, "name", name);
 
@@ -552,14 +553,14 @@ namespace Spine41 {
 			attachment.vertices = weights.ToArray();
 		}
 
-		private int FindSlotIndex (SkeletonData skeletonData, string slotName) {
+		protected int FindSlotIndex (SkeletonData skeletonData, string slotName) {
 			SlotData[] slots = skeletonData.slots.Items;
 			for (int i = 0, n = skeletonData.slots.Count; i < n; i++)
 				if (slots[i].name == slotName) return i;
 			throw new Exception("Slot not found: " + slotName);
 		}
 
-		private void ReadAnimation (Dictionary<string, Object> map, string name, SkeletonData skeletonData) {
+		protected void ReadAnimation (Dictionary<string, Object> map, string name, SkeletonData skeletonData) {
 			float scale = this.scale;
 			ExposedList<Timeline> timelines = new ExposedList<Timeline>();
 
@@ -1173,7 +1174,7 @@ namespace Spine41 {
 			}
 		}
 
-		static int ReadCurve (object curve, CurveTimeline timeline, int bezier, int frame, int value, float time1, float time2,
+        internal static int ReadCurve (object curve, CurveTimeline timeline, int bezier, int frame, int value, float time1, float time2,
 			float value1, float value2, float scale) {
 
 			string curveString = curve as string;
@@ -1191,12 +1192,12 @@ namespace Spine41 {
 			return bezier + 1;
 		}
 
-		static void SetBezier (CurveTimeline timeline, int frame, int value, int bezier, float time1, float value1, float cx1, float cy1,
+        internal static void SetBezier (CurveTimeline timeline, int frame, int value, int bezier, float time1, float value1, float cx1, float cy1,
 			float cx2, float cy2, float time2, float value2) {
 			timeline.SetBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 		}
 
-		static float[] GetFloatArray (Dictionary<string, Object> map, string name, float scale) {
+        internal static float[] GetFloatArray (Dictionary<string, Object> map, string name, float scale) {
 			List<object> list = (List<Object>)map[name];
 			float[] values = new float[list.Count];
 			if (scale == 1) {
@@ -1209,7 +1210,7 @@ namespace Spine41 {
 			return values;
 		}
 
-		static int[] GetIntArray (Dictionary<string, Object> map, string name) {
+        internal static int[] GetIntArray (Dictionary<string, Object> map, string name) {
 			List<object> list = (List<Object>)map[name];
 			int[] values = new int[list.Count];
 			for (int i = 0, n = list.Count; i < n; i++)
@@ -1217,32 +1218,30 @@ namespace Spine41 {
 			return values;
 		}
 
-		static float GetFloat (Dictionary<string, Object> map, string name, float defaultValue) {
+        internal static float GetFloat (Dictionary<string, Object> map, string name, float defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (float)map[name];
-		}
-
-		static int GetInt (Dictionary<string, Object> map, string name, int defaultValue) {
+		}internal static int GetInt (Dictionary<string, Object> map, string name, int defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (int)(float)map[name];
 		}
 
-		static int GetInt (Dictionary<string, Object> map, string name) {
+        internal static int GetInt (Dictionary<string, Object> map, string name) {
 			if (!map.ContainsKey(name)) throw new ArgumentException("Named value not found: " + name);
 			return (int)(float)map[name];
 		}
 
-		static bool GetBoolean (Dictionary<string, Object> map, string name, bool defaultValue) {
+        internal static bool GetBoolean (Dictionary<string, Object> map, string name, bool defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (bool)map[name];
 		}
 
-		static string GetString (Dictionary<string, Object> map, string name, string defaultValue) {
+		internal static string GetString (Dictionary<string, Object> map, string name, string defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (string)map[name];
 		}
 
-		static float ToColor (string hexString, int colorIndex, int expectedLength = 8) {
+        internal static float ToColor (string hexString, int colorIndex, int expectedLength = 8) {
 			if (hexString.Length < expectedLength)
 				throw new ArgumentException("Color hexadecimal length must be " + expectedLength + ", received: " + hexString, "hexString");
 			return Convert.ToInt32(hexString.Substring(colorIndex * 2, 2), 16) / (float)255;

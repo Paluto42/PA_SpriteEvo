@@ -40,6 +40,7 @@ namespace SpriteEvo
     public class Patch_UIRoot
     {
         [HarmonyPrefix]
+        //用来加载全部文件的Prefix方法
         public static bool Prefix(UIRoot_Entry __instance)
         {
             if (!AssetLoadManager.AllAssetsLoaded)
