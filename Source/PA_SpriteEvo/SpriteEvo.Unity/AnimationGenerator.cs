@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using SpriteEvo.Extensions;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Xml.Linq;
 using UnityEngine;
 using Verse;
+using Verse.Noise;
 
 namespace SpriteEvo.Unity
 {
@@ -26,13 +30,54 @@ namespace SpriteEvo.Unity
     {
         private static Dictionary<string, SpineAssetPack> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SpineAssetPack> Spine41_DB => AssetManager.spine41_Database;
-        private static Dictionary<Thing, GameObject> ThingObject_DB => AssetManager.ThingObjectDatabase;
+        //private static Dictionary<Thing, GameObject> ThingObject_DB => AssetManager.ThingObjectDatabase;
 
         private static List<PawnKindSpriteDef> PawnKindDB => DefDatabase<PawnKindSpriteDef>.AllDefsListForReading;
-        
+
+        public static void MergeAnimation(Thing t, PawnKindSpriteDef test, string name = null)
+        {
+            GameObject obj = GC_GameObjectManager.TryGetRecord(t);
+            if (obj != null) return;
+            Vector3 rot = new(90f, 0f, 0f);
+            GameObject baseroot = Create_FxRootBase(rot, name);
+            baseroot.SetFxRootAtThing(t);
+            if (t is Pawn p)
+            {
+                if (test == null) return;
+                //
+                var packhead = test.head.south.parent.FindSpineAssetPack();
+                //var packhair = test.head.south.attachments[0].attachment.FindSpineAssetPack();
+                //var newSkeleton = JsonMerger.MergeSkeletonFromJSON(packhead, packhair);
+                /*for (int i = 1; i < test.head.south.attachments.Count; i++)
+                {
+                }*/
+                List<SpineAssetPack> packs = new List<SpineAssetPack>();
+                foreach (var item in test.head.south.attachments)
+                {
+                    packs.Add(item.attachment.FindSpineAssetPack());
+                }
+                var newSkeleton = JsonMerger.MergeSkeletonFromJSONs(packhead, packs);
+
+                var animation = Spine41.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(newSkeleton);
+                //Initilize
+                animation.gameObject.name = "Spine_" + packhead.def.defName;
+                animation.gameObject.layer = 2;
+                animation.transform.rotation = Quaternion.Euler(packhead.def.rotation);
+                //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
+                animation.transform.localScale = new Vector3(packhead.def.scale.x * 0.1f, packhead.def.scale.y * 0.1f, 1f);
+                //newObject.skeleton.SetSkin();
+                //TrackEntry 
+                animation.AnimationState.SetAnimation(0, packhead.def.props.idleAnimationName, true);
+                animation.Initialize(overwrite: false);
+                animation.gameObject.SetActive(value: true);
+                animation.gameObject.SetParentSafely(baseroot);
+            }
+            GC_GameObjectManager.Add(t, baseroot);
+        }
         public static void CreatePawnAnimationModel(Thing t, PawnKindSpriteDef test, string name = null) 
         {
-            GameObject obj = ThingObject_DB.TryGetValue(t);
+            GameObject obj = GC_GameObjectManager.TryGetRecord(t);
+            //GameObject obj = ThingObject_DB.TryGetValue(t);
             if (obj != null) return;
             Vector3 rot = new Vector3(90f, 0f, 0f);
             GameObject baseroot = Create_FxRootBase(rot, name);
@@ -60,13 +105,14 @@ namespace SpriteEvo.Unity
 
                 test.body.west?.SetBodyRotateForFxBody(fxbody, Rot4.West, version);
             }
-            ThingObject_DB.Add(t, baseroot);
+            GC_GameObjectManager.Add(t, baseroot);
+            //ThingObject_DB.Add(t, baseroot);
         }
         private static GameObject Create_FxRootBase(Vector3 rotation, string name = null) 
         {
             GameObject root = new GameObject
             {
-                name = "FXRoot" + name
+                name = name + "FXRoot"
             };
             root.transform.rotation = Quaternion.Euler(rotation);
             root.SetActive(false);

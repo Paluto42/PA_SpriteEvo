@@ -97,11 +97,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SpriteEvo.Unity\AnimationID.cs" />
-    <Compile Include="SpriteEvo\GC\GC_ThingAnimationManager.cs" />
     <Compile Include="SpriteEvo\Manager\AssetExtensions.cs" />
     <Compile Include="SpriteEvo\Manager\AssetManager.cs" />
     <Compile Include="SpriteEvo\Defs\PawnKindSpriteDef.cs" />
     <Compile Include="SpriteEvo\ISkeletonLoader.cs" />
+    <Compile Include="SpriteEvo\Manager\GC_GameObjectManager.cs" />
     <Compile Include="SpriteEvo\Misc\SpineObjectNodeProperties.cs" />
     <Compile Include="SpriteEvo\Misc\SpineObjectNodeProperties_Parent.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\BinaryMerger.cs" />
@@ -120,8 +120,8 @@
     <Compile Include="SpriteEvo\Harmony\HarmonyPatches.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadManager.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
-    <Compile Include="SpriteEvo\Mod\PA_Mod.cs" />
-    <Compile Include="SpriteEvo\Mod\PA_ModSettings.cs" />
+    <Compile Include="SpriteEvo\Mod\Mod.cs" />
+    <Compile Include="SpriteEvo\Mod\ModSettings.cs" />
     <Compile Include="SpriteEvo\SpineAssetPack.cs" />
     <Compile Include="SpriteEvo\Defs\SpinePackDef.cs" />
     <Compile Include="SpriteEvo.Unity\AnimationGenerator.cs" />

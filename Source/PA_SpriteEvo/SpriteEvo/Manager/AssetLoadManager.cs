@@ -3,7 +3,6 @@ using System.Linq;
 using System.IO;
 using UnityEngine;
 using Verse;
-using Verse.AI;
 
 namespace SpriteEvo
 {

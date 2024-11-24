@@ -7,10 +7,8 @@ using Verse;
 
 namespace SpriteEvo
 {
-    public class PA_Mod : Mod
+    public class ModSettings : Verse.ModSettings
     {
-        public PA_Mod(ModContentPack content) : base(content)
-        {
-        }
+        public static bool debugOverride = false;
     }
 }
