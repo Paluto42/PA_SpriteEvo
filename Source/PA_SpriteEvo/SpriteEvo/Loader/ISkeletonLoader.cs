@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Verse;
 
 namespace SpriteEvo
 {
@@ -18,8 +19,22 @@ namespace SpriteEvo
     /// </summary>
     public abstract class SkeletonLoader
     {
-        public SkeletonLoader() 
+        public SpinePackDef def;
+        public TextAsset atlasInput;
+        public TextAsset skeletonInput;
+        public SkeletonLoader(SpinePackDef def, TextAsset atlas, TextAsset skeleton) 
         {
+            this.def = def;
+            this.atlasInput = atlas;
+            this.skeletonInput = skeleton;
+        }
+        public virtual void AtlasErrorMessage() 
+        {
+            Log.Error(this.def.defName + " SpineAssetPack Missing Atlas");
+        }
+        public virtual void SkeletonErrorMessage() 
+        {
+            Log.Error(this.def.defName + " SpineAssetPack Missing Skeleton");
         }
         ///<summary>读取 SkeletonDataAsset (Spine3.8版本)</summary>
         public abstract Spine38.Unity.SkeletonDataAsset Create_SkeletonDataAsset38();

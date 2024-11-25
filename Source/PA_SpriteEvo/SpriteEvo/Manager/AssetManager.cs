@@ -18,12 +18,12 @@ namespace SpriteEvo
 
         //public static Dictionary<Thing, GameObject> ThingObjectDatabase = new();
 
-        public static Dictionary<string, SpineAssetPack> spine38_Database = new();
+        public static Dictionary<string, SkeletonLoader> spine38_Database = new();
 
-        public static Dictionary<string, SpineAssetPack> spine41_Database = new();
+        public static Dictionary<string, SkeletonLoader> spine41_Database = new();
 
         //May be Null.
-        public static SpineAssetPack FindSpineAssetPack(this SpinePackDef def) 
+        public static SkeletonLoader FindSpineAssetPack(this SpinePackDef def) 
         {
             if (def == null) return null;
             if (def.props.version == "3.8")
@@ -34,6 +34,20 @@ namespace SpriteEvo
             {
                 return spine41_Database.TryGetValue(def.defName);
             }
+            return null;
+        }
+        public static SpineMatAsset FindSpineMatAssetPack(this SpinePackDef def)
+        {
+            var pack = FindSpineAssetPack(def);
+            if (pack is SpineMatAsset matpack) 
+                return matpack;
+            return null;
+        }
+        public static SpineTexAsset FindSpineTexAssetPack(this SpinePackDef def)
+        {
+            var pack = FindSpineAssetPack(def);
+            if (pack is SpineTexAsset texpack)
+                return texpack;
             return null;
         }
     }

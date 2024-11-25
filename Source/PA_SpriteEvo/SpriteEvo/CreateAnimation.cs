@@ -1,77 +1,30 @@
-﻿using System.Collections.Generic;
-using Verse;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using System;
+using Verse;
 
 namespace SpriteEvo
 {
-    public static class AssetExtensions
+    public static class CreateAnimation
     {
-        public static bool Is_StraightAlphaTexture = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
         public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
         public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.ObjectDatabase;
-        #region 一些小拓展方法
-        ///<summary>获取一个模型实例的定位点Bone</summary>
-        public static Spine38.Bone RootBone(this Spine38.Unity.SkeletonAnimation instance)
+        public struct GenAnimationRequest
         {
-            return instance.skeleton.RootBone;
+            public string name;
+            public int layer;
+            public Vector3 rotation;
+            public Vector3 scale;
+            public string defaultskin;
+            public string defaultAnimation;
         }
-        public static Spine41.Bone RootBone(this Spine41.Unity.SkeletonAnimation instance)
-        {
-            return instance.skeleton.RootBone;
-        }
-        ///<summary>获取一个模型实例里的Bone (可能为Null)</summary>
-        public static Spine38.Bone GetBone(this Spine38.Unity.SkeletonAnimation instance, string name)
-        {
-            return instance.skeleton.FindBone(name);
-        }
-        public static Spine41.Bone GetBone(this Spine41.Unity.SkeletonAnimation instance, string name)
-        {
-            return instance.skeleton.FindBone(name);
-        }
-        ///<summary>获取一个模型实例里的Bone的实际坐标 (不推荐在动画运动时使用)</summary>
-        public static Vector3 GetBonePositon(this Spine38.Unity.SkeletonAnimation instance, string name)
-        {
-            Spine38.Bone bone = instance.skeleton.FindBone(name);
-            if (bone == null)
-            {
-                return Vector3.zero;
-            }
-            return Spine38.Unity.SkeletonExtensions.GetWorldPosition(bone, instance.transform);
-        }
-        public static Vector3 GetBonePositon(this Spine41.Unity.SkeletonAnimation instance, string name)
-        {
-            Spine41.Bone bone = instance.skeleton.FindBone(name);
-            if (bone == null)
-            {
-                return Vector3.zero;
-            }
-            return Spine41.Unity.SkeletonExtensions.GetWorldPosition(bone, instance.transform);
-        }
-        ///<summary>访问SkeletonAnimation实例的SkeletonDataAsset 获取指定名称的Spine动画数据对象</summary>
-        public static Spine38.Animation GetAnimation(this Spine38.Unity.SkeletonAnimation instance, string name)
-        {
-            return instance?.SkeletonDataAsset.GetSkeletonData(false).FindAnimation(name);
-        }
-        ///<summary>访问SkeletonAnimation实例的SkeletonDataAsset 返回包含该骨骼文件的全部动画对象的列表</summary>
-        public static List<Spine38.Animation> GetAllAnimations(this Spine38.Unity.SkeletonAnimation instance)
-        {
-            Spine38.ExposedList<Spine38.Animation> animations = instance?.SkeletonDataAsset.GetSkeletonData(false).Animations;
-            List<Spine38.Animation> IList = new List<Spine38.Animation>();
-            for (int i = 0, n = animations.Count; i < n; i++)
-            {
-                Spine38.Animation animation = animations.Items[i];
-                IList.Add(animation);
-            }
-            return IList;
-        }
-        #endregion
+
         ///<summary>(在当前游戏GC内) 在指定坐标位置初始化创建一个SkeletonAnimation实例对象后返回该运行时实例
         /// <para>需要一个key用于在游戏内记录当前动画实例, 默认启用的动画名称 是否循环播放. 该实例强制禁用DontDestroyOnLoad功能.</para>
         /// <para>懒人模式 填好XML 给出初始动画名称和坐标 即可.</para>
         /// </summary>
-        public static GameObject CreateAnimationInstanceAtPos(this SpineAssetPack pack, Vector3 pos, string InitAnimation = null, bool visiable = true, bool loop = true, bool DontDestroyOnLoad = false) 
+        public static GameObject CreateAnimationInstanceAtPos(this SkeletonLoader pack, Vector3 pos, string InitAnimation = null, bool visiable = true, bool loop = true, bool DontDestroyOnLoad = false)
         {
             if (pack == null) return null;
             Vector3 offset = new Vector3(pack.def.offset.x, 0, pack.def.offset.y);
@@ -112,7 +65,9 @@ namespace SpriteEvo
                 animation.transform.localScale = scale;
                 //newObject.skeleton.SetSkin();
                 //TrackEntry 
-                animation.AnimationState.SetAnimation(0, pack.def.props.idleAnimationName, loop);
+                if (InitAnimation == null)
+                    InitAnimation = pack.def.props.idleAnimationName;
+                animation.AnimationState.SetAnimation(0, InitAnimation, loop);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 if (DontDestroyOnLoad)
@@ -124,7 +79,7 @@ namespace SpriteEvo
         ///<summary>(在当前游戏GC内) 初始化创建一个用于输出RenderTexture的SkeletonAnimation实例对象后返回该运行时实例
         /// <para>需要一个key用于在游戏内记录当前动画实例, 默认启用的动画名称 是否循环播放. 该实例强制禁用DontDestroyOnLoad功能.</para>
         /// </summary>
-        public static GameObject Create_GameOnlyAnimationTextureInstance(this SpineAssetPack pack, object key, string InitAnimation = null, bool loop = true) 
+        public static GameObject Create_GameOnlyAnimationTextureInstance(this SkeletonLoader pack, object key, string InitAnimation = null, bool loop = true)
         {
             if (pack == null) return null;
             GameObject obj = GC_GameObjectManager.TryGetRecord(key);
@@ -138,7 +93,7 @@ namespace SpriteEvo
             return instance;
         }
         ///<summary>(具有全局唯一性地)初始化创建一个用于输出RenderTexture的SkeletonAnimation实例对象后返回该运行时实例</summary>
-        internal static GameObject Create_GlobalAnimationTextureInstance(this SpineAssetPack pack, string InitAnimation = null, bool loop = true, bool DontDestroyOnLoad = true) 
+        public static GameObject Create_GlobalAnimationTextureInstance(this SkeletonLoader pack, string InitAnimation = null, bool loop = true, bool DontDestroyOnLoad = true)
         {
             if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
@@ -149,18 +104,17 @@ namespace SpriteEvo
             }
             GameObject instance = Create_AnimationTextureInstance(pack, InitAnimation, loop, DontDestroyOnLoad);
             DynamicObjectDatabase.Add(pack.def.defName, instance);
-            GC_GameObjectManager.Add(pack.def.defName, instance);
             return instance;
         }
         ///<summary>创建一个用于输出RenderTexture的SkeletonAnimation实例对象并进行初始化</summary>
-        public static GameObject Create_AnimationTextureInstance(this SpineAssetPack pack, string animationName = null, bool loop = true, bool DontDestroyOnLoad = false)
+        public static GameObject Create_AnimationTextureInstance(this SkeletonLoader pack, string animationName = null, bool loop = true, bool DontDestroyOnLoad = false)
         {
             if (pack == null) return null;
             Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, pack.def.scale.y * 0.1f, 1f);
             string version = pack.def.props.version;
             if (version == "3.8")
             {
-                
+
                 Spine38.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset38();
                 if (skeleton == null) { return null; }
                 Spine38.Unity.SkeletonAnimation animation = Spine38.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
@@ -213,7 +167,7 @@ namespace SpriteEvo
             return null;
         }
         ///<summary>(具有全局唯一性地)初始化创建一个SkeletonAnimation实例对象后返回该运行时实例</summary>
-        public static GameObject CreateGlobalAnimationInstance(this SpineAssetPack pack, string animationName = null, bool visiable = false, bool Isloop = true, bool DontDestroyOnLoad = true)
+        public static GameObject CreateGlobalAnimationInstance(this SkeletonLoader pack, string animationName = null, bool visiable = false, bool Isloop = true, bool DontDestroyOnLoad = true)
         {
             if (pack == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
@@ -227,7 +181,7 @@ namespace SpriteEvo
             return instance;
         }
         ///<summary>创建一个SkeletonAnimation实例对象并进行初始化</summary>
-        internal static GameObject CreateAnimationInstance (this SpineAssetPack pack, string animationName = null, bool visiable = false, bool Isloop = true, bool DontDestroyOnLoad = false)
+        public static GameObject CreateAnimationInstance(this SkeletonLoader pack, string animationName = null, bool visiable = false, bool Isloop = true, bool DontDestroyOnLoad = false)
         {
             if (pack == null) return null;
             Vector3 offset = new Vector3(pack.def.offset.x, 0, pack.def.offset.y);
@@ -276,7 +230,7 @@ namespace SpriteEvo
             }
             return null;
         }
-        public static GameObject AddCameraToSkeletonAnimation(this GameObject instance, string name, Vector3 offset) 
+        public static GameObject AddCameraToSkeletonAnimation(this GameObject instance, string name, Vector3 offset)
         {
             //添加Camera
             GameObject myGO = new(name, new Type[] { typeof(Camera) });
@@ -299,11 +253,10 @@ namespace SpriteEvo
             return myGO;
         }
         [Obsolete]
-        internal static void Create_CanvasInstance(this SpineAssetPack pack, Pawn pawn, bool loop = true)
+        public static void Create_CanvasInstance(this SkeletonLoader pack, Pawn pawn, bool loop = true)
         {
             Vector3 offset = new Vector3(pack.def.offset.x, 0, pack.def.offset.y);
             Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, 1f, pack.def.scale.y * 0.1f);
-
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
             if (obj != null)
             {
@@ -320,12 +273,12 @@ namespace SpriteEvo
             parent.localScale = scale;
 
             Material SkeletonGraphic_alpha = Spine_SkeletonGraphic;
-            if (!pack.useStraightAlpha)
+            /*if (!pack.useStraightAlpha)
             {
                 SkeletonGraphic_alpha.SetFloat("_StraightAlphaInput", 0);
                 SkeletonGraphic_alpha.DisableKeyword("_STRAIGHT_ALPHA_INPUT");
                 Log.Message("_STRAIGHT_ALPHA_INPUT OFF");
-            }
+            }*/
             Spine38.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset38();
             Spine38.Unity.SkeletonGraphic graphic = Spine38.Unity.SkeletonGraphic.NewSkeletonGraphicGameObject(skeleton, parent, SkeletonGraphic_alpha);
 
@@ -340,7 +293,7 @@ namespace SpriteEvo
             graphic.gameObject.SetActive(false);
             DynamicObjectDatabase.Add(pack.def.defName, graphic.gameObject);
         }
-        internal static void Destory_SpineAnimationModel(string name)
+        public static void Destory_SpineAnimationModel(string name)
         {
             GameObject obj = DynamicObjectDatabase.TryGetValue(name);
             if (obj != null)

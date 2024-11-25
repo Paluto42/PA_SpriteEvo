@@ -1,4 +1,5 @@
 ﻿using SpriteEvo.Extensions;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
@@ -28,10 +29,9 @@ namespace SpriteEvo.Unity
     //由于Sorting Layer的鬼畜，不得不使用单独的Camera直接拿到贴图渲染。
     public static class AnimationGenerator
     {
-        private static Dictionary<string, SpineAssetPack> Spine38_DB => AssetManager.spine38_Database;
-        private static Dictionary<string, SpineAssetPack> Spine41_DB => AssetManager.spine41_Database;
+        private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
+        private static Dictionary<string, SkeletonLoader> Spine41_DB => AssetManager.spine41_Database;
         //private static Dictionary<Thing, GameObject> ThingObject_DB => AssetManager.ThingObjectDatabase;
-
         private static List<PawnKindSpriteDef> PawnKindDB => DefDatabase<PawnKindSpriteDef>.AllDefsListForReading;
 
         public static void MergeAnimation(Thing t, PawnKindSpriteDef test, string name = null)
@@ -41,23 +41,15 @@ namespace SpriteEvo.Unity
             Vector3 rot = new(90f, 0f, 0f);
             GameObject baseroot = Create_FxRootBase(rot, name);
             baseroot.SetFxRootAtThing(t);
-            if (t is Pawn p)
+            if (t is Pawn)
             {
                 if (test == null) return;
-                //
-                var packhead = test.head.south.parent.FindSpineAssetPack();
-                //var packhair = test.head.south.attachments[0].attachment.FindSpineAssetPack();
-                //var newSkeleton = JsonMerger.MergeSkeletonFromJSON(packhead, packhair);
-                /*for (int i = 1; i < test.head.south.attachments.Count; i++)
-                {
-                }*/
-                List<SpineAssetPack> packs = new List<SpineAssetPack>();
-                foreach (var item in test.head.south.attachments)
-                {
-                    packs.Add(item.attachment.FindSpineAssetPack());
+                var packhead = test.head.south.parent.FindSpineTexAssetPack();
+                SpineTexAsset[] arrays = new SpineTexAsset[test.head.south.attachments.Count];
+                for (int i = 0; i < arrays.Length; i++) { 
+                    arrays[i] = test.head.south.attachments[i].attachment.FindSpineTexAssetPack();
                 }
-                var newSkeleton = JsonMerger.MergeSkeletonFromJSONs(packhead, packs);
-
+                var newSkeleton = JsonMerger.MergeSkeletonFromJSONs(packhead, arrays);
                 var animation = Spine41.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(newSkeleton);
                 //Initilize
                 animation.gameObject.name = "Spine_" + packhead.def.defName;
@@ -150,7 +142,7 @@ namespace SpriteEvo.Unity
             }
             return null;
         }
-        private static GameObject AddAttachment(this GameObject parent, SpineAssetPack pack, int layer = 0, bool loop = false) 
+        private static GameObject AddAttachment(this GameObject parent, SkeletonLoader pack, int layer = 0, bool loop = false) 
         {
             if (parent == null) return null;
             if (pack == null) return null;
@@ -204,10 +196,10 @@ namespace SpriteEvo.Unity
         private static GameObject SetHeadRotateForFxhead(this ParentWithAttachment pwa, GameObject fxhead, Rot4 rot, string version = "4.1", int headlayer = 1)
         {
             if (pwa.parent == null || fxhead == null) return null;
-            Dictionary<string, SpineAssetPack> db;
+            Dictionary<string, SkeletonLoader> db;
             if (version == "4.1") db = Spine41_DB;
             else db = Spine38_DB;
-            SpineAssetPack head_pack = db.TryGetValue(pwa.parent.defName);
+            SkeletonLoader head_pack = db.TryGetValue(pwa.parent.defName);
             if (head_pack == null)
             {
                 Log.Error("southheadDef.head找不到!");
@@ -239,7 +231,7 @@ namespace SpriteEvo.Unity
             {
                 if (a.attachment != null)
                 {
-                    SpineAssetPack pack = db.TryGetValue(a.attachment.defName);
+                    SkeletonLoader pack = db.TryGetValue(a.attachment.defName);
                     GameObject attach = headrotate.AddAttachment(pack, layer: a.layer);
                     attach.RecordFacialAttachmentToComp(fcc, a.tag);
                 }
@@ -313,16 +305,16 @@ namespace SpriteEvo.Unity
         private static GameObject SetBodyRotateForFxBody(this ParentWithAttachment pwa, GameObject fxbody, Rot4 rot, string version = "4.1", int bodylayer = 1)
         {
             if (pwa.parent == null || fxbody == null) return null;
-            Dictionary<string, SpineAssetPack> db;
+            Dictionary<string, SkeletonLoader> db;
             if (version == "4.1") db = Spine41_DB;
             else db = Spine38_DB;
-            SpineAssetPack body_pack = db.TryGetValue(pwa.parent.defName);
+            SkeletonLoader body_pack = db.TryGetValue(pwa.parent.defName);
             if (body_pack == null)
             {
                 Log.Error("southbodyDef.body找不到!");
                 return null;
             }
-            GameObject bodyrotate = AssetExtensions.CreateAnimationInstance(body_pack, Isloop: false);
+            GameObject bodyrotate = body_pack.CreateAnimationInstance(Isloop: false);
             bodyrotate.GetComponent<MeshRenderer>().sortingOrder = bodylayer;
             bodyrotate.SetParentSafely(fxbody);
             BodyControllWorker bcc = bodyrotate.AddComponent<BodyControllWorker>();
@@ -348,7 +340,7 @@ namespace SpriteEvo.Unity
             {
                 if (a.attachment != null)
                 {
-                    SpineAssetPack pack = db.TryGetValue(a.attachment.defName);
+                    SkeletonLoader pack = db.TryGetValue(a.attachment.defName);
                     GameObject attach = bodyrotate.AddAttachment(pack, layer: a.layer);
                     attach.RecordBodyAttachmentToComp(bcc, a.tag);
                 }

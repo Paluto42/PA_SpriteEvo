@@ -85,7 +85,7 @@ namespace SpriteEvo
                     break;
                 }
             }
-            SpineAssetPack pack = AssetManager.spine38_Database?.TryGetValue(defName); ;
+            SkeletonLoader pack = AssetManager.spine38_Database?.TryGetValue(defName); ;
             if (pack == null)
             {
                 Log.Error("[PA]. SpineAssetPack " + defName + "Not Found");
@@ -114,7 +114,7 @@ namespace SpriteEvo
         }
         private static void TrySetPawnAnimation(OperatorDocument doc, Pawn pawn)
         {
-            PawnKindSpriteDef test = DefDatabase<PawnKindSpriteDef>.AllDefsListForReading.FirstOrDefault(pd => pd.defName == "Chang_An");
+            var test = DefDatabase<PawnKindSpriteDef>.AllDefsListForReading.FirstOrDefault(pd => pd.defName == "Chang_An_Test");
             if (test == null)
             {
                 Log.Error("PawnKindSpriteDef Not Found");

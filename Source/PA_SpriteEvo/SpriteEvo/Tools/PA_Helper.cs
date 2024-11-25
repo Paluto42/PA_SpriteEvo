@@ -30,33 +30,6 @@ namespace SpriteEvo
                 GameObject.Destroy(obj);
             }
         }
-        //May be Null
-        public static TextAsset AppendToAtlasText(this TextAsset child, TextAsset parent)
-        {
-            if (parent == null || child == null) return null;
-            string origincontent = parent.text;
-            string toappend = child.text;
-            string result = origincontent + "\n\n" + toappend;
-            TextAsset newatlas = new TextAsset(result)
-            {
-                name = parent.name
-            };
-            return newatlas;
-        }
-        //May be Null
-        public static Texture2D[] AppendToTextureArray(this Texture2D[] child, Texture2D[] parent)
-        {
-            if (parent == null || child == null) return null;
-            Texture2D[] mergedTexArray = new Texture2D[parent.Length + child.Length];
-            for (int i = 0; i < parent.Length; i++)
-            {
-                mergedTexArray[i] = parent[i];
-            }
-            for (int i = 0; i < child.Length; i++)
-            {
-                mergedTexArray[parent.Length + i] = child[i];
-            }
-            return mergedTexArray;
-        }
+
     }
 }

@@ -6,12 +6,10 @@ using Verse;
 namespace SpriteEvo
 {
     //暂时好像没用
-    public class GameObjectDocument : IExposable, ILoadReferenceable
+    public class GODocument : IExposable, ILoadReferenceable
     {
         public string objectID;
         public bool currentExist;
-        public GameObject document;
-
 
         public void ExposeData()
         {
