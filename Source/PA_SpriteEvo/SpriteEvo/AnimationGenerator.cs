@@ -9,24 +9,6 @@ using Verse.Noise;
 
 namespace SpriteEvo.Unity
 {
-    /*Root模型结构:
-     *   根节点: Fx_Root ，只负责更新坐标
-     *   {
-     *     //别问我为什么头和身体分开渲染，泰南也干了
-     *     第一层节点: Fx_Head  负责切换旋转方向,使用HeadControllerComp组件控制下面的节点实现头部动画
-     *     {
-     *       South Head, North Head, East Head为第二层节点 是头部的SkeletonAnimation附件物体
-     *       {
-     *         //Facial Attachments
-     *         Front Hair, Back Hair, EyeBow, LeftEye, RightEye, Mouth等面部部件挂在下面,为第三层节点  
-     *         
-     *     第一层节点: Fx_Body
-     *     {
-     *     
-     *     第一层节点: Fx_Extra
-     *     {
-     */
-    //由于Sorting Layer的鬼畜，不得不使用单独的Camera直接拿到贴图渲染。
     public static class AnimationGenerator
     {
         private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
@@ -54,9 +36,9 @@ namespace SpriteEvo.Unity
                 //Initilize
                 animation.gameObject.name = "Spine_" + packhead.def.defName;
                 animation.gameObject.layer = 2;
-                animation.transform.rotation = Quaternion.Euler(packhead.def.rotation);
+                animation.transform.rotation = Quaternion.Euler(packhead.def.props.rotation);
                 //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
-                animation.transform.localScale = new Vector3(packhead.def.scale.x * 0.1f, packhead.def.scale.y * 0.1f, 1f);
+                animation.transform.localScale = new Vector3(packhead.def.props.scale.x, packhead.def.props.scale.y, 1f);
                 //newObject.skeleton.SetSkin();
                 //TrackEntry 
                 animation.AnimationState.SetAnimation(0, packhead.def.props.idleAnimationName, true);

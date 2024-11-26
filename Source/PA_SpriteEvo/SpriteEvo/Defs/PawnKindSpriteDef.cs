@@ -17,13 +17,13 @@ namespace SpriteEvo
     }
     public class Attachment 
     {
-        public SpinePackDef attachment;
+        public SpineAssetDef attachment;
         public AttachmentTag tag = AttachmentTag.None;
         public int layer = 0;
     } 
     public class ParentWithAttachment
     {
-        public SpinePackDef parent;
+        public SpineAssetDef parent;
         public List<Attachment> attachments = new List<Attachment>();
     }
     public class VWH_Model

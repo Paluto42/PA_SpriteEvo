@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>9.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>9.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -96,7 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SpriteEvo.Unity\AnimationID.cs" />
+    <Compile Include="SpriteEvo.Unity\AnimationController.cs" />
     <Compile Include="SpriteEvo\Loader\SpineMatAsset.cs" />
     <Compile Include="SpriteEvo\Loader\SpineTexAsset.cs" />
     <Compile Include="SpriteEvo\AssetExtensions.cs" />
@@ -125,7 +127,7 @@
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
     <Compile Include="SpriteEvo\Mod\Mod.cs" />
     <Compile Include="SpriteEvo\Mod\ModSettings.cs" />
-    <Compile Include="SpriteEvo\Defs\SpinePackDef.cs" />
+    <Compile Include="SpriteEvo\Defs\SpineAssetDef.cs" />
     <Compile Include="SpriteEvo\AnimationGenerator.cs" />
     <Compile Include="SpriteEvo\Tools\PA_Helper.cs" />
     <Compile Include="SpriteEvo\TypeDef.cs" />

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SpriteEvo.Unity
 {
-    public class AnimationID : BaseControllComp
+    public class AnimationController : BaseControllComp
     {
         public System.Object ID;
 

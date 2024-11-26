@@ -1,77 +1,119 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Verse;
 
 namespace SpriteEvo
 {
     public static class CreateAnimation
     {
+        public struct SkeletonAnimationRequest
+        {
+            public SkeletonLoader loader;
+            public Color color;
+            public Vector3 offset;
+            public Vector3 position;
+            public Vector3 rotation;
+            public Vector3 scale;
+            public string skin;
+            public string defaultAnimation;
+            public bool PremultipliedAlpha;
+            public bool loop;
+            public float timeScale;
+            //默认关闭光照和反射探测 = 0 应该带来微小的性能提示
+            public LightProbeUsage lightProbe;
+            public ReflectionProbeUsage reflectionProbe;
+        }
+        public struct SkeletonGraphicRequest
+        {
+            public SkeletonLoader loader;
+            public Color color;
+            public Vector3 offset;
+            public Vector3 position;
+            public Vector3 rotation;
+            public Vector3 scale;
+            public string skin;
+            public string defaultAnimation;
+            public bool PremultipliedAlpha;
+            public bool loop;
+            public float timeScale;
+        }
+        public static bool currentlyGenerating = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
         public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
         public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.ObjectDatabase;
-        public struct GenAnimationRequest
-        {
-            public string name;
-            public int layer;
-            public Vector3 rotation;
-            public Vector3 scale;
-            public string defaultskin;
-            public string defaultAnimation;
-        }
 
+        public static GameObject CreateAnimationInstacnceAtPos(this SpineAssetDef def, Vector3 pos = default, bool loop = true) 
+        {
+            SkeletonLoader loader = def.TryGetSpineAsset();
+            if (loader == null) 
+            {
+                Log.Error("PA.SpriteEvo" + def.defName + " No SpineAsset Found");
+                return null;
+            }
+            SkeletonAnimationRequest sar = default;
+            sar.loader = loader;
+            sar.color = def.props.color;
+            sar.skin = def.props.skin;
+            sar.defaultAnimation = def.props.idleAnimationName;
+            sar.position = pos;
+            sar.rotation = def.props.rotation;
+            sar.scale = def.props.rotation;
+            sar.loop = loop;
+            sar.timeScale = def.props.timeScale;
+            return CreateAnimationInstanceAtPos(sar);
+        }
         ///<summary>(在当前游戏GC内) 在指定坐标位置初始化创建一个SkeletonAnimation实例对象后返回该运行时实例
         /// <para>需要一个key用于在游戏内记录当前动画实例, 默认启用的动画名称 是否循环播放. 该实例强制禁用DontDestroyOnLoad功能.</para>
         /// <para>懒人模式 填好XML 给出初始动画名称和坐标 即可.</para>
         /// </summary>
-        public static GameObject CreateAnimationInstanceAtPos(this SkeletonLoader pack, Vector3 pos, string InitAnimation = null, bool visiable = true, bool loop = true, bool DontDestroyOnLoad = false)
+        public static GameObject CreateAnimationInstanceAtPos(SkeletonAnimationRequest sar, bool activeSelf = true, bool DontDestroyOnLoad = false)
         {
-            if (pack == null) return null;
-            Vector3 offset = new Vector3(pack.def.offset.x, 0, pack.def.offset.y);
-            Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, pack.def.scale.y * 0.1f, 1f);
-            string version = pack.def.props.version;
+            if (sar.loader == null) return null;
+            Vector3 scale = new(sar.scale.x, sar.scale.y, 1f);
+            string version = sar.loader.def.asset.version;
             if (version == "3.8")
             {
-                Spine38.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset38();
+                Spine38.Unity.SkeletonDataAsset skeleton = sar.loader.Create_SkeletonDataAsset38();
                 Spine38.Unity.SkeletonAnimation animation = Spine38.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
-                animation.gameObject.name = pack.def.defName;
-                animation.gameObject.layer = 5;
-                animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
+                animation.gameObject.name = sar.loader.def.defName;
+                animation.gameObject.layer = 2;
+                animation.transform.rotation = Quaternion.Euler(sar.rotation);
                 //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
-                animation.transform.localScale = scale;
-                animation.skeleton.SetSkin(pack.def.props.skin);
+                animation.transform.localScale = sar.scale;
+                animation.skeleton.SetSkin(sar.skin);
                 //TrackEntry 
-                if (InitAnimation == null)
-                    InitAnimation = pack.def.props.idleAnimationName;
-                animation.AnimationState.SetAnimation(0, InitAnimation, loop);
+                sar.defaultAnimation ??= sar.loader.def.props.idleAnimationName;
+                animation.AnimationState.SetAnimation(0, sar.defaultAnimation, sar.loop);
                 animation.Initialize(overwrite: false);
-                animation.gameObject.SetActive(value: visiable);
+                animation.gameObject.SetActive(value: activeSelf);
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
                 //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
-                animation.transform.position = pos;
+                animation.transform.position = sar.position;
                 return animation.gameObject;
             }
             else if (version == "4.1")
             {
-                Spine41.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset41();
+                Spine41.Unity.SkeletonDataAsset skeleton = sar.loader.Create_SkeletonDataAsset41();
                 Spine41.Unity.SkeletonAnimation animation = Spine41.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
-                animation.gameObject.name = "Spine_" + pack.def.defName;
+                animation.gameObject.name = "Spine_" + sar.loader.def.defName;
                 animation.gameObject.layer = 2;
-                animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
+                animation.transform.rotation = Quaternion.Euler(sar.rotation);
                 //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
                 animation.transform.localScale = scale;
                 //newObject.skeleton.SetSkin();
                 //TrackEntry 
-                if (InitAnimation == null)
-                    InitAnimation = pack.def.props.idleAnimationName;
-                animation.AnimationState.SetAnimation(0, InitAnimation, loop);
+                sar.defaultAnimation ??= sar.loader.def.props.idleAnimationName;
+                animation.AnimationState.SetAnimation(0, sar.defaultAnimation, sar.loop);
                 animation.Initialize(overwrite: false);
-                animation.gameObject.SetActive(value: false);
+                animation.gameObject.SetActive(value: activeSelf);
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
+                animation.transform.position = sar.position;
                 return animation.gameObject;
             }
             return null;
@@ -110,8 +152,8 @@ namespace SpriteEvo
         public static GameObject Create_AnimationTextureInstance(this SkeletonLoader pack, string animationName = null, bool loop = true, bool DontDestroyOnLoad = false)
         {
             if (pack == null) return null;
-            Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, pack.def.scale.y * 0.1f, 1f);
-            string version = pack.def.props.version;
+            Vector3 scale = new Vector3(pack.def.props.scale.x * 0.1f, pack.def.props.scale.y * 0.1f, 1f);
+            string version = pack.def.asset.version;
             if (version == "3.8")
             {
 
@@ -121,7 +163,7 @@ namespace SpriteEvo
                 //Initilize
                 animation.gameObject.name = pack.def.defName;
                 animation.gameObject.layer = 5;
-                animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
+                animation.transform.rotation = Quaternion.Euler(pack.def.props.rotation);
                 animation.transform.localScale = scale;
                 animation.skeleton.SetSkin(pack.def.props.skin); ;
                 //TrackEntry 
@@ -131,7 +173,7 @@ namespace SpriteEvo
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: false);
                 //添加Camera
-                animation.gameObject.AddCameraToSkeletonAnimation("RenderCamera38" + "_" + pack.def.defName, pack.def.uioffset);
+                animation.gameObject.AddCameraToSkeletonAnimation("RenderCamera38" + "_" + pack.def.defName, pack.def.props.uioffset);
 
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
@@ -146,7 +188,7 @@ namespace SpriteEvo
                 //Initilize
                 animation.gameObject.name = pack.def.defName;
                 animation.gameObject.layer = 5;
-                animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
+                animation.transform.rotation = Quaternion.Euler(pack.def.props.rotation);
                 animation.transform.localScale = scale;
                 animation.skeleton.SetSkin(pack.def.props.skin); ;
                 //TrackEntry 
@@ -184,9 +226,9 @@ namespace SpriteEvo
         public static GameObject CreateAnimationInstance(this SkeletonLoader pack, string animationName = null, bool visiable = false, bool Isloop = true, bool DontDestroyOnLoad = false)
         {
             if (pack == null) return null;
-            Vector3 offset = new Vector3(pack.def.offset.x, 0, pack.def.offset.y);
-            Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, pack.def.scale.y * 0.1f, 1f);
-            string version = pack.def.props.version;
+            Vector3 offset = new Vector3(pack.def.props.offset.x, 0, pack.def.props.offset.y);
+            Vector3 scale = new Vector3(pack.def.props.scale.x * 0.1f, pack.def.props.scale.y * 0.1f, 1f);
+            string version = pack.def.asset.version;
             if (version == "3.8")
             {
                 Spine38.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset38();
@@ -194,7 +236,7 @@ namespace SpriteEvo
                 //Initilize
                 animation.gameObject.name = pack.def.defName;
                 animation.gameObject.layer = 5;
-                animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
+                animation.transform.rotation = Quaternion.Euler(pack.def.props.rotation);
                 //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
                 animation.transform.localScale = scale;
                 animation.skeleton.SetSkin(pack.def.props.skin);
@@ -216,7 +258,7 @@ namespace SpriteEvo
                 //Initilize
                 animation.gameObject.name = "Spine_" + pack.def.defName;
                 animation.gameObject.layer = 2;
-                animation.transform.rotation = Quaternion.Euler(pack.def.rotation);
+                animation.transform.rotation = Quaternion.Euler(pack.def.props.rotation);
                 //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
                 animation.transform.localScale = scale;
                 //newObject.skeleton.SetSkin();
@@ -255,8 +297,8 @@ namespace SpriteEvo
         [Obsolete]
         public static void Create_CanvasInstance(this SkeletonLoader pack, Pawn pawn, bool loop = true)
         {
-            Vector3 offset = new Vector3(pack.def.offset.x, 0, pack.def.offset.y);
-            Vector3 scale = new Vector3(pack.def.scale.x * 0.1f, 1f, pack.def.scale.y * 0.1f);
+            Vector3 offset = new Vector3(pack.def.props.offset.x, 0, pack.def.props.offset.y);
+            Vector3 scale = new Vector3(pack.def.props.scale.x * 0.1f, 1f, pack.def.props.scale.y * 0.1f);
             GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
             if (obj != null)
             {

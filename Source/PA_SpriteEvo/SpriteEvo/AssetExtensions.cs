@@ -68,5 +68,26 @@ namespace SpriteEvo
             return IList;
         }
         #endregion
+        //对整个骨架染色。在激活后调用
+        public static void SetColor(this Spine38.Unity.SkeletonAnimation instance, Color color) 
+        {
+            if (instance == null) return;
+            Spine38.Unity.ISkeletonComponent skeletonComponent = instance.gameObject.GetComponent<Spine38.Unity.ISkeletonComponent>();
+            if (skeletonComponent != null)
+            {
+                Spine38.Skeleton skeleton = skeletonComponent.Skeleton;
+                Spine38.Unity.SkeletonExtensions.SetColor(skeleton, color);
+            }
+        }
+        public static void SetColor(this Spine41.Unity.SkeletonAnimation instance, Color color)
+        {
+            if (instance == null) return;
+            Spine41.Unity.ISkeletonComponent skeletonComponent = instance.gameObject.GetComponent<Spine41.Unity.ISkeletonComponent>();
+            if (skeletonComponent != null)
+            {
+                Spine41.Skeleton skeleton = skeletonComponent.Skeleton;
+                Spine41.Unity.SkeletonExtensions.SetColor(skeleton, color);
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace SpriteEvo
         public Shader shader;
         public bool useStraightAlpha;
 
-        public SpineTexAsset(SpinePackDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool usePMA = false) : base(def, atlas, skeleton)
+        public SpineTexAsset(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool usePMA = false) : base(def, atlas, skeleton)
         {
             this.textures = texs;
             this.shader = shader;
@@ -24,7 +24,7 @@ namespace SpriteEvo
 
         public override Spine38.Unity.SkeletonDataAsset Create_SkeletonDataAsset38()
         {
-            if (this.def.props.version != "3.8") { return null; }
+            if (this.def.asset.version != "3.8") { return null; }
             if (this.atlasInput == null) 
             {
                 AtlasErrorMessage();
@@ -51,7 +51,7 @@ namespace SpriteEvo
 
         public override Spine41.Unity.SkeletonDataAsset Create_SkeletonDataAsset41()
         {
-            if (this.def.props.version != "4.1") { return null; }
+            if (this.def.asset.version != "4.1") { return null; }
             if (this.atlasInput == null)
             {
                 AtlasErrorMessage();

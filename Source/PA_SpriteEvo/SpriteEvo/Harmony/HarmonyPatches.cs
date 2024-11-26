@@ -74,9 +74,9 @@ namespace SpriteEvo
         }
         private static void TrySetDynModel(OperatorDocument doc, Pawn pawn)
         {
-            List<SpinePackDef> list = DefDatabase<SpinePackDef>.AllDefsListForReading;
+            List<SpineAssetDef> list = DefDatabase<SpineAssetDef>.AllDefsListForReading;
             string defName = "AK_Spine_Dusk_dynillust_Nian";
-            foreach (SpinePackDef def in list)
+            foreach (SpineAssetDef def in list)
             {
                 string[] parts = def.defName.Split('_');
                 if (doc.operatorID.EndsWith(parts[2]))

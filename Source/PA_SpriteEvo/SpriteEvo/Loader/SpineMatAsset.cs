@@ -14,14 +14,14 @@ namespace SpriteEvo
         public Material[] materials;
         public bool useStraightAlpha;
 
-        public SpineMatAsset(SpinePackDef def, TextAsset atlas, TextAsset skeleton, Material[] mats, bool usePMA = false) : base(def, atlas, skeleton) 
+        public SpineMatAsset(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Material[] mats, bool usePMA = false) : base(def, atlas, skeleton) 
         {
             this.materials = mats;
             this.useStraightAlpha = usePMA;
         }
         public override Spine38.Unity.SkeletonDataAsset Create_SkeletonDataAsset38()
         {
-            if (this.def.props.version != "3.8") { return null; }
+            if (this.def.asset.version != "3.8") { return null; }
             if (this.atlasInput == null)
             {
                 AtlasErrorMessage();
@@ -46,7 +46,7 @@ namespace SpriteEvo
 
         public override Spine41.Unity.SkeletonDataAsset Create_SkeletonDataAsset41()
         {
-            if (this.def.props.version != "4.1") { return null; }
+            if (this.def.asset.version != "4.1") { return null; }
             if (this.atlasInput == null)
             {
                 AtlasErrorMessage();

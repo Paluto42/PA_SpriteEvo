@@ -23,29 +23,29 @@ namespace SpriteEvo
         public static Dictionary<string, SkeletonLoader> spine41_Database = new();
 
         //May be Null.
-        public static SkeletonLoader FindSpineAssetPack(this SpinePackDef def) 
+        public static SkeletonLoader TryGetSpineAsset(this SpineAssetDef def) 
         {
             if (def == null) return null;
-            if (def.props.version == "3.8")
+            if (def.asset.version == "3.8")
             {
                 return spine38_Database.TryGetValue(def.defName);
             }
-            else if (def.props.version == "4.1")
+            else if (def.asset.version == "4.1")
             {
                 return spine41_Database.TryGetValue(def.defName);
             }
             return null;
         }
-        public static SpineMatAsset FindSpineMatAssetPack(this SpinePackDef def)
+        public static SpineMatAsset FindSpineMatAssetPack(this SpineAssetDef def)
         {
-            var pack = FindSpineAssetPack(def);
+            var pack = TryGetSpineAsset(def);
             if (pack is SpineMatAsset matpack) 
                 return matpack;
             return null;
         }
-        public static SpineTexAsset FindSpineTexAssetPack(this SpinePackDef def)
+        public static SpineTexAsset FindSpineTexAssetPack(this SpineAssetDef def)
         {
-            var pack = FindSpineAssetPack(def);
+            var pack = TryGetSpineAsset(def);
             if (pack is SpineTexAsset texpack)
                 return texpack;
             return null;
