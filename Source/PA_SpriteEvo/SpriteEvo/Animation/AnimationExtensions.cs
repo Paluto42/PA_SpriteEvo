@@ -5,8 +5,7 @@ using System;
 
 namespace SpriteEvo
 {
-    //现在貌似没用
-    public static class AssetExtensions
+    public static class AnimationExtensions
     {
         public static bool Is_StraightAlphaTexture = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
@@ -68,8 +67,18 @@ namespace SpriteEvo
             return IList;
         }
         #endregion
-        //对整个骨架染色。在激活后调用
-        public static void SetColor(this Spine38.Unity.SkeletonAnimation instance, Color color) 
+        public static Spine38.Unity.SkeletonAnimation GetSkeletonAnimation38(GameObject instance) 
+        {
+            if (instance == null) return null;
+            return instance.GetComponent<Spine38.Unity.SkeletonAnimation>();
+        }
+        public static Spine41.Unity.SkeletonAnimation GetSkeletonAnimation41(GameObject instance)
+        {
+            if (instance == null) return null;
+            return instance.GetComponent<Spine41.Unity.SkeletonAnimation>();
+        }
+        //对整个骨架染色。在激活后调用,应在实例级别的骨架上修改
+        public static void SetColor(this Spine38.Unity.SkeletonAnimation instance, Color color, List<SlotSettings> slotSettings) 
         {
             if (instance == null) return;
             Spine38.Unity.ISkeletonComponent skeletonComponent = instance.gameObject.GetComponent<Spine38.Unity.ISkeletonComponent>();
@@ -77,9 +86,15 @@ namespace SpriteEvo
             {
                 Spine38.Skeleton skeleton = skeletonComponent.Skeleton;
                 Spine38.Unity.SkeletonExtensions.SetColor(skeleton, color);
+                foreach (SlotSettings s in slotSettings)
+                {
+                    Spine38.Slot slot = skeleton.FindSlot(s.slot);
+                    if (slot != null) 
+                        Spine38.Unity.SkeletonExtensions.SetColor(slot, color);
+                }
             }
         }
-        public static void SetColor(this Spine41.Unity.SkeletonAnimation instance, Color color)
+        public static void SetColor(this Spine41.Unity.SkeletonAnimation instance, Color color, List<SlotSettings> slotSettings)
         {
             if (instance == null) return;
             Spine41.Unity.ISkeletonComponent skeletonComponent = instance.gameObject.GetComponent<Spine41.Unity.ISkeletonComponent>();
@@ -87,6 +102,12 @@ namespace SpriteEvo
             {
                 Spine41.Skeleton skeleton = skeletonComponent.Skeleton;
                 Spine41.Unity.SkeletonExtensions.SetColor(skeleton, color);
+                foreach (SlotSettings s in slotSettings)
+                {
+                    Spine41.Slot slot = skeleton.FindSlot(s.slot);
+                    if (slot != null) 
+                        Spine41.Unity.SkeletonExtensions.SetColor(slot, color);
+                }
             }
         }
     }

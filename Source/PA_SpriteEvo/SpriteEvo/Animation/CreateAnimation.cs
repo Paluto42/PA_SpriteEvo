@@ -6,39 +6,47 @@ using Verse;
 
 namespace SpriteEvo
 {
+    #region 字段属性
+    ///<summary>创建动画实例时用于确定一个slot的颜色</summary>
+    [Serializable]
+    public class SlotSettings
+    {
+        public string slot = string.Empty;
+        public Color32 color = Color.white;
+    }
+    public struct SkeletonAnimationRequest
+    {
+        public SkeletonLoader loader;
+        public Color32 color;
+        public List<SlotSettings> slotSettings;
+        public Vector3 offset;
+        public Vector3 position;
+        public Vector3 rotation;
+        public Vector3 scale;
+        public string skin;
+        public string defaultAnimation;
+        public bool PremultipliedAlpha;
+        public bool loop;
+        public float timeScale;
+    }
+    public struct SkeletonGraphicRequest
+    {
+        public SkeletonLoader loader;
+        public Color32 color;
+        public List<SlotSettings> slotSettings;
+        public Vector3 offset;
+        public Vector3 position;
+        public Vector3 rotation;
+        public Vector3 scale;
+        public string skin;
+        public string defaultAnimation;
+        public bool PremultipliedAlpha;
+        public bool loop;
+        public float timeScale;
+    }
+    #endregion
     public static class CreateAnimation
     {
-        public struct SkeletonAnimationRequest
-        {
-            public SkeletonLoader loader;
-            public Color color;
-            public Vector3 offset;
-            public Vector3 position;
-            public Vector3 rotation;
-            public Vector3 scale;
-            public string skin;
-            public string defaultAnimation;
-            public bool PremultipliedAlpha;
-            public bool loop;
-            public float timeScale;
-            //默认关闭光照和反射探测 = 0 应该带来微小的性能提示
-            public LightProbeUsage lightProbe;
-            public ReflectionProbeUsage reflectionProbe;
-        }
-        public struct SkeletonGraphicRequest
-        {
-            public SkeletonLoader loader;
-            public Color color;
-            public Vector3 offset;
-            public Vector3 position;
-            public Vector3 rotation;
-            public Vector3 scale;
-            public string skin;
-            public string defaultAnimation;
-            public bool PremultipliedAlpha;
-            public bool loop;
-            public float timeScale;
-        }
         public static bool currentlyGenerating = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
         public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
@@ -93,6 +101,7 @@ namespace SpriteEvo
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
                 //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
                 animation.transform.position = sar.position;
+                DisableProbe(animation.gameObject);
                 return animation.gameObject;
             }
             else if (version == "4.1")
@@ -114,6 +123,7 @@ namespace SpriteEvo
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
                 animation.transform.position = sar.position;
+                DisableProbe(animation.gameObject);
                 return animation.gameObject;
             }
             return null;
@@ -124,14 +134,14 @@ namespace SpriteEvo
         public static GameObject Create_GameOnlyAnimationTextureInstance(this SkeletonLoader pack, object key, string InitAnimation = null, bool loop = true)
         {
             if (pack == null) return null;
-            GameObject obj = GC_GameObjectManager.TryGetRecord(key);
+            GameObject obj = GC_ThingDocument.TryGetRecord(key);
             if (obj != null)
             {
                 Log.Warning("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
                 return null;
             }
             GameObject instance = Create_AnimationTextureInstance(pack, InitAnimation, loop);
-            GC_GameObjectManager.Add(key, instance);
+            GC_ThingDocument.Add(key, instance);
             return instance;
         }
         ///<summary>(具有全局唯一性地)初始化创建一个用于输出RenderTexture的SkeletonAnimation实例对象后返回该运行时实例</summary>
@@ -177,6 +187,7 @@ namespace SpriteEvo
 
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
+                DisableProbe(animation.gameObject);
                 //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
                 return animation.gameObject;
             }
@@ -203,6 +214,7 @@ namespace SpriteEvo
 
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
+                DisableProbe(animation.gameObject);
                 //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
                 return animation.gameObject;
             }
@@ -248,6 +260,7 @@ namespace SpriteEvo
                 animation.gameObject.SetActive(value: visiable);
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
+                DisableProbe(animation.gameObject);
                 //DynamicObjectDatabase.Add(pack.def.defName, animation.gameObject);
                 return animation.gameObject;
             }
@@ -268,6 +281,7 @@ namespace SpriteEvo
                 animation.gameObject.SetActive(value: false);
                 if (DontDestroyOnLoad)
                     UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
+                DisableProbe(animation.gameObject);
                 return animation.gameObject;
             }
             return null;
@@ -334,6 +348,15 @@ namespace SpriteEvo
             graphic.Initialize(overwrite: false);
             graphic.gameObject.SetActive(false);
             DynamicObjectDatabase.Add(pack.def.defName, graphic.gameObject);
+        }
+        public static void DisableProbe(GameObject obj) 
+        {
+            var MeshRenderer = obj.GetComponent<MeshRenderer>();
+            if (MeshRenderer != null) 
+            {
+                MeshRenderer.lightProbeUsage = LightProbeUsage.Off;
+                MeshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            }
         }
         public static void Destory_SpineAnimationModel(string name)
         {

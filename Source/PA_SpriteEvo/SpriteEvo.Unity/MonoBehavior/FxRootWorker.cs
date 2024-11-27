@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using Verse;
 
 namespace SpriteEvo.Unity
@@ -20,15 +21,21 @@ namespace SpriteEvo.Unity
         GameObject FxBodyChild => FxBodyController?.gameObject;
         GameObject FxExtraChild => FxExtraController?.gameObject;
 
-        /*public virtual void DoRotation(Rot4 rot)
-        {
-            FxHeadController?.DoRotation(rot);
-            FxBodyController?.DoRotation(rot);
-            FxExtraController?.DoRotation(rot);
-        }*/
-        public virtual void DoMove()
+        //检查Pawn是否在地图上 因为切换地图不会触发自动回收 要禁用不在当前地图上的动画实例
+        public virtual void CheckUserMap()
         {
             if (Root == null || User == null) return;
+            if (User is Pawn P)
+            {
+                if (P.Map != Find.CurrentMap)
+                    Root.SetActive(false);
+                else
+                    Root.SetActive(true);
+            }
+        }
+        public virtual void DoMove()
+        {
+            if (Root == null || User == null || !Root.activeSelf) return;
             Root.transform.position = User.DrawPos;
         }
         public override void Awake()
@@ -52,6 +59,7 @@ namespace SpriteEvo.Unity
         {
             if (!CanDrawNow) return;
             if (User == null) return;
+            CheckUserMap();
             DoMove();
         }
         public override void LateUpdate()

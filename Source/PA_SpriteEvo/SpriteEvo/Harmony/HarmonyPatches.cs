@@ -91,7 +91,7 @@ namespace SpriteEvo
                 Log.Error("[PA]. SpineAssetPack " + defName + "Not Found");
                 return;
             }
-            GameObject obj = GC_GameObjectManager.TryGetRecord(defName);
+            GameObject obj = GC_ThingDocument.TryGetRecord(defName);
             //GameObject obj = AssetManager.ObjectDatabase.TryGetValue(pack.def.defName);
             if (obj == null)
             {
@@ -120,7 +120,7 @@ namespace SpriteEvo
                 Log.Error("PawnKindSpriteDef Not Found");
                 return;
             }
-            GameObject obj = GC_GameObjectManager.TryGetRecord(pawn);
+            GameObject obj = GC_ThingDocument.TryGetRecord(pawn);
             //GameObject obj = AssetManager.ThingObjectDatabase.TryGetValue(pawn);
             if (obj == null)
             {

@@ -19,11 +19,13 @@ namespace SpriteEvo
     /// </summary>
     public abstract class SkeletonLoader
     {
+        public string version;
         public SpineAssetDef def;
         public TextAsset atlasInput;
         public TextAsset skeletonInput;
         public SkeletonLoader(SpineAssetDef def, TextAsset atlas, TextAsset skeleton) 
         {
+            this.version = def.asset.version;
             this.def = def;
             this.atlasInput = atlas;
             this.skeletonInput = skeleton;

@@ -1,11 +1,8 @@
 ﻿using SpriteEvo.Extensions;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Xml.Linq;
 using UnityEngine;
 using Verse;
-using Verse.Noise;
 
 namespace SpriteEvo.Unity
 {
@@ -18,7 +15,7 @@ namespace SpriteEvo.Unity
 
         public static void MergeAnimation(Thing t, PawnKindSpriteDef test, string name = null)
         {
-            GameObject obj = GC_GameObjectManager.TryGetRecord(t);
+            GameObject obj = GC_ThingDocument.TryGetRecord(t);
             if (obj != null) return;
             Vector3 rot = new(90f, 0f, 0f);
             GameObject baseroot = Create_FxRootBase(rot, name);
@@ -46,11 +43,11 @@ namespace SpriteEvo.Unity
                 animation.gameObject.SetActive(value: true);
                 animation.gameObject.SetParentSafely(baseroot);
             }
-            GC_GameObjectManager.Add(t, baseroot);
+            GC_ThingDocument.Add(t, baseroot);
         }
         public static void CreatePawnAnimationModel(Thing t, PawnKindSpriteDef test, string name = null) 
         {
-            GameObject obj = GC_GameObjectManager.TryGetRecord(t);
+            GameObject obj = GC_ThingDocument.TryGetRecord(t);
             //GameObject obj = ThingObject_DB.TryGetValue(t);
             if (obj != null) return;
             Vector3 rot = new Vector3(90f, 0f, 0f);
@@ -79,7 +76,7 @@ namespace SpriteEvo.Unity
 
                 test.body.west?.SetBodyRotateForFxBody(fxbody, Rot4.West, version);
             }
-            GC_GameObjectManager.Add(t, baseroot);
+            GC_ThingDocument.Add(t, baseroot);
             //ThingObject_DB.Add(t, baseroot);
         }
         private static GameObject Create_FxRootBase(Vector3 rotation, string name = null) 
