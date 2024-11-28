@@ -6,14 +6,15 @@ using Verse;
 
 namespace SpriteEvo.Unity
 {
+    //测试合并动画以及脚本用，准备删了
     public static class AnimationGenerator
     {
         private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SkeletonLoader> Spine41_DB => AssetManager.spine41_Database;
         //private static Dictionary<Thing, GameObject> ThingObject_DB => AssetManager.ThingObjectDatabase;
-        private static List<PawnKindSpriteDef> PawnKindDB => DefDatabase<PawnKindSpriteDef>.AllDefsListForReading;
+        //private static List<PawnKindSpriteDef> PawnKindDB => DefDatabase<PawnKindSpriteDef>.AllDefsListForReading;
 
-        public static void MergeAnimation(Thing t, PawnKindSpriteDef test, string name = null)
+        public static void MergeAnimation(Thing t, AnimationDef test, string name = null)
         {
             GameObject obj = GC_ThingDocument.TryGetRecord(t);
             if (obj != null) return;
@@ -22,11 +23,13 @@ namespace SpriteEvo.Unity
             baseroot.SetFxRootAtThing(t);
             if (t is Pawn)
             {
-                if (test == null) return;
-                var packhead = test.head.south.parent.FindSpineTexAssetPack();
-                SpineTexAsset[] arrays = new SpineTexAsset[test.head.south.attachments.Count];
+                GameObject instance = GenAnimation.CreateAnimationInstance(test);
+                instance.SetParentSafely(baseroot);
+                /*if (test == null) return;
+                var packhead = test.mainAsset.FindSpineTexAsset();
+                SpineTexAsset[] arrays = new SpineTexAsset[test.attachments.Count];
                 for (int i = 0; i < arrays.Length; i++) { 
-                    arrays[i] = test.head.south.attachments[i].attachment.FindSpineTexAssetPack();
+                    arrays[i] = test.attachments[i].FindSpineTexAsset();
                 }
                 var newSkeleton = JsonMerger.MergeSkeletonFromJSONs(packhead, arrays);
                 var animation = Spine41.Unity.SkeletonAnimation.NewSkeletonAnimationGameObject(newSkeleton);
@@ -41,11 +44,11 @@ namespace SpriteEvo.Unity
                 animation.AnimationState.SetAnimation(0, packhead.def.props.idleAnimationName, true);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: true);
-                animation.gameObject.SetParentSafely(baseroot);
+                animation.gameObject.SetParentSafely(baseroot);*/
             }
             GC_ThingDocument.Add(t, baseroot);
         }
-        public static void CreatePawnAnimationModel(Thing t, PawnKindSpriteDef test, string name = null) 
+        /*public static void CreatePawnAnimationModel(Thing t, PawnKindSpriteDef test, string name = null) 
         {
             GameObject obj = GC_ThingDocument.TryGetRecord(t);
             //GameObject obj = ThingObject_DB.TryGetValue(t);
@@ -78,7 +81,7 @@ namespace SpriteEvo.Unity
             }
             GC_ThingDocument.Add(t, baseroot);
             //ThingObject_DB.Add(t, baseroot);
-        }
+        }*/
         private static GameObject Create_FxRootBase(Vector3 rotation, string name = null) 
         {
             GameObject root = new GameObject
@@ -121,7 +124,7 @@ namespace SpriteEvo.Unity
             }
             return null;
         }
-        private static GameObject AddAttachment(this GameObject parent, SkeletonLoader pack, int layer = 0, bool loop = false) 
+        /*private static GameObject AddAttachment(this GameObject parent, SkeletonLoader pack, int layer = 0, bool loop = false) 
         {
             if (parent == null) return null;
             if (pack == null) return null;
@@ -129,8 +132,8 @@ namespace SpriteEvo.Unity
             attachment.GetComponent<MeshRenderer>().sortingOrder = layer;
             attachment.SetParentSafely(parent);
             return attachment;
-        }
-        private static void RecordFacialAttachmentToComp(this GameObject fx, FacialControllWorker fcc, AttachmentTag tag) 
+        }*/
+        /*private static void RecordFacialAttachmentToComp(this GameObject fx, FacialControllWorker fcc, AttachmentTag tag) 
         {
             int s = (int)tag;
             switch (s) 
@@ -171,8 +174,8 @@ namespace SpriteEvo.Unity
                 default:
                     break;
             }
-        }
-        private static GameObject SetHeadRotateForFxhead(this ParentWithAttachment pwa, GameObject fxhead, Rot4 rot, string version = "4.1", int headlayer = 1)
+        }*/
+        /*private static GameObject SetHeadRotateForFxhead(this ParentWithAttachment pwa, GameObject fxhead, Rot4 rot, string version = "4.1", int headlayer = 1)
         {
             if (pwa.parent == null || fxhead == null) return null;
             Dictionary<string, SkeletonLoader> db;
@@ -216,7 +219,7 @@ namespace SpriteEvo.Unity
                 }
             }
             return headrotate;
-        }
+        }*/
         /*private static GameObject SetSouthHead(this GameObject fx_head, PawnKindSpriteDef def, int headlayer = 1) 
         {
             if (fx_head == null) return null;
@@ -281,7 +284,7 @@ namespace SpriteEvo.Unity
             return south_body;
         }*/
 
-        private static GameObject SetBodyRotateForFxBody(this ParentWithAttachment pwa, GameObject fxbody, Rot4 rot, string version = "4.1", int bodylayer = 1)
+        /*private static GameObject SetBodyRotateForFxBody(this ParentWithAttachment pwa, GameObject fxbody, Rot4 rot, string version = "4.1", int bodylayer = 1)
         {
             if (pwa.parent == null || fxbody == null) return null;
             Dictionary<string, SkeletonLoader> db;
@@ -325,7 +328,7 @@ namespace SpriteEvo.Unity
                 }
             }
             return bodyrotate;
-        }
+        }*/
         /*private static GameObject SetEastHead(this GameObject fx_head, PawnKindSpriteDef def, int headlayer = 1)
         {
             if (fx_head == null) return null;

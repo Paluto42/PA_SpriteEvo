@@ -85,18 +85,19 @@ namespace SpriteEvo
                     break;
                 }
             }
-            SkeletonLoader pack = AssetManager.spine38_Database?.TryGetValue(defName); ;
-            if (pack == null)
+            AnimationDef animationdef = DefDatabase<AnimationDef>.AllDefsListForReading.Find(a => a.defName == defName);
+            //SkeletonLoader pack = AssetManager.spine38_Database?.TryGetValue(defName); ;
+            if (animationdef == null)
             {
-                Log.Error("[PA]. SpineAssetPack " + defName + "Not Found");
+                Log.Error("[PA]. SpineAssetPack " + animationdef + "Not Found");
                 return;
             }
-            GameObject obj = GC_ThingDocument.TryGetRecord(defName);
+            GameObject obj = GC_ThingDocument.TryGetRecord(animationdef.defName);
             //GameObject obj = AssetManager.ObjectDatabase.TryGetValue(pack.def.defName);
             if (obj == null)
             {
                 //Add
-                pack.Create_GameOnlyAnimationTextureInstance(defName);
+                animationdef.Create_GameOnlyAnimationTextureInstance(animationdef.defName);
                 //pack.Create_GlobalAnimationTextureInstance();
             }
             else
@@ -114,7 +115,7 @@ namespace SpriteEvo
         }
         private static void TrySetPawnAnimation(OperatorDocument doc, Pawn pawn)
         {
-            var test = DefDatabase<PawnKindSpriteDef>.AllDefsListForReading.FirstOrDefault(pd => pd.defName == "Chang_An_Test");
+            var test = DefDatabase<AnimationDef>.AllDefsListForReading.FirstOrDefault(pd => pd.defName == "Chang_An_Test");
             if (test == null)
             {
                 Log.Error("PawnKindSpriteDef Not Found");

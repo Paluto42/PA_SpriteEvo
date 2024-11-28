@@ -8,6 +8,8 @@ namespace SpriteEvo
     ///<summary>整合了初始化单个Spine骨骼动画对象的必要信息</summary>
     public class ThingDocument : IExposable, ILoadReferenceable
     {
+        public string animationID;
+        public SpineAssetDef spineassetdef;
         public Thing user;
         public Color32 color;
         public List<SlotSettings> slotSettings;
@@ -19,7 +21,24 @@ namespace SpriteEvo
         public string currentAnimation;
         public bool loop;
         public float timeScale;
+        public ThingDocument(string defName, Thing t, SpineAssetDef spineassetdef)
+        {
+            this.animationID = defName;
+            this.user = t;
+            this.spineassetdef = spineassetdef;
+        }
+        public void RecordSlotSettings() 
+        {
 
+        }
+        public void ClearSlotSettings() 
+        {
+            if (slotSettings.NullOrEmpty()) return;
+            foreach (SlotSettings setting in slotSettings) 
+            {
+
+            }
+        }
         //Color32=> Value=RGBA(255, 255, 255, 255)
         public void ExposeData()
         {
@@ -42,19 +61,22 @@ namespace SpriteEvo
 
         public string GetUniqueLoadID()
         {
-            return this.user.GetHashCode() + "SpAnimationDoc";
+            return this.animationID + "SpAnimationDoc";
         }
     }
+    //
     public class GC_ThingDocument : GameComponent
     {
         public static Dictionary<object, GameObject> ObjectDataBase;
-        public static Dictionary<string, ThingDocument> animationDataBase;
+        public static Dictionary<string, List<ThingDocument>> animationDataBase;
+        public static HashSet<Thing> cachedThings;
 
         //internal static HashSet<Thing> cachedThings = new HashSet<Thing>();
 
         public GC_ThingDocument(Game game)
         {
             ObjectDataBase = new Dictionary<object, GameObject>();
+            animationDataBase = new Dictionary<string, List<ThingDocument>>();
         }
         public override void StartedNewGame()
         {
@@ -68,12 +90,12 @@ namespace SpriteEvo
 
         public override void FinalizeInit()
         {
-            List<string> key = new List<string>();
-            List<ThingDocument> value = new List<ThingDocument>();
+            List<string> key = new();
+            List<List<ThingDocument>> value = new();
             Scribe.mode = LoadSaveMode.ResolvingCrossRefs;
             try
             {
-                Scribe_Collections.Look(ref animationDataBase, "animationDocoment", LookMode.Value, LookMode.Deep, ref key, ref value);
+                Scribe_Collections.Look(ref animationDataBase, "animationDocument", LookMode.Value, LookMode.Deep, ref key, ref value);
             }
             catch 
             { Log.Error("Failed to save AnimationDoc"); }
@@ -90,8 +112,8 @@ namespace SpriteEvo
             base.ExposeData();
             if (Scribe.mode != LoadSaveMode.ResolvingCrossRefs)
             {
-                List<string> key = new List<string>();
-                List<ThingDocument> value = new List<ThingDocument>();
+                List<string> key = new();
+                List<List<ThingDocument>> value = new();
                 try 
                 {
                     Scribe_Collections.Look(ref animationDataBase, "animationDocoment", LookMode.Value, LookMode.Deep, ref key, ref value);

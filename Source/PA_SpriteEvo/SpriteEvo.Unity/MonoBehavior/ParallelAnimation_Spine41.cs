@@ -19,7 +19,7 @@ namespace SpriteEvo.Unity
         public string Animation_8;
         #endregion
 
-        Spine41.Unity.SkeletonAnimation skeletonAnimation;
+        SkeletonAnimation skeletonAnimation;
 
         void Start()
         {

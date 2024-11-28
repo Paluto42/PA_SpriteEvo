@@ -19,7 +19,7 @@ namespace SpriteEvo.Unity
         #endregion
         List<float> durations = new List<float>();
 
-        Spine38.Unity.SkeletonAnimation skeletonAnimation;
+        SkeletonAnimation skeletonAnimation;
 
         public virtual void Start()
         {

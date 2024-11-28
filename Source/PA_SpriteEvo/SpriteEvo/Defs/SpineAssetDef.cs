@@ -23,22 +23,10 @@ namespace SpriteEvo
         public List<string> textures = new();
         public List<string> materials = new();
     }
-    public class SpineProperty
-    {
-        public bool OnIMGUI = false;
-        public Color color = Color.white;
-        public Vector3 offset = new(0f, 0f, 0f);
-        public Vector3 uioffset = new(0f, 0f, 0f);
-        public Vector3 rotation = Vector3.zero;
-        public Vector2 scale = new(1f, 1f);
-        public string skin = "default";
-        public string idleAnimationName = "Idle";
-        public float timeScale = 1f;
-    }
     public class SpineAssetDef : Def
     {
         public SkelFormat skelFormat = SkelFormat.SkeletonBinary;
         public SpineAsset asset = new();
-        public SpineProperty props = new();
+        //public SpineProperty props = new();
     }
 }

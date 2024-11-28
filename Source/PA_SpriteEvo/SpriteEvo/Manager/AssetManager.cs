@@ -36,16 +36,16 @@ namespace SpriteEvo
             }
             return null;
         }
-        public static SpineMatAsset FindSpineMatAssetPack(this SpineAssetDef def)
+        public static SpineMatAsset FindSpineMatAsset(this SpineAssetDef def)
         {
-            var pack = TryGetSpineAsset(def);
-            if (pack is SpineMatAsset matpack) 
+            SkeletonLoader loader = TryGetSpineAsset(def);
+            if (loader is SpineMatAsset matpack) 
                 return matpack;
             return null;
         }
-        public static SpineTexAsset FindSpineTexAssetPack(this SpineAssetDef def)
+        public static SpineTexAsset FindSpineTexAsset(this SpineAssetDef def)
         {
-            var pack = TryGetSpineAsset(def);
+            SkeletonLoader pack = TryGetSpineAsset(def);
             if (pack is SpineTexAsset texpack)
                 return texpack;
             return null;

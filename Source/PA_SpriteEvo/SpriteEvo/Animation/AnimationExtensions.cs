@@ -94,21 +94,6 @@ namespace SpriteEvo
                 }
             }
         }
-        public static void SetColor(this Spine41.Unity.SkeletonAnimation instance, Color color, List<SlotSettings> slotSettings)
-        {
-            if (instance == null) return;
-            Spine41.Unity.ISkeletonComponent skeletonComponent = instance.gameObject.GetComponent<Spine41.Unity.ISkeletonComponent>();
-            if (skeletonComponent != null)
-            {
-                Spine41.Skeleton skeleton = skeletonComponent.Skeleton;
-                Spine41.Unity.SkeletonExtensions.SetColor(skeleton, color);
-                foreach (SlotSettings s in slotSettings)
-                {
-                    Spine41.Slot slot = skeleton.FindSlot(s.slot);
-                    if (slot != null) 
-                        Spine41.Unity.SkeletonExtensions.SetColor(slot, color);
-                }
-            }
-        }
+
     }
 }
