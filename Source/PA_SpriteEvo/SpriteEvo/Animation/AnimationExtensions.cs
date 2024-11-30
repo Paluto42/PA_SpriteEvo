@@ -78,7 +78,7 @@ namespace SpriteEvo
             return instance.GetComponent<Spine41.Unity.SkeletonAnimation>();
         }
         //对整个骨架染色。在激活后调用,应在实例级别的骨架上修改
-        public static void SetColor(this Spine38.Unity.SkeletonAnimation instance, Color color, List<SlotSettings> slotSettings) 
+        /*public static void SetColor(this Spine38.Unity.SkeletonAnimation instance, Color color, List<SlotSettings> slotSettings) 
         {
             if (instance == null) return;
             Spine38.Unity.ISkeletonComponent skeletonComponent = instance.gameObject.GetComponent<Spine38.Unity.ISkeletonComponent>();
@@ -93,7 +93,7 @@ namespace SpriteEvo
                         Spine38.Unity.SkeletonExtensions.SetColor(slot, color);
                 }
             }
-        }
+        }*/
 
     }
 }

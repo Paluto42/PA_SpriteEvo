@@ -4,6 +4,7 @@ using Verse;
 
 namespace SpriteEvo
 {
+    //动画属性
     public class SpineProperty
     {
         public bool OnIMGUI = false;

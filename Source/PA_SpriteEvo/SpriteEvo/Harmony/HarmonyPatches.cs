@@ -69,7 +69,7 @@ namespace SpriteEvo
             OperatorDocument doc = pawn.GetDoc();
             if (doc == null) return;
             if (!AssetLoadManager.AllAssetsLoaded) return;
-            TrySetDynModel(doc, pawn);
+            //TrySetDynModel(doc, pawn);
             TrySetPawnAnimation(doc, pawn);
         }
         private static void TrySetDynModel(OperatorDocument doc, Pawn pawn)

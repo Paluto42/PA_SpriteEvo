@@ -27,12 +27,12 @@ namespace SpriteEvo
             if (this.def.asset.version != "3.8") { return null; }
             if (this.atlasInput == null) 
             {
-                AtlasErrorMessage();
+                AtlasException();
                 return null;
             }
             if (this.skeletonInput == null)
             {
-                SkeletonErrorMessage();
+                SkeletonException();
                 return null;
             }
             if (this.textures.NullOrEmpty())
@@ -54,12 +54,12 @@ namespace SpriteEvo
             if (this.def.asset.version != "4.1") { return null; }
             if (this.atlasInput == null)
             {
-                AtlasErrorMessage();
+                AtlasException();
                 return null;
             }
             if (this.skeletonInput == null)
             {
-                SkeletonErrorMessage();
+                SkeletonException();
                 return null;
             }
             if (this.textures.NullOrEmpty())

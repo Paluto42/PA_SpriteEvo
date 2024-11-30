@@ -7,7 +7,6 @@ using Verse;
 
 namespace SpriteEvo
 {
-    ///<summary>提供生成Spine Skeleton Animation实例方法的库</summary>
     public static class GenAnimation
     {
         public static bool currentlyGenerating = false;
@@ -35,22 +34,24 @@ namespace SpriteEvo
         ///根据AnimationDef信息创建并初始化一个没有额外附加脚本SkeletonAnimation素体实例，默认在场景Layer的第2层
         ///<para>是本框架最重要的功能之一，实现了填入XML信息就可在指定地图位置生成Spine动画</para>
         ///</summary>
-        public static GameObject CreateAnimationInstance(this AnimationDef def, int layer = 2, bool loop = true, bool DontDestroyOnLoad = false)
+        public static GameObject CreateAnimationInstance(this AnimationDef def, int layer = 2, bool loop = true, bool DontDestroyOnLoad = false, string tag = null)
         {
             GameObject obj = null;
             AnimationParams @params = GetSkeletonParams(def, loop);
             if (def.version == "3.8")
             {
-                obj = Spine38Lib.CreateAnimationSafe(def, @params, layer, DontDestroyOnLoad);
+                obj = Spine38Lib.CreateAnimationSafe(def, @params, layer, active: true, DontDestroyOnLoad);
             }
             else if (def.version == "4.1")
             {
-                obj = Spine41Lib.CreateAnimationSafe(def, @params, layer, DontDestroyOnLoad);
+                obj = Spine41Lib.CreateAnimationSafe(def, @params, layer, active: true, DontDestroyOnLoad);
             }
+            if (tag != null)
+                obj.tag = tag;
             return obj;
         }
         ///<summary>(具有全局唯一性地)初始化创建一个SkeletonAnimation实例对象后返回该运行时实例</summary>
-        public static GameObject CreateGlobalAnimationInstance(this AnimationDef def, int layer = 2, bool Isloop = true, bool DontDestroyOnLoad = true)
+        public static GameObject CreateGlobalAnimationInstance(this AnimationDef def, int layer = 2, bool Isloop = true, bool DontDestroyOnLoad = true, string tag = null)
         {
             if (def == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(def.defName);
@@ -59,24 +60,25 @@ namespace SpriteEvo
                 Log.Warning("[PA]. Duplicate Call :  Animation Instance  \"" + def.defName + "\"  Existed in Hierarchy");
                 return null;
             }
-            GameObject instance = CreateAnimationInstance(def, layer, Isloop, DontDestroyOnLoad);
+            GameObject instance = CreateAnimationInstance(def, layer, Isloop, DontDestroyOnLoad, tag);
             DynamicObjectDatabase.Add(def.defName, instance);
             return instance;
         }
         ///<summary>创建一个用于输出RenderTexture的SkeletonAnimation实例对象并进行初始化, 默认在场景Layer 5层进行渲染隔离且不可见
         ///<para>是本框架最重要的功能之一，实现了填入XML信息就可在指定屏幕位置生成Spine动画</para>
         ///</summary>
-        public static GameObject Create_AnimationTextureInstance(this AnimationDef def, int layer = 5, bool loop = true, bool DontDestroyOnLoad = false)
+        public static GameObject Create_AnimationTextureInstance(this AnimationDef def, Vector3 pos, int width = 1024, int height = 1024, int layer = 5, bool loop = true, bool DontDestroyOnLoad = false, string tag = null, string camtag = null)
         {
             if (def == null) return null;
-            GameObject instance = CreateAnimationInstance(def, layer, loop, DontDestroyOnLoad);
-            instance.AddCameraToSkeletonAnimation("RenderCamera_" + def.defName, def.props.uioffset);
+            GameObject instance = CreateAnimationInstance(def, layer, loop, DontDestroyOnLoad, tag);
+            instance.AddRenderCameraToSkeletonAnimation(def.props.uioffset, width, height, camtag);
+            instance.transform.position = pos;
             return instance;
         }
         ///<summary>(在当前游戏GC内) 初始化创建一个用于输出RenderTexture的SkeletonAnimation实例对象后返回该运行时实例
         /// <para>需要一个key用于在游戏内记录当前动画实例, 默认启用的动画名称 是否循环播放. 该实例强制禁用DontDestroyOnLoad功能.</para>
         /// </summary>
-        public static GameObject Create_GameOnlyAnimationTextureInstance(this AnimationDef def, object key, int layer = 5, bool loop = true)
+        public static GameObject Create_GameOnlyAnimationTextureInstance(this AnimationDef def, object key, int width = 1024, int height = 1024, int layer = 5, bool loop = true, bool DontDestroyOnLoad = false, string tag = null, string camtag = null)
         {
             if (def == null) return null;
             GameObject obj = GC_ThingDocument.TryGetRecord(key);
@@ -85,13 +87,13 @@ namespace SpriteEvo
                 Log.Warning("[PA]. Duplicate Call :  Animation Instance  \"" + def.defName + "\"  Existed in Hierarchy");
                 return null;
             }
-
-            GameObject instance = Create_AnimationTextureInstance(def, layer, loop);
+            Vector3 pos = new(UnityEngine.Random.Range(-99f, 99f), UnityEngine.Random.Range(-99f, 99f), UnityEngine.Random.Range(-99f, 99f));
+            GameObject instance = Create_AnimationTextureInstance(def, pos, width, height, layer, loop, DontDestroyOnLoad, tag, camtag);
             GC_ThingDocument.Add(key, instance);
             return instance;
         }
         ///<summary>(具有全局唯一性地)初始化创建一个用于输出RenderTexture的SkeletonAnimation实例对象后返回该运行时实例</summary>
-        public static GameObject Create_GlobalAnimationTextureInstance(this AnimationDef def, int layer = 5, bool loop = true, bool DontDestroyOnLoad = true)
+        public static GameObject Create_GlobalAnimationTextureInstance(this AnimationDef def, Vector3 pos, int width = 1024, int height = 1024, int layer = 5, bool loop = true, bool DontDestroyOnLoad = true, string tag = null, string camtag = null)
         {
             if (def == null) return null;
             GameObject obj = DynamicObjectDatabase.TryGetValue(def.defName);
@@ -100,14 +102,14 @@ namespace SpriteEvo
                 Log.Warning("[PA]. Duplicate Call :  Animation Instance  \"" + def.defName + "\"  Existed in Hierarchy");
                 return null;
             }
-            GameObject instance = Create_AnimationTextureInstance(def, layer, loop, DontDestroyOnLoad);
+            GameObject instance = Create_AnimationTextureInstance(def, pos, layer, width, height, loop, DontDestroyOnLoad, tag, camtag);
             DynamicObjectDatabase.Add(def.defName, instance);
             return instance;
         }
-        public static GameObject AddCameraToSkeletonAnimation(this GameObject instance, string name, Vector3 uioffset)
+        public static GameObject AddRenderCameraToSkeletonAnimation(this GameObject instance, Vector3 uioffset, int width = 1024, int height = 1024, string camtag = null)
         {
             //添加Camera
-            GameObject myGO = new(name, new Type[] { typeof(Camera) });
+            GameObject myGO = new("RenderCamera", new Type[] { typeof(Camera) });
             Camera cam = myGO.GetComponent<Camera>();
             myGO.transform.SetParent(instance.transform);
             myGO.transform.localRotation = Quaternion.identity;
@@ -123,10 +125,14 @@ namespace SpriteEvo
             //cam.nearClipPlane = 0.3f;
             //cam.farClipPlane = 10f;
             cam.depth = Current.Camera.depth - 1f;
-            cam.targetTexture = new RenderTexture(1024, 1024, 32, RenderTextureFormat.ARGB32, 0);
+            cam.targetTexture = new RenderTexture(width, height, 32, RenderTextureFormat.ARGB32, 0);
+            if (camtag != null)
+            {
+                myGO.tag = camtag;
+            }
             return myGO;
         }
-        ///<summary>[Pending]在Canvas上渲染Spine动画 </summary>
+        //<summary>[Pending]在Canvas上渲染Spine动画 </summary>
         [Obsolete]
         public static void Create_CanvasInstance(this AnimationDef def, Pawn pawn, bool loop = true)
         {

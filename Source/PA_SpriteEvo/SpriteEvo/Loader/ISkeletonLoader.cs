@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace SpriteEvo
@@ -30,11 +25,11 @@ namespace SpriteEvo
             this.atlasInput = atlas;
             this.skeletonInput = skeleton;
         }
-        public virtual void AtlasErrorMessage() 
+        public virtual void AtlasException() 
         {
             Log.Error(this.def.defName + " SpineAssetPack Missing Atlas");
         }
-        public virtual void SkeletonErrorMessage() 
+        public virtual void SkeletonException() 
         {
             Log.Error(this.def.defName + " SpineAssetPack Missing Skeleton");
         }

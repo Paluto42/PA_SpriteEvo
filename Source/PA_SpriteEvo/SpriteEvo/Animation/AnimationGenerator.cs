@@ -1,4 +1,5 @@
-﻿using SpriteEvo.Extensions;
+﻿using Spine41.Unity;
+using SpriteEvo.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,6 @@ namespace SpriteEvo.Unity
     {
         private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SkeletonLoader> Spine41_DB => AssetManager.spine41_Database;
-        //private static Dictionary<Thing, GameObject> ThingObject_DB => AssetManager.ThingObjectDatabase;
-        //private static List<PawnKindSpriteDef> PawnKindDB => DefDatabase<PawnKindSpriteDef>.AllDefsListForReading;
 
         public static void MergeAnimation(Thing t, AnimationDef test, string name = null)
         {
@@ -24,6 +23,7 @@ namespace SpriteEvo.Unity
             if (t is Pawn)
             {
                 GameObject instance = GenAnimation.CreateAnimationInstance(test);
+                baseroot.GetComponent<FxRootWorker>().SkeletonAnimation = instance.GetComponent<SkeletonAnimation>();
                 instance.SetParentSafely(baseroot);
                 /*if (test == null) return;
                 var packhead = test.mainAsset.FindSpineTexAsset();
@@ -47,6 +47,24 @@ namespace SpriteEvo.Unity
                 animation.gameObject.SetParentSafely(baseroot);*/
             }
             GC_ThingDocument.Add(t, baseroot);
+        }
+        private static GameObject Create_FxRootBase(Vector3 rotation, string name = null)
+        {
+            GameObject root = new()
+            {
+                name = name + "FXRoot"
+            };
+            root.transform.rotation = Quaternion.Euler(rotation);
+            root.SetActive(false);
+            return root;
+        }
+        private static void SetFxRootAtThing(this GameObject fx_root, Thing t)
+        {
+            if (fx_root == null || t == null) return;
+            //设置子物件
+            FxRootWorker rootcomp = fx_root.AddComponent<FxRootWorker>();
+            rootcomp.User = t;
+            return;
         }
         /*public static void CreatePawnAnimationModel(Thing t, PawnKindSpriteDef test, string name = null) 
         {
@@ -82,25 +100,7 @@ namespace SpriteEvo.Unity
             GC_ThingDocument.Add(t, baseroot);
             //ThingObject_DB.Add(t, baseroot);
         }*/
-        private static GameObject Create_FxRootBase(Vector3 rotation, string name = null) 
-        {
-            GameObject root = new GameObject
-            {
-                name = name + "FXRoot"
-            };
-            root.transform.rotation = Quaternion.Euler(rotation);
-            root.SetActive(false);
-            return root;
-        }
-        private static void SetFxRootAtThing(this GameObject fx_root, Thing t) 
-        {
-            if (fx_root == null || t == null) return;
-            //设置子物件
-            FxRootWorker rootcomp = fx_root.AddComponent<FxRootWorker>();
-            rootcomp.User = t;
-            return;
-        }
-        private static GameObject AddFxHead(this GameObject fx_root) 
+        /*private static GameObject AddFxHead(this GameObject fx_root) 
         {
             if (fx_root == null) return null;
             if (fx_root.GetComponent<FxRootWorker>()?.User is Pawn) 
@@ -123,7 +123,7 @@ namespace SpriteEvo.Unity
                 return fxbody;
             }
             return null;
-        }
+        }*/
         /*private static GameObject AddAttachment(this GameObject parent, SkeletonLoader pack, int layer = 0, bool loop = false) 
         {
             if (parent == null) return null;

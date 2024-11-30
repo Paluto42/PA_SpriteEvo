@@ -98,6 +98,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpriteEvo\Animation\Animation38.cs" />
+    <Compile Include="SpriteEvo\Animation\Animation41.cs" />
+    <Compile Include="SpriteEvo\Animation\Interface\ISkeletonConfig.cs" />
+    <Compile Include="SpriteEvo\Animation\Interface\ITransform.cs" />
     <Compile Include="SpriteEvo\Animation\Spine38Lib.cs" />
     <Compile Include="SpriteEvo\Animation\Spine41Lib.cs" />
     <Compile Include="SpriteEvo\Animation\AnimationParams.cs" />
@@ -122,12 +126,12 @@
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FxBodyWorker.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FxExtraWorker.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FxHeadWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxRootWorker.cs" />
+    <Compile Include="SpriteEvo.Unity\FxRootWorker.cs" />
     <Compile Include="SpriteEvo\Harmony\HarmonyPatches.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadManager.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
-    <Compile Include="SpriteEvo\Mod\Mod.cs" />
-    <Compile Include="SpriteEvo\Mod\ModSettings.cs" />
+    <Compile Include="Mod.cs" />
+    <Compile Include="ModSettings.cs" />
     <Compile Include="SpriteEvo\Defs\SpineAssetDef.cs" />
     <Compile Include="SpriteEvo\Animation\AnimationGenerator.cs" />
     <Compile Include="SpriteEvo\Script\ScriptWorker.cs" />

@@ -68,6 +68,7 @@ namespace SpriteEvo
     public class GC_ThingDocument : GameComponent
     {
         public static Dictionary<object, GameObject> ObjectDataBase;
+        public static Dictionary<Pawn, GameObject> PawnUIDataBase;
         public static Dictionary<string, List<ThingDocument>> animationDataBase;
         public static HashSet<Thing> cachedThings;
 
@@ -76,6 +77,7 @@ namespace SpriteEvo
         public GC_ThingDocument(Game game)
         {
             ObjectDataBase = new Dictionary<object, GameObject>();
+            PawnUIDataBase = new Dictionary<Pawn, GameObject>();
             animationDataBase = new Dictionary<string, List<ThingDocument>>();
         }
         public override void StartedNewGame()
@@ -86,6 +88,7 @@ namespace SpriteEvo
                 Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(Translator.Translate("AK_StartLabel"), Translator.Translate("AK_StartDesc"), LetterDefOf.NeutralEvent, null, null));
             }
             ObjectDataBase ??= new Dictionary<object, GameObject>();
+            PawnUIDataBase ??= new Dictionary<Pawn, GameObject>();
         }
 
         public override void FinalizeInit()
@@ -106,6 +109,7 @@ namespace SpriteEvo
         {
             base.LoadedGame();
             ObjectDataBase ??= new Dictionary<object, GameObject>();
+            PawnUIDataBase ??= new Dictionary<Pawn, GameObject>();
         }
         public override void ExposeData()
         {

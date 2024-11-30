@@ -1,4 +1,5 @@
-﻿using Spine38.Unity;
+﻿using Spine38;
+using Spine38.Unity;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -6,9 +7,10 @@ using Verse;
 
 namespace SpriteEvo
 {
+    ///<summary>Spine3.8版本方法库</summary>
     public static class Spine38Lib
     {
-        public static GameObject CreateAnimationSafe(AnimationDef animationDef, AnimationParams @params, int layer = 2, bool DontDestroyOnLoad = false)
+        public static GameObject CreateAnimationSafe(AnimationDef animationDef, AnimationParams @params, int layer = 2, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (animationDef == null || animationDef.version != "3.8" || animationDef.mainAsset == null) return null;
             if (animationDef.attachments.NullOrEmpty())
@@ -25,10 +27,11 @@ namespace SpriteEvo
                     return null;
                 }
                 SkeletonDataAsset skeleton = loader.Create_SkeletonDataAsset38();
+                skeleton.name = animationDef.defName + "_SkeletonData.asset";
                 SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
-                animation.InitAnimation(@params, layer, DontDestroyOnLoad);
-                animation.gameObject.ApplyColor(@params.color, @params.slotSettings);
+                animation.InitAnimation(@params, layer, active, DontDestroyOnLoad);
+                animation.ApplyColor(@params.color, @params.slotSettings);
                 return animation.gameObject;
             }
             else
@@ -40,22 +43,22 @@ namespace SpriteEvo
         /// <summary>
         /// 在实例层面对动画进行颜色修改，可以多次覆盖
         /// </summary>
-        public static void ApplyColor(this SkeletonAnimation instance, Color color, List<SlotSettings> slotSettings)
+        public static void ApplyColor(this ISkeletonComponent instance, Color color, List<SlotSettings> slotSettings)
         {
             if (instance == null) return;
-            ISkeletonComponent skeletonComponent = instance.gameObject.GetComponent<ISkeletonComponent>();
+            ISkeletonComponent skeletonComponent = instance;
             if (skeletonComponent != null)
             {
-                Spine38.Skeleton skeleton = skeletonComponent.Skeleton;
+                Skeleton skeleton = skeletonComponent.Skeleton;
                 SkeletonExtensions.SetColor(skeleton, color);
                 foreach (SlotSettings s in slotSettings)
                 {
-                    Spine38.Slot slot = skeleton.FindSlot(s.slot);
+                    Slot slot = skeleton.FindSlot(s.slot);
                     slot?.SetColor(color);
                 }
             }
         }
-        public static void InitAnimation(this SkeletonAnimation instance, AnimationParams @params, int layer = 2 ,bool activeSelf = true, bool DontDestroyOnLoad = false)
+        public static void InitAnimation(this SkeletonAnimation instance, AnimationParams @params, int layer = 2 ,bool active = true, bool DontDestroyOnLoad = false)
         {
             if (instance == null) { return; }
             //Initilize
@@ -63,28 +66,43 @@ namespace SpriteEvo
             instance.gameObject.name = "Spine_" + @params.name;
             instance.gameObject.layer = layer;
             instance.transform.rotation = Quaternion.Euler(@params.rotation);
-            //animation.transform.position = pawn.DrawPos + Vector3.back + Vector3.up;
             instance.transform.localScale = scale;
             instance.timeScale = @params.timeScale;
             instance.skeleton.SetSkin(@params.skin);
             //TrackEntry 
             instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
-            instance.Initialize(overwrite: false);
-            instance.gameObject.SetActive(value: activeSelf);
+            instance.gameObject.SetActive(value: active);
             if (DontDestroyOnLoad)
                 UnityEngine.Object.DontDestroyOnLoad(instance.gameObject);
             instance.transform.position = @params.position;
             DisableProbe(instance.gameObject);
         }
-        //重新加载动画
-        public static void ReloadAnimation(this SkeletonAnimation instance) 
+        /// <summary>
+        /// 对Spine运行时骨架实例更新Skin.会重置骨骼和Slots的材质以及丢失之前的动画状态
+        /// </summary>
+        public static void UpdateSkin(this SkeletonAnimation animated, string newskin, bool resetBones = true)
         {
-
+            if (animated.SkeletonDataAsset == null)
+                return;
+            animated.Skeleton.SetSkin(newskin);
+            if (resetBones) 
+                animated.Skeleton.SetBonesToSetupPose(); 
+            animated.Skeleton.SetSlotsToSetupPose();
+        }
+        /// <summary>
+        /// 重新加载SkeletonData并重置骨架实例所有状态,包括AnimationState 
+        /// <para>仅在复用单个SkeletonRenderer实例时再考虑使用<paramref name="newAsset"/>重新加载新的Skeleton</para>
+        /// </summary>
+        public static void ReloadSkeleton(this SkeletonAnimation instance, SkeletonDataAsset newAsset = null, string skin = "default")
+        {
+            instance.skeletonDataAsset = newAsset;
+            instance.initialSkinName = skin;
+            instance.Initialize(overwrite: true);
         }
         //通用，禁用渲染器反射
         public static void DisableProbe(GameObject obj)
         {
-            var MeshRenderer = obj.GetComponent<MeshRenderer>();
+            MeshRenderer MeshRenderer = obj.GetComponent<MeshRenderer>();
             if (MeshRenderer != null)
             {
                 MeshRenderer.lightProbeUsage = LightProbeUsage.Off;

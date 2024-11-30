@@ -37,13 +37,13 @@ namespace SpriteEvo.Unity
         public void DoFlipX(bool IsFlip) 
         {
             ScaleX = IsFlip ? -1f : 1f;
-            head_skeletonAnimation?.skeleton.SetScaleX(ScaleX);
-            frontHair_skeletonAnimation?.skeleton.SetScaleX(ScaleX);
-            backHair_skeletonAnimation?.skeleton.SetScaleX(ScaleX);
-            eyeBow_skeletonAnimation?.skeleton.SetScaleX(ScaleX);
-            leftEye_skeletonAnimation?.skeleton.SetScaleX(ScaleX);
-            rightEye_skeletonAnimation?.skeleton.SetScaleX(ScaleX);
-            mouth_skeletonAnimation?.skeleton.SetScaleX(ScaleX);
+            head_skeletonAnimation?.skeleton.DoFlipX(ScaleX);
+            frontHair_skeletonAnimation?.skeleton.DoFlipX(ScaleX);
+            backHair_skeletonAnimation?.skeleton.DoFlipX(ScaleX);
+            eyeBow_skeletonAnimation?.skeleton.DoFlipX(ScaleX);
+            leftEye_skeletonAnimation?.skeleton.DoFlipX(ScaleX);
+            rightEye_skeletonAnimation?.skeleton.DoFlipX(ScaleX);
+            mouth_skeletonAnimation?.skeleton.DoFlipX(ScaleX);
         }
         public virtual IEnumerator EyesAnimationCoroutine()
         {

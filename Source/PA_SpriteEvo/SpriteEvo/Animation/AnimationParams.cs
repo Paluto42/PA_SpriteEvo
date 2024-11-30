@@ -11,9 +11,8 @@ namespace SpriteEvo
         public string slot = string.Empty;
         public Color32 color = Color.white;
     }
-    /// <summary>用于生成初始化Spine动画
+    /// <summary>用于生成初始化Spine动画提供的参数集
     /// <para>必须调用<a cref="GenAnimation.GetSkeletonParams(AnimationDef, bool)"></a>进行值的初始化</para>
-    /// <para>除非你明白里面的参数值，否则不要乱改</para>
     /// </summary>
     public struct AnimationParams
     {

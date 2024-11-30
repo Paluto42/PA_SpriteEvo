@@ -1,13 +1,24 @@
 ﻿using UnityEngine;
+using Verse.Noise;
 
 namespace SpriteEvo
 {
     internal static class PA_Helper
     {
-        internal static void SetScaleX(this Spine41.Skeleton skeleton, float x)
+        internal static void DoFlipX(this Spine38.Unity.ISkeletonComponent instance, bool IsFlip)
+        {
+            float x = IsFlip ? -1f : 1f;
+            instance.Skeleton.ScaleX = x;
+        }
+        internal static void DoFlipX(this Spine41.Unity.ISkeletonComponent instance, bool IsFlip) 
+        {
+            float x = IsFlip ? -1f : 1f;
+            instance.Skeleton.ScaleX = x;
+        }
+        internal static void DoFlipX(this Spine41.Skeleton skeleton, float x) 
         {
             if (x == 1f || x == -1f)
-            skeleton.ScaleX = x;
+                skeleton.ScaleX = x;
         }
         internal static GameObject AddEmptyChild(this GameObject parent, string name)
         {
