@@ -1,5 +1,4 @@
-﻿using AK_DLL;
-using HarmonyLib;
+﻿using HarmonyLib;
 using SpriteEvo.Unity;
 using System;
 using System.Collections.Generic;
@@ -54,7 +53,7 @@ namespace SpriteEvo
     //用来清除
 
     //应该合并进AK_DLL的招募流程中，不需要去每帧判断。
-    [HarmonyPatch(typeof(Window), "WindowOnGUI")]
+    /*[HarmonyPatch(typeof(Window), "WindowOnGUI")]
     public class PatchWindowOnGUI
     {
         [HarmonyPrefix]
@@ -70,7 +69,7 @@ namespace SpriteEvo
             if (doc == null) return;
             if (!AssetLoadManager.AllAssetsLoaded) return;
             //TrySetDynModel(doc, pawn);
-            TrySetPawnAnimation(doc, pawn);
+            TrySetPawnAnimation(pawn);
         }
         private static void TrySetDynModel(OperatorDocument doc, Pawn pawn)
         {
@@ -113,7 +112,7 @@ namespace SpriteEvo
                 }
             }
         }
-        private static void TrySetPawnAnimation(OperatorDocument doc, Pawn pawn)
+        private static void TrySetPawnAnimation(Pawn pawn)
         {
             var test = DefDatabase<AnimationDef>.AllDefsListForReading.FirstOrDefault(pd => pd.defName == "Chang_An_Test");
             if (test == null)
@@ -132,6 +131,5 @@ namespace SpriteEvo
             {
                 obj?.SetActive(!pawn.Downed || !pawn.Dead);
             }
-        }
-    }
+        }*/
 }
