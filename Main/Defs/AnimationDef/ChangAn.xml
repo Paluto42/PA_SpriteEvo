@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+    <SpriteEvo.AnimationDef>
+        <defName>Chang_An_Test</defName>
+        <version>4.1</version>
+        <mainAsset>Sprite_South_BackHair_SE_ChangAn</mainAsset>
+        <attachments>
+            <li>Sprite_South_BackClothes_SE_ChangAn</li>
+            <li>Sprite_South_Body_SE_ChangAn</li>
+            <li>Sprite_South_Head_Merged_SE_ChangAn</li>
+            <li>Sprite_South_FrontHair_SE_ChangAn</li>
+            <li>Sprite_South_FrontClothes_SE_ChangAn</li>
+            <!--North-->
+            <li>Sprite_North_Body_SE_ChangAn</li>
+            <li>Sprite_North_Head_SE_ChangAn</li>
+            <li>Sprite_North_FrontHair_SE_ChangAn</li>
+            <li>Sprite_North_BackClothes_SE_ChangAn</li>
+            <li>Sprite_North_BackHair_SE_ChangAn</li>
+            <!--East-->
+            <li>Sprite_East_BackClothes_SE_ChangAn</li>
+            <li>Sprite_East_Body_SE_ChangAn</li>
+            <li>Sprite_East_Head_SE_ChangAn</li>
+            <li>Sprite_East_FrontClothes_SE_ChangAn</li>
+            <li>Sprite_East_BackHair_SE_ChangAn</li>
+            <li>Sprite_East_FrontHair_SE_ChangAn</li>
+            <li>Sprite_East_EyeBrow_SE_ChangAn</li>
+            <li>Sprite_East_RightEye_SE_ChangAn</li>
+            <li>Sprite_East_Mouth_SE_ChangAn</li>
+        </attachments>
+        <props>
+            <scale>(1.0,1.0)</scale>
+            <skin>South</skin>
+            <idleAnimationName>animation</idleAnimationName>
+        </props>
+    </SpriteEvo.AnimationDef>
+
+</Defs>

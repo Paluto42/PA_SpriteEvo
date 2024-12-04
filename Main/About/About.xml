@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
-	<name>[PA] Spine Animation Framework</name>
+	<name>[PA] SpriteEvo - WIP</name>
 	<author>Paluto22</author>
-	<packageId>Paluto22.SpineAnimationFramework</packageId>
+	<packageId>Paluto22.SpriteEvo</packageId>
 	<url></url>
 	<supportedVersions>
 		<li>1.5</li>
@@ -15,9 +15,12 @@
 		<li></li>
 	</modDependencies-->
 	<description>
-Version: 1.0.0\n\n Spine Animation Framework\n
-Use Spine-Unity Runtime to provide powerful 2D animation capabilities, 
-and support importing atlas and skeleton to generate animations.
+Version: 1.0.0\n\n SpriteEvo - WIP\n
+Integrate Spine-Unity Runtimes functionality into Rimworld 
+to provide powerful 2D animation capabilities.\n
+Support for Spine3.8/4.1/4.2 Runtimes\n
+Supports generating animations at specified locations,
+and you can render them like normal Textures\n
 
     </description>
 </ModMetaData>
