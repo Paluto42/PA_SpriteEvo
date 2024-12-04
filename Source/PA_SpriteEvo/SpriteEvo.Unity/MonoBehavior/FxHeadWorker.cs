@@ -6,7 +6,7 @@ using Verse;
 namespace SpriteEvo.Unity
 {
     //切记切记 一旦FxHeadComp组件被添加，就会自动获取上级FxRoot节点
-    public class FxHeadWorker : BaseControllComp
+    /*public class FxHeadWorker : BaseControllComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -129,5 +129,5 @@ namespace SpriteEvo.Unity
         public override void OnDestory()
         {
         }
-    }
+    }*/
 }

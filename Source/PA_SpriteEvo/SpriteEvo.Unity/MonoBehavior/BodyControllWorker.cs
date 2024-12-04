@@ -8,7 +8,7 @@ using Verse;
 
 namespace SpriteEvo.Unity
 {
-    public class BodyControllWorker : BaseControllComp
+    /*public class BodyControllWorker : BaseControllComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -38,5 +38,5 @@ namespace SpriteEvo.Unity
             FrontClothes?.SetActive(false);
             BackClothes?.SetActive(false);
         }
-    }
+    }*/
 }

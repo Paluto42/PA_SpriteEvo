@@ -1,6 +1,7 @@
 ﻿using Spine38;
 using Spine38.Unity;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Verse;
@@ -10,7 +11,7 @@ namespace SpriteEvo
     ///<summary>Spine3.8版本方法库</summary>
     public static class Spine38Lib
     {
-        public static GameObject CreateAnimationSafe(AnimationDef animationDef, AnimationParams @params, int layer = 2, bool active = true, bool DontDestroyOnLoad = false)
+        /*public static Animation38 GenAnimation38(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool hasCam = false, bool DontDestroyOnLoad = false) 
         {
             if (animationDef == null || animationDef.version != "3.8" || animationDef.mainAsset == null) return null;
             if (animationDef.attachments.NullOrEmpty())
@@ -30,6 +31,45 @@ namespace SpriteEvo
                 skeleton.name = animationDef.defName + "_SkeletonData.asset";
                 SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
+                AnimationParams @params = GenAnimation.GetSkeletonParams(animationDef, loop);
+                animation.InitAnimation(@params, layer, active, DontDestroyOnLoad);
+                animation.ApplyColor(@params.color, @params.slotSettings);
+                if (!hasCam)
+                {
+                    return new Animation38(animation);
+                }
+                else
+                {
+                    return new Animation38(animation, animationDef.props.uioffset, animationDef.props.uiDrawSize);
+                }
+            }
+            else
+            {
+                Log.Error("暂不支持Spine3.8骨架合并");
+            }
+            return null;
+        }*/
+        public static GameObject CreateSkeletonAnimation(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
+        {
+            if (animationDef == null || animationDef.version != "3.8" || animationDef.mainAsset == null) return null;
+            if (animationDef.attachments.NullOrEmpty())
+            {
+                SkeletonLoader loader = animationDef.mainAsset.TryGetSpineAsset();
+                if (loader == null)
+                {
+                    Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found");
+                    return null;
+                }
+                if (loader.def.asset.version != "3.8")
+                {
+                    Log.Error("SpriteEvo." + animationDef.defName + " Wrong AnimationDef Version");
+                    return null;
+                }
+                SkeletonDataAsset skeleton = loader.Create_SkeletonDataAsset38();
+                skeleton.name = animationDef.defName + "_SkeletonData.asset";
+                SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
+                //Initilize
+                AnimationParams @params = GenAnimation.GetSkeletonParams(animationDef, loop);
                 animation.InitAnimation(@params, layer, active, DontDestroyOnLoad);
                 animation.ApplyColor(@params.color, @params.slotSettings);
                 return animation.gameObject;
@@ -58,12 +98,12 @@ namespace SpriteEvo
                 }
             }
         }
-        public static void InitAnimation(this SkeletonAnimation instance, AnimationParams @params, int layer = 2 ,bool active = true, bool DontDestroyOnLoad = false)
+        public static void InitAnimation(this SkeletonAnimation instance, AnimationParams @params, int layer = 2, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (instance == null) { return; }
             //Initilize
             Vector3 scale = new(@params.scale.x, @params.scale.y, 1f);
-            instance.gameObject.name = "Spine_" + @params.name;
+            instance.gameObject.name = @params.name;
             instance.gameObject.layer = layer;
             instance.transform.rotation = Quaternion.Euler(@params.rotation);
             instance.transform.localScale = scale;

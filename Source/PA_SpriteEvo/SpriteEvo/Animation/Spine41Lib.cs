@@ -11,7 +11,7 @@ namespace SpriteEvo
     ///<summary>Spine4.1版本方法库</summary>
     public static class Spine41Lib
     {
-        public static GameObject CreateAnimationSafe(AnimationDef animationDef, AnimationParams @params, int layer = 2, bool active = true, bool DontDestroyOnLoad = false)
+        public static GameObject CreateSkeletonAnimation(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (animationDef == null || animationDef.version != "4.1" || animationDef.mainAsset == null) return null;
             //单个动画
@@ -20,18 +20,19 @@ namespace SpriteEvo
                 SkeletonLoader loader = animationDef.mainAsset.TryGetSpineAsset();
                 if (loader == null)
                 {
-                    Log.Error("PA.SpriteEvo" + animationDef.defName + " Main Asset Not Found");
+                    Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found");
                     return null;
                 }
                 if (loader.def.asset.version != "4.1")
                 {
-                    Log.Error("PA.SpriteEvo" + animationDef.defName + " Wrong AnimationDef Version");
+                    Log.Error("SpriteEvo." + animationDef.defName + " Wrong AnimationDef Version");
                     return null;
                 }
                 SkeletonDataAsset skeleton = loader.Create_SkeletonDataAsset41();
                 skeleton.name = animationDef.defName + "_SkeletonData.asset";
                 SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
+                AnimationParams @params = GenAnimation.GetSkeletonParams(animationDef, loop);
                 animation.InitAnimation(@params, layer, active, DontDestroyOnLoad);
                 animation.ApplyColor(@params.color, @params.slotSettings);
                 return animation.gameObject;
@@ -42,7 +43,7 @@ namespace SpriteEvo
                 SpineTexAsset parent = animationDef.mainAsset.FindSpineTexAsset();
                 if (parent == null)
                 {
-                    Log.Error("PA.SpriteEvo" + animationDef.defName + " Main Asset Not Found.");
+                    Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found.");
                     return null;
                 }
                 SpineTexAsset[] attachments = new SpineTexAsset[animationDef.attachments.Count];
@@ -51,7 +52,7 @@ namespace SpriteEvo
                     attachments[i] = animationDef.attachments[i].FindSpineTexAsset();
                     if (attachments[i] == null) 
                     {
-                        Log.Error("PA.SpriteEvo" + animationDef.defName + "Failed Applying Attachments.");
+                        Log.Error("SpriteEvo." + animationDef.defName + "Failed Applying Attachments.");
                         return null;
                     }
                 }
@@ -59,6 +60,7 @@ namespace SpriteEvo
                 skeleton.name = animationDef.defName + "_SkeletonData.asset";
                 SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
                 //Initilize
+                AnimationParams @params = GenAnimation.GetSkeletonParams(animationDef, loop);
                 animation.InitAnimation(@params, layer, active, DontDestroyOnLoad);
                 animation.ApplyColor(@params.color, @params.slotSettings);
                 return animation.gameObject;
@@ -88,7 +90,7 @@ namespace SpriteEvo
             if (instance == null) { return; }
             //Initilize
             Vector3 scale = new(@params.scale.x, @params.scale.y, 1f);
-            instance.gameObject.name = "Spine_" + @params.name;
+            instance.gameObject.name = @params.name;
             instance.gameObject.layer = layer;
             instance.transform.rotation = Quaternion.Euler(@params.rotation);
             instance.transform.localScale = scale;

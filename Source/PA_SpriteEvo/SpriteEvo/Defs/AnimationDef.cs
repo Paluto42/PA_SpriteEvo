@@ -8,10 +8,12 @@ namespace SpriteEvo
     public class SpineProperty
     {
         public bool OnIMGUI = false;
+        public Vector3 uioffset = new(0f, 0f, 0f);
+        public Vector2 uiDrawSize = new(1024, 1024);
+
         public Color color = Color.white;
         public List<SlotSettings> slotSettings = new();
         public Vector3 offset = new(0f, 0f, 0f);
-        public Vector3 uioffset = new(0f, 0f, 0f);
         public Vector3 position = new(0f, 0f, 0f);
         public Vector3 rotation = Vector3.zero;
         public Vector2 scale = new(1f, 1f);

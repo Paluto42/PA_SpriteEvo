@@ -7,10 +7,10 @@ namespace SpriteEvo
 {
     public static class AnimationExtensions
     {
-        public static bool Is_StraightAlphaTexture = false;
+        //public static bool Is_StraightAlphaTexture = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
         public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
-        public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.ObjectDatabase; 
+        public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.GlobalObjectDatabase; 
         #region 一些小拓展方法
         ///<summary>获取一个模型实例的定位点Bone</summary>
         public static Spine38.Bone RootBone(this Spine38.Unity.SkeletonAnimation instance)

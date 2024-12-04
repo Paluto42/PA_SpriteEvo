@@ -8,7 +8,7 @@ using UnityEngine;
 namespace SpriteEvo.Unity
 {
     //处理动画的点击反馈事件
-    public class ClickEventComp : MonoBehaviour
+    /*public class ClickEventComp : MonoBehaviour
     {
         public virtual void Awake()
         {
@@ -37,5 +37,5 @@ namespace SpriteEvo.Unity
         public virtual void OnDestory()
         {
         }
-    }
+    }*/
 }

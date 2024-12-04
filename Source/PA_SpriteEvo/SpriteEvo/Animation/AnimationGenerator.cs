@@ -7,15 +7,15 @@ using Verse;
 
 namespace SpriteEvo.Unity
 {
-    //测试合并动画以及脚本用，准备删了
-    public static class AnimationGenerator
+    //已弃用 应当分量
+    /*public static class AnimationGenerator
     {
         private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SkeletonLoader> Spine41_DB => AssetManager.spine41_Database;
 
         public static void MergeAnimation(Thing t, AnimationDef test, string name = null)
         {
-            GameObject obj = GC_ThingDocument.TryGetRecord(t);
+            GameObject obj = GC_AnimationDocument.TryGet(t);
             if (obj != null) return;
             Vector3 rot = new(90f, 0f, 0f);
             GameObject baseroot = Create_FxRootBase(rot, name);
@@ -44,9 +44,9 @@ namespace SpriteEvo.Unity
                 animation.AnimationState.SetAnimation(0, packhead.def.props.idleAnimationName, true);
                 animation.Initialize(overwrite: false);
                 animation.gameObject.SetActive(value: true);
-                animation.gameObject.SetParentSafely(baseroot);*/
+                animation.gameObject.SetParentSafely(baseroot);
             }
-            GC_ThingDocument.Add(t, baseroot);
+            GC_AnimationDocument.TryAdd(t, baseroot);
         }
         private static GameObject Create_FxRootBase(Vector3 rotation, string name = null)
         {
@@ -483,7 +483,7 @@ namespace SpriteEvo.Unity
                 }
             }
             return west_head;
-        }*/
+        }
 
-    }
+    }*/
 }

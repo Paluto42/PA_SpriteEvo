@@ -6,7 +6,7 @@ using UnityEngine;
 namespace SpriteEvo.Unity
 {
     //用来测试连播动态立绘的组件,记得删
-    public class ParallelAnimation_Spine38 : MonoBehaviour
+    /*public class ParallelAnimation_Spine38 : MonoBehaviour
     {
         #region
         public List<string> Animation_Slots = new List<string>() 
@@ -60,5 +60,5 @@ namespace SpriteEvo.Unity
             }
 
         }
-    }
+    }*/
 }

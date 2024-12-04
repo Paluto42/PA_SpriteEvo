@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SpriteEvo.Unity
 {
     //测试连播动态立绘用
-    public class ParallelAnimation_Spine41 : MonoBehaviour
+    /*public class ParallelAnimation_Spine41 : MonoBehaviour
     {
         #region Inspector
         public string Animation_0 = "Idle";
@@ -42,5 +42,5 @@ namespace SpriteEvo.Unity
             }
 
         }
-    }
+    }*/
 }

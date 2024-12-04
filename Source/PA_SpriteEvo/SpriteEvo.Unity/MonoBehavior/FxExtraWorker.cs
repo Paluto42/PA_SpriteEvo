@@ -9,7 +9,7 @@ using Verse;
 
 namespace SpriteEvo.Unity
 {
-    public class FxExtraWorker : BaseControllComp
+    /*public class FxExtraWorker : BaseControllComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -62,5 +62,5 @@ namespace SpriteEvo.Unity
         public override void OnDestory()
         {
         }
-    }
+    }*/
 }

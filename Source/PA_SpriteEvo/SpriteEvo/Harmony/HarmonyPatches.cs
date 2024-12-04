@@ -14,7 +14,7 @@ namespace SpriteEvo
     {
         static HarmonyPatches()
         {
-            Harmony Instance = new Harmony("paluto22.SpineFramework.patch");
+            Harmony Instance = new Harmony("paluto22.SpriteEvo.patch");
             Instance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }

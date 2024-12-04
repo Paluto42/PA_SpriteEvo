@@ -11,7 +11,7 @@ using Verse;
 namespace SpriteEvo.Unity
 {
     //绑在身上的身体控件
-    public class FxBodyWorker : BaseControllComp
+    /*public class FxBodyWorker : BaseControllComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -115,5 +115,5 @@ namespace SpriteEvo.Unity
         public override void OnDestory()
         {
         }
-    }
+    }*/
 }

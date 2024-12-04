@@ -7,18 +7,28 @@ using UnityEngine;
 namespace SpriteEvo
 {
     //写这个类是为了更加便捷地访问动画的属性,全是Getter
-    public class Animation38 : ITransform, ISkeletonConfig
+    /*public class Animation38 : ITransform, ISkeletonConfig
     {
         private readonly SkeletonAnimation _skeletonAnimation;
+        private readonly Camera renderCam;
         private GameObject RootObject => _skeletonAnimation?.gameObject;
+        public bool Active 
+        { 
+            get => RootObject.activeInHierarchy; 
+            set => RootObject.SetActive(value); 
+        }
         public Skeleton Skeleton => _skeletonAnimation?.Skeleton;
-        public RenderTexture RenderTexture => RootObject?.GetComponentInChildren<Camera>()?.targetTexture;
+        public RenderTexture RenderTexture => renderCam?.targetTexture;
 
         public Animation38(SkeletonAnimation instance)
         {
             _skeletonAnimation = instance ?? throw new ArgumentNullException("Failed to Instantiate Animation38");
         }
-
+        public Animation38(SkeletonAnimation instance, Vector3 camoffset, Vector2 drawSize)
+        {
+            _skeletonAnimation = instance ?? throw new ArgumentNullException("Failed to Instantiate Animation38");
+            renderCam = _skeletonAnimation.gameObject.AddRenderCameraToSkeletonAnimation(camoffset, (int)drawSize.x, (int)drawSize.y);
+        }
         public Vector3 Position => RootObject.transform.position;
         public Quaternion Rotation => RootObject.transform.rotation;
         public Vector3 Scale => RootObject.transform.localScale;
@@ -70,7 +80,7 @@ namespace SpriteEvo
         }
         public void UpdateSkin(string skinName, bool resetBones = true)
         {
-            if (_skeletonAnimation.SkeletonDataAsset == null)
+            if (_skeletonAnimation?.SkeletonDataAsset == null)
                 return;
             this.Skeleton.SetSkin(skinName);
             if (resetBones)
@@ -78,5 +88,5 @@ namespace SpriteEvo
             this.Skeleton.SetSlotsToSetupPose();
         }
 
-    }
+    }*/
 }

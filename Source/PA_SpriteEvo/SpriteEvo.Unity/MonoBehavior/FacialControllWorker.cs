@@ -11,7 +11,7 @@ using Verse;
 namespace SpriteEvo.Unity
 {
     //绑在头部的面部控件
-    public class FacialControllWorker : BaseControllComp
+    /*public class FacialControllWorker : BaseControllComp
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector
@@ -100,5 +100,5 @@ namespace SpriteEvo.Unity
             Mouth?.SetActive(false);
         }
 
-    }
+    }*/
 }

@@ -14,9 +14,7 @@ namespace SpriteEvo
         public static Dictionary<string, Shader> SpineShaderDatabase = new();
 
         //设置为DontDestroyOnLoad的GameObject才能在这里引用。
-        public static Dictionary<object, GameObject> ObjectDatabase = new();
-
-        //public static Dictionary<Thing, GameObject> ThingObjectDatabase = new();
+        public static Dictionary<object, GameObject> GlobalObjectDatabase = new();
 
         public static Dictionary<string, SkeletonLoader> spine38_Database = new();
 

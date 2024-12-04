@@ -6,7 +6,7 @@ using Verse;
 namespace SpriteEvo
 {
     ///<summary>整合了初始化单个Spine骨骼动画对象的必要信息</summary>
-    public class ThingDocument : IExposable, ILoadReferenceable
+    /*public class ThingDocument : IExposable, ILoadReferenceable
     {
         public string animationID;
         public SpineAssetDef spineassetdef;
@@ -63,37 +63,33 @@ namespace SpriteEvo
         {
             return this.animationID + "SpAnimationDoc";
         }
-    }
-    //
-    public class GC_ThingDocument : GameComponent
+    }*/
+
+    ///<summary>用来缓存动画信息的GC,在游戏中才可以使用</summary>
+    public class GC_AnimationDocument : GameComponent
     {
         public static Dictionary<object, GameObject> ObjectDataBase;
-        public static Dictionary<Pawn, GameObject> PawnUIDataBase;
-        public static Dictionary<string, List<ThingDocument>> animationDataBase;
-        public static HashSet<Thing> cachedThings;
-
+        //public static Dictionary<string, List<ThingDocument>> animationDataBase;
+        //public static HashSet<Thing> cachedThings;
         //internal static HashSet<Thing> cachedThings = new HashSet<Thing>();
-
-        public GC_ThingDocument(Game game)
+        public GC_AnimationDocument(Game game)
         {
             ObjectDataBase = new Dictionary<object, GameObject>();
-            PawnUIDataBase = new Dictionary<Pawn, GameObject>();
-            animationDataBase = new Dictionary<string, List<ThingDocument>>();
+            //animationDataBase = new Dictionary<string, List<ThingDocument>>();
         }
         public override void StartedNewGame()
         {
             base.StartedNewGame();
-            if (ModLister.GetActiveModWithIdentifier("PA.SpriteEvo") != null) 
+            /*if (ModLister.GetActiveModWithIdentifier("PA.SpriteEvo") != null) 
             {
                 Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(Translator.Translate("AK_StartLabel"), Translator.Translate("AK_StartDesc"), LetterDefOf.NeutralEvent, null, null));
-            }
-            ObjectDataBase ??= new Dictionary<object, GameObject>();
-            PawnUIDataBase ??= new Dictionary<Pawn, GameObject>();
+            }*/
+            ObjectDataBase = new Dictionary<object, GameObject>();
         }
 
         public override void FinalizeInit()
         {
-            List<string> key = new();
+            /*List<string> key = new();
             List<List<ThingDocument>> value = new();
             Scribe.mode = LoadSaveMode.ResolvingCrossRefs;
             try
@@ -103,17 +99,18 @@ namespace SpriteEvo
             catch 
             { Log.Error("Failed to save AnimationDoc"); }
             //复原
-            Scribe.mode = LoadSaveMode.Inactive;
+            Scribe.mode = LoadSaveMode.Inactive;*/
         }
         public override void LoadedGame()
         {
             base.LoadedGame();
-            ObjectDataBase ??= new Dictionary<object, GameObject>();
-            PawnUIDataBase ??= new Dictionary<Pawn, GameObject>();
+            ObjectDataBase = new Dictionary<object, GameObject>();
+ 
         }
         public override void ExposeData()
         {
             base.ExposeData();
+            /*
             if (Scribe.mode != LoadSaveMode.ResolvingCrossRefs)
             {
                 List<string> key = new();
@@ -123,13 +120,13 @@ namespace SpriteEvo
                     Scribe_Collections.Look(ref animationDataBase, "animationDocoment", LookMode.Value, LookMode.Deep, ref key, ref value);
                 }
                 catch { Log.Error("Failed to save AnimationDoc"); }
-            }
+            }*/
         }
-        public static void Add(object key, GameObject value)
+        public static void TryAdd(object key, GameObject value)
         {
             if (ObjectDataBase.ContainsKey(key)) 
             {
-                Log.Error("SpriteEvo. Error while Adding new Value: The same Key already exists in ObjectDatabase"); 
+                Log.Error("SpriteEvo. Error while Adding new Value: The same Key already exists in Current Game"); 
                 return; 
             }
             else
@@ -138,7 +135,7 @@ namespace SpriteEvo
             }
         }
         //May be Null
-        public static GameObject TryGetRecord(object key)
+        public static GameObject TryGet(object key)
         {
             if (ObjectDataBase.ContainsKey(key)) 
             {

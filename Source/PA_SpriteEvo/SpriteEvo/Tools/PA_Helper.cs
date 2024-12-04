@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
-using Verse.Noise;
+using Verse;
 
 namespace SpriteEvo
 {
-    internal static class PA_Helper
+    public static class PA_Helper
     {
+        public static AnimationDef FindDef(this string defName)
+        {
+            if (defName == null) return null;
+            return DefDatabase<AnimationDef>.AllDefsListForReading.Find(a => a.defName == defName);
+        }
         internal static void DoFlipX(this Spine38.Unity.ISkeletonComponent instance, bool IsFlip)
         {
             float x = IsFlip ? -1f : 1f;
@@ -34,13 +39,13 @@ namespace SpriteEvo
             child.transform.localPosition = Vector3.zero;
             child.transform.localRotation = Quaternion.identity;
         }
-        internal static void DestoryInNextFrame(this GameObject obj) 
+        /*internal static void DestoryInNextFrame(this GameObject obj) 
         {
             if (obj != null) 
             {
                 GameObject.Destroy(obj);
             }
-        }
+        }*/
 
     }
 }

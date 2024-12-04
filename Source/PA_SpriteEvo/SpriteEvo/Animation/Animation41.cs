@@ -7,7 +7,7 @@ using UnityEngine;
 namespace SpriteEvo
 {
     //写这个类是为了更加便捷地访问动画的属性,全是Getter
-    public class Animation41 : ITransform, ISkeletonConfig
+    /*public class Animation41 : ITransform, ISkeletonConfig
     {
         private readonly SkeletonAnimation _skeletonAnimation;
         public Skeleton Skeleton => _skeletonAnimation.Skeleton;
@@ -74,5 +74,5 @@ namespace SpriteEvo
                 this.Skeleton.SetBonesToSetupPose();
             this.Skeleton.SetSlotsToSetupPose();
         }
-    }
+    }*/
 }
