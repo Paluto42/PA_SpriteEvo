@@ -22,7 +22,7 @@ namespace SpriteEvo
             @params.color = def.props.color;
             @params.slotSettings = def.props.slotSettings;
             @params.skin = def.props.skin;
-            @params.defaultAnimation = def.props.idleAnimationName;
+            @params.defaultAnimation = def.props.idleAnimation;
             @params.rotation = def.props.rotation;
             @params.scale = def.props.scale;
             @params.timeScale = def.props.timeScale;

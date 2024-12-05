@@ -126,7 +126,7 @@
     <Compile Include="SpriteEvo\Harmony\HarmonyPatches.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadManager.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
-    <Compile Include="SPE_ModSettings.cs" />
+    <Compile Include="SpriteEvo\SPE_ModSettings.cs" />
     <Compile Include="SpriteEvo\Defs\SpineAssetDef.cs" />
     <Compile Include="SpriteEvo\Animation\AnimationGenerator.cs" />
     <Compile Include="SpriteEvo\Script\ScriptWorker.cs" />

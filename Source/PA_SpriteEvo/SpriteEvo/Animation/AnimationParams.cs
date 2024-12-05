@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace SpriteEvo
-{
-    ///<summary>用于确定一个slot的颜色</summary>
-    [Serializable]
-    public class SlotSettings
-    {
-        public string slot = string.Empty;
-        public Color32 color = Color.white;
-    }
+{  
     /// <summary>用于生成初始化Spine动画提供的参数集
     /// <para>必须调用<a cref="GenAnimation.GetSkeletonParams(AnimationDef, bool)"></a>进行值的初始化</para>
     /// </summary>

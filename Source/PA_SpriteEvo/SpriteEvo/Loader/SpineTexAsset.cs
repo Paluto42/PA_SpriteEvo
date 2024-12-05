@@ -43,7 +43,7 @@ namespace SpriteEvo
             Spine38.Unity.SpineAtlasAsset atlas;
             Spine38.Unity.SkeletonDataAsset skeleton;
             //Is_StraightAlphaTexture = pack.useStraightAlpha;
-            atlas = Spine38.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.textures, this.shader, initialize: true);
+            atlas = Spine38.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.textures, this.shader, initialize: true, pma: useStraightAlpha);
             skeleton = Spine38.Unity.SkeletonDataAsset.CreateRuntimeInstance(this.skeletonInput, atlas, initialize: true);
             //Is_StraightAlphaTexture = false;
             return skeleton;
@@ -70,7 +70,7 @@ namespace SpriteEvo
             Spine41.Unity.SpineAtlasAsset atlas;
             Spine41.Unity.SkeletonDataAsset skeleton;
             //Is_StraightAlphaTexture = pack.useStraightAlpha;
-            atlas = Spine41.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.textures, this.shader, initialize: true);
+            atlas = Spine41.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.textures, this.shader, initialize: true, pma: useStraightAlpha);
             skeleton = Spine41.Unity.SkeletonDataAsset.CreateRuntimeInstance(this.skeletonInput, atlas, initialize: true);
             //Is_StraightAlphaTexture = false;
             return skeleton;
