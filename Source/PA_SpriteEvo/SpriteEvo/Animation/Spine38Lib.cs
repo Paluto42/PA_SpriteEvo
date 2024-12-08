@@ -1,7 +1,7 @@
 ﻿using Spine38;
 using Spine38.Unity;
+using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Verse;
@@ -68,6 +68,17 @@ namespace SpriteEvo
                 SkeletonDataAsset skeleton = loader.Create_SkeletonDataAsset38();
                 skeleton.name = animationDef.defName + "_SkeletonData.asset";
                 SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
+                animation.gameObject.SetActive(false);
+                var cmp = animationDef.scriptProperties;
+                if (cmp?.scriptClass != null) 
+                {
+                    if (typeof(CompatibleMonoBehaviour).IsAssignableFrom(cmp?.scriptClass))
+                    {
+                        Component comp = animation.gameObject.AddComponent(cmp.scriptClass);
+                        if (comp is CompatibleMonoBehaviour cm)
+                            cm.props = cmp;
+                    }
+                }
                 //Initilize
                 AnimationParams @params = GenAnimation.GetSkeletonParams(animationDef, loop);
                 animation.InitAnimation(@params, layer, active, DontDestroyOnLoad);

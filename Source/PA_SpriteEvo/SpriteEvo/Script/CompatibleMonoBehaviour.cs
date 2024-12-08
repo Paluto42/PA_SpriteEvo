@@ -5,10 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace SpriteEvo.Unity
+namespace SpriteEvo
 {
-    public class BaseControllComp : MonoBehaviour
+    /// <summary>
+    /// 相当于ThingComp的用法
+    /// </summary>
+    public class CompatibleMonoBehaviour : MonoBehaviour
     {
+        public GameObject Parent => base.gameObject;
+
+        public CompatibleMonoBehaviourProperties props;
+        public void Enable() { this.enabled = true; }
+        public void Disable() { this.enabled = false; }
+        //添加后调用
         public virtual void Awake()
         {
         }

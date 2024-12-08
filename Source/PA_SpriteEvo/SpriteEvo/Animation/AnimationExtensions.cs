@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Verse;
 using UnityEngine;
-using System;
 
 namespace SpriteEvo
 {
@@ -58,7 +57,7 @@ namespace SpriteEvo
         public static List<Spine38.Animation> GetAllAnimations(this Spine38.Unity.SkeletonAnimation instance)
         {
             Spine38.ExposedList<Spine38.Animation> animations = instance?.SkeletonDataAsset.GetSkeletonData(false).Animations;
-            List<Spine38.Animation> IList = new List<Spine38.Animation>();
+            List<Spine38.Animation> IList = new();
             for (int i = 0, n = animations.Count; i < n; i++)
             {
                 Spine38.Animation animation = animations.Items[i];

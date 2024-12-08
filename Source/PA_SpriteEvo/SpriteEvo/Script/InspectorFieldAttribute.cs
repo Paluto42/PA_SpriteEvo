@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Verse;
 
 namespace SpriteEvo
 {
-    internal class GraphicDef : Def
+    [AttributeUsage(AttributeTargets.Field)]
+    public class InspectorFieldAttribute : Attribute
     {
     }
 }

@@ -55,10 +55,6 @@
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
@@ -73,6 +69,10 @@
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
       <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>E:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
@@ -101,8 +101,6 @@
     <Compile Include="SpriteEvo\Animation\Spine41Lib.cs" />
     <Compile Include="SpriteEvo\Animation\AnimationParams.cs" />
     <Compile Include="SpriteEvo\Defs\AnimationDef.cs" />
-    <Compile Include="SpriteEvo\Defs\AnimationScriptDef.cs" />
-    <Compile Include="SpriteEvo\Defs\GraphicDef.cs" />
     <Compile Include="SpriteEvo\Loader\SpineMatAsset.cs" />
     <Compile Include="SpriteEvo\Loader\SpineTexAsset.cs" />
     <Compile Include="SpriteEvo\Animation\AnimationExtensions.cs" />
@@ -115,7 +113,7 @@
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonBinaryMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonJsonMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonMerger.cs" />
-    <Compile Include="SpriteEvo.Unity\BaseControllComp.cs" />
+    <Compile Include="SpriteEvo\Script\CompatibleMonoBehaviour.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\BodyControllWorker.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ClickEventComp.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FacialControllWorker.cs" />
@@ -126,10 +124,11 @@
     <Compile Include="SpriteEvo\Harmony\HarmonyPatches.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadManager.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
+    <Compile Include="SpriteEvo\Script\InspectorFieldAttribute.cs" />
     <Compile Include="SpriteEvo\SPE_ModSettings.cs" />
     <Compile Include="SpriteEvo\Defs\SpineAssetDef.cs" />
     <Compile Include="SpriteEvo\Animation\AnimationGenerator.cs" />
-    <Compile Include="SpriteEvo\Script\ScriptWorker.cs" />
+    <Compile Include="SpriteEvo\Script\CompatibleMonoBehaviourProperties.cs" />
     <Compile Include="SpriteEvo\Tools\PA_Helper.cs" />
     <Compile Include="SpriteEvo\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
