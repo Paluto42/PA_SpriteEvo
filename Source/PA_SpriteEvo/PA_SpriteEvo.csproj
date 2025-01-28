@@ -145,12 +145,6 @@
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SpriteEvo\Misc\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Spine38\Spine38.csproj">
       <Project>{23a5c3b0-b715-4d3b-b534-e7eda3b6c1f2}</Project>
       <Name>Spine38</Name>
@@ -160,12 +154,5 @@
       <Name>Spine41</Name>
     </ProjectReference>
   </ItemGroup>
-<<<<<<< HEAD
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-=======
->>>>>>> cdb252c26b221237bf22845590eef59edbfcd987
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
