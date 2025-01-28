@@ -10,6 +10,21 @@ namespace SpriteEvo
             if (defName == null) return null;
             return DefDatabase<AnimationDef>.AllDefsListForReading.Find(a => a.defName == defName);
         }
+        /// <summary>从AnimationDef中读取动画属性作为参数结构体返回</summary>
+        public static AnimationParams GetSkeletonParams(this AnimationDef def, bool loop = true)
+        {
+            AnimationParams @params = default;
+            @params.color = def.props.color;
+            @params.slotSettings = def.props.slotSettings;
+            @params.skin = def.props.skin;
+            @params.defaultAnimation = def.props.idleAnimation;
+            @params.rotation = def.props.rotation;
+            @params.scale = def.props.scale;
+            @params.timeScale = def.props.timeScale;
+            @params.position = def.props.position;
+            @params.loop = loop;
+            return @params;
+        }
         internal static void DoFlipX(this Spine38.Unity.ISkeletonComponent instance, bool IsFlip)
         {
             float x = IsFlip ? -1f : 1f;

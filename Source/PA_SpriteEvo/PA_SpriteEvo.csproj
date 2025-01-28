@@ -21,9 +21,11 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
     <LangVersion>9.0</LangVersion>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -97,17 +99,21 @@
     <Compile Include="SpriteEvo\Animation\Animation41.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ISkeletonConfig.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ITransform.cs" />
-    <Compile Include="SpriteEvo\Animation\Spine38Lib.cs" />
-    <Compile Include="SpriteEvo\Animation\Spine41Lib.cs" />
-    <Compile Include="SpriteEvo\Animation\AnimationParams.cs" />
+    <Compile Include="SpriteEvo\Hierarchy\Hierarchy.cs" />
+    <Compile Include="SpriteEvo\ThingComp\TC_Animation.cs" />
+    <Compile Include="SpriteEvo\Utility\Spine38Lib.cs" />
+    <Compile Include="SpriteEvo\Utility\Spine41Lib.cs" />
+    <Compile Include="SpriteEvo\Misc\AnimationParams.cs" />
     <Compile Include="SpriteEvo\Defs\AnimationDef.cs" />
     <Compile Include="SpriteEvo\Loader\SpineMatAsset.cs" />
     <Compile Include="SpriteEvo\Loader\SpineTexAsset.cs" />
-    <Compile Include="SpriteEvo\Animation\AnimationExtensions.cs" />
+    <Compile Include="SpriteEvo\Tools\AnimationExtensions.cs" />
     <Compile Include="SpriteEvo\Manager\AssetManager.cs" />
     <Compile Include="SpriteEvo\Loader\ISkeletonLoader.cs" />
     <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
-    <Compile Include="SpriteEvo\Animation\GenAnimation.cs" />
+    <Compile Include="SpriteEvo\Utility\EffectsUtility.cs" />
+    <Compile Include="SpriteEvo\Utility\SkeletonGraphicUtility.cs" />
+    <Compile Include="SpriteEvo\Utility\SkeletonAnimationUtility.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\BinaryMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\JsonMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonBinaryMerger.cs" />
@@ -127,10 +133,10 @@
     <Compile Include="SpriteEvo\Script\InspectorFieldAttribute.cs" />
     <Compile Include="SpriteEvo\SPE_ModSettings.cs" />
     <Compile Include="SpriteEvo\Defs\SpineAssetDef.cs" />
-    <Compile Include="SpriteEvo\Animation\AnimationGenerator.cs" />
+    <Compile Include="SpriteEvo\Tools\AnimationGenerator.cs" />
     <Compile Include="SpriteEvo\Script\CompatibleMonoBehaviourProperties.cs" />
     <Compile Include="SpriteEvo\Tools\PA_Helper.cs" />
-    <Compile Include="SpriteEvo\TypeDef.cs" />
+    <Compile Include="SpriteEvo\Misc\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
@@ -144,9 +150,7 @@
       <Name>Spine41</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SpriteEvo\Misc\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

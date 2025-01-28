@@ -33,7 +33,7 @@ namespace SpriteEvo
     public class AnimationDef : Def
     {
         public string version;
-        public CompatibleMonoBehaviourProperties scriptProperties;
+        public List<CompatibleMonoBehaviourProperties> scriptProperties = new();
         public SpineAssetDef mainAsset;
         public List<SpineAssetDef> attachments = new();
         public SpineProperty props = new();

@@ -34,8 +34,8 @@ namespace SpriteEvo
             Log.Error(this.def.defName + " SpineAssetPack Missing Skeleton");
         }
         ///<summary>读取 SkeletonDataAsset (Spine3.8版本)</summary>
-        public abstract Spine38.Unity.SkeletonDataAsset Create_SkeletonDataAsset38();
+        public abstract Spine38.Unity.SkeletonDataAsset SkeletonDataAsset38();
         ///<summary>读取 SkeletonDataAsset (Spine4.1版本)</summary>
-        public abstract Spine41.Unity.SkeletonDataAsset Create_SkeletonDataAsset41();
+        public abstract Spine41.Unity.SkeletonDataAsset SkeletonDataAsset41();
     }
 }

@@ -22,7 +22,7 @@ namespace SpriteEvo
             this.useStraightAlpha = usePMA;
         }
 
-        public override Spine38.Unity.SkeletonDataAsset Create_SkeletonDataAsset38()
+        public override Spine38.Unity.SkeletonDataAsset SkeletonDataAsset38()
         {
             if (this.def.asset.version != "3.8") { return null; }
             if (this.atlasInput == null) 
@@ -49,7 +49,7 @@ namespace SpriteEvo
             return skeleton;
         }
 
-        public override Spine41.Unity.SkeletonDataAsset Create_SkeletonDataAsset41()
+        public override Spine41.Unity.SkeletonDataAsset SkeletonDataAsset41()
         {
             if (this.def.asset.version != "4.1") { return null; }
             if (this.atlasInput == null)

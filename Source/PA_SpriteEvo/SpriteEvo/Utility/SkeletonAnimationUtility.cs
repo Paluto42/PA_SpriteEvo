@@ -2,39 +2,21 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using Verse;
 
 namespace SpriteEvo
 {
-    public static class GenAnimation
+    public static class SkeletonAnimationUtility
     {
         public static bool currentlyGenerating = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
-        public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
         public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.GlobalObjectDatabase;
-        
-        /// <summary>从AnimationDef中读取动画属性作为参数结构体返回</summary>
-        public static AnimationParams GetSkeletonParams(this AnimationDef def, bool loop = true)
-        {
-            AnimationParams @params = default;
-            @params.name = def.defName;
-            @params.color = def.props.color;
-            @params.slotSettings = def.props.slotSettings;
-            @params.skin = def.props.skin;
-            @params.defaultAnimation = def.props.idleAnimation;
-            @params.rotation = def.props.rotation;
-            @params.scale = def.props.scale;
-            @params.timeScale = def.props.timeScale;
-            @params.position = def.props.position;
-            @params.loop = loop;
-            return @params;
-        }
+
         ///<summary>
         ///根据AnimationDef信息创建并初始化一个没有额外附加脚本SkeletonAnimation素体实例，默认在场景Layer的第2层
         ///<para>是本框架最重要的功能之一，实现了填入XML信息就可在指定地图位置生成Spine动画</para>
         ///</summary>
-        /*public static GameObject CreateAnimationInstance(this AnimationDef def, int layer = 2, bool loop = true, bool DontDestroyOnLoad = false)
+        /*public static GameObject CreateAnimationInstance(AnimationDef def, int layer = 2, bool loop = true, bool DontDestroyOnLoad = false)
         {
             GameObject obj = null;
             //AnimationParams @params = GetSkeletonParams(def, loop);
@@ -49,13 +31,21 @@ namespace SpriteEvo
             return obj;
         }*/
         //可副本 生命周期仅限每局游戏内,加载新游戏就会被清理 没有key怎么获取自己想吧 写新方法可以用
-        public static GameObject InstantiateAnimationInGame(this AnimationDef def, int layer = 2, bool loop = true, bool active = true) 
+        public static GameObject InstantiateInGame(AnimationDef def, bool loop = true, bool active = true)
+        {
+            return InstantiateInGame(def, layer: 2, loop, active);
+        }
+        public static GameObject InstantiateInGame(AnimationDef def, int layer = 2, bool loop = true, bool active = true) 
         {
             if (Current.ProgramState != ProgramState.Playing) return null;
-            return (GameObject)InstantiateAnimation(def, layer, loop, active, DontDestroyOnLoad: false);
+            return Instantiate(def, layer, loop, active, DontDestroyOnLoad: false);
         }
         //可副本,每局游戏内 一个key绑定一个运行时实例 不可传入NULL作为Key
-        public static GameObject InstantiateAnimationInGameOnly(this AnimationDef def, object key, int layer = 2, bool loop = true, bool active = true)
+        public static GameObject InstantiateInGameOnly(AnimationDef def, object key) 
+        {
+            return InstantiateInGameOnly(def, key, layer: 2, loop: true, active: true);
+        }
+        public static GameObject InstantiateInGameOnly(AnimationDef def, object key, int layer = 2, bool loop = true, bool active = true)
         {
             if (Current.ProgramState != ProgramState.Playing) return null;
             if (key == null) return null;
@@ -64,18 +54,18 @@ namespace SpriteEvo
                 Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
                 return null;
             }
-            GameObject instance = InstantiateAnimation(def, layer, loop, active, DontDestroyOnLoad: false);
+            GameObject instance = Instantiate(def, layer, loop, active, DontDestroyOnLoad: false);
             if (instance != null)
                 GC_AnimationDocument.TryAdd(key, instance);
             return instance;
         }
         //因为开一个新档会清掉所有物件，所以全局使用要DontDestroyOnLoad 基本上不考虑对它做删除操作和额外管理. 可副本
-        public static GameObject InstantiateAnimationGlobal(this AnimationDef def, int layer = 5, bool loop = true, bool active = true)
+        public static GameObject InstantiateGlobal(AnimationDef def, int layer = 5, bool loop = true, bool active = true)
         {
-            return (GameObject)InstantiateAnimation(def, layer, loop, active, DontDestroyOnLoad: true);
+            return Instantiate(def, layer, loop, active, DontDestroyOnLoad: true);
         }
         //可副本,全局一个key绑定一个运行时实例 
-        public static GameObject InstantiateAnimationGlobalOnly(this AnimationDef def, object key, int layer = 5, bool loop = true, bool active = true)
+        public static GameObject InstantiateGlobalOnly(AnimationDef def, object key, int layer = 5, bool loop = true, bool active = true)
         {
             if (key == null) return null;
             if (AssetManager.GlobalObjectDatabase.TryGetValue(key) != null)
@@ -83,23 +73,23 @@ namespace SpriteEvo
                 Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
                 return null;
             }
-            GameObject instance = InstantiateAnimation(def, layer, loop, active, DontDestroyOnLoad: true);
+            GameObject instance = Instantiate(def, layer, loop, active, DontDestroyOnLoad: true);
             if (instance != null)
                 AssetManager.GlobalObjectDatabase.Add(key, instance);
             return instance;
         }
         /// <summary>接受所有可选参数的主方法</summary>
-        public static GameObject InstantiateAnimation(AnimationDef def, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
+        public static GameObject Instantiate(AnimationDef def, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (def == null) return null;
             GameObject instance = null;
             if (def.version == "3.8")
             {
-                instance = Spine38Lib.CreateSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
+                instance = Spine38Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
             else if (def.version == "4.1")
             {
-                instance = Spine41Lib.CreateSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
+                instance = Spine41Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
             if (instance == null)
             {
@@ -213,59 +203,6 @@ namespace SpriteEvo
             cam.depth = Current.Camera.depth - 1f;
             cam.targetTexture = new RenderTexture(width, height, 32, RenderTextureFormat.ARGB32, 0);
             return cam;
-        }
-        //<summary>[Pending]在Canvas上渲染Spine动画 </summary>
-        [Obsolete]
-        public static void Create_CanvasInstance(this AnimationDef def, Pawn pawn, bool loop = true)
-        {
-            /*
-            Vector3 offset = new Vector3(def.props.offset.x, 0, pack.def.props.offset.y);
-            Vector3 scale = new Vector3(pack.def.props.scale.x * 0.1f, 1f, pack.def.props.scale.y * 0.1f);
-            GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
-            if (obj != null)
-            {
-                Log.Error("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
-                return;
-            }
-            GameObject myGO = new GameObject
-            {
-                name = "myGO"
-            };
-            Canvas myCanvas = myGO.AddComponent<Canvas>();
-            Transform parent = myCanvas.transform;
-            parent.position += offset;
-            parent.localScale = scale;
-
-            Material SkeletonGraphic_alpha = Spine_SkeletonGraphic;
-            if (!pack.useStraightAlpha)
-            {
-                SkeletonGraphic_alpha.SetFloat("_StraightAlphaInput", 0);
-                SkeletonGraphic_alpha.DisableKeyword("_STRAIGHT_ALPHA_INPUT");
-                Log.Message("_STRAIGHT_ALPHA_INPUT OFF");
-            }
-            Spine38.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset38();
-            Spine38.Unity.SkeletonGraphic graphic = Spine38.Unity.SkeletonGraphic.NewSkeletonGraphicGameObject(skeleton, parent, SkeletonGraphic_alpha);
-
-            graphic.allowMultipleCanvasRenderers = true;
-            graphic.gameObject.layer = 5;
-            //graphic.rectTransform.position += offset;
-            //graphic.rectTransform.localScale = scale;
-            graphic.rectTransform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            graphic.rectTransform.position = pawn.DrawPos + Vector3.up; ;
-            graphic.AnimationState.SetAnimation(0, "Idle", loop);
-            graphic.Initialize(overwrite: false);
-            graphic.gameObject.SetActive(false);
-            DynamicObjectDatabase.Add(pack.def.defName, graphic.gameObject);
-            */
-        }
-        public static void DisableProbe(GameObject obj) 
-        {
-            var MeshRenderer = obj.GetComponent<MeshRenderer>();
-            if (MeshRenderer != null) 
-            {
-                MeshRenderer.lightProbeUsage = LightProbeUsage.Off;
-                MeshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
-            }
         }
         public static void Destory_SpineAnimationModel(string name)
         {

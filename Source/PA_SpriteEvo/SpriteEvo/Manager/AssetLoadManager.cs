@@ -90,7 +90,7 @@ namespace SpriteEvo
                         ab = AssetBundle.LoadFromFile(abPath);
                         AssetBundle_Loaded.Add(ab);
                         if (SPE_ModSettings.debugOverride)
-                            Log.Warning("SpriteEvo: Loading SkeletonBinary\"" + def.defName + "\" From Assetbundle : " + Spine_Dict + ab.name);
+                            Log.Warning("SpriteEvo: Loading SkeletonBinary\"" + "\" From Assetbundle : " + Spine_Dict + ab.name);
                     }
                     else
                     {

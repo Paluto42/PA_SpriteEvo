@@ -5,11 +5,10 @@ using UnityEngine;
 namespace SpriteEvo
 {  
     /// <summary>用于生成初始化Spine动画提供的参数集
-    /// <para>必须调用<a cref="GenAnimation.GetSkeletonParams(AnimationDef, bool)"></a>进行值的初始化</para>
+    /// <para>必须调用<a cref="SkeletonAnimationUtility.GetSkeletonParams(AnimationDef, bool)"></a>进行值的初始化</para>
     /// </summary>
     public struct AnimationParams
     {
-        public string name;
         public Color32 color;
         public List<SlotSettings> slotSettings;
         public Vector3 offset;
