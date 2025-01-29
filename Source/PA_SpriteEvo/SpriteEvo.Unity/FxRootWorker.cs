@@ -6,7 +6,7 @@ using Verse;
 namespace SpriteEvo.Unity
 {
     //控制坐标更新和旋转方向的Root物件
-    public class FxRootWorker : CompatibleMonoBehaviour
+    public class FxRootWorker : ScriptBase
     {
         //在Unity编辑器里直接使用需要把属性换成字段
         #region Inspector

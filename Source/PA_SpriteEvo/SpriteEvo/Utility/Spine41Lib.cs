@@ -14,11 +14,11 @@ namespace SpriteEvo
         public static GameObject NewSkeletonAnimation(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (animationDef == null || animationDef.version != "4.1" || animationDef.mainAsset == null) return null;
-            SkeletonDataAsset skeletonDataAsset = null;
+            SkeletonDataAsset skeletonDataAsset;
             //单个Skeleton
             if (animationDef.attachments.NullOrEmpty())
             {
-                SkeletonLoader loader = animationDef.mainAsset.TryGetSpineAsset();
+                SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
                 if (loader == null)
                 {
                     Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found");
@@ -36,16 +36,16 @@ namespace SpriteEvo
             //合并Skeleton
             else
             {
-                SpineTexAsset parent = animationDef.mainAsset.FindSpineTexAsset();
+                Asset_Tex parent = animationDef.mainAsset.TryGetAsset<Asset_Tex>();
                 if (parent == null)
                 {
                     Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found.");
                     return null;
                 }
-                SpineTexAsset[] attachments = new SpineTexAsset[animationDef.attachments.Count];
+                Asset_Tex[] attachments = new Asset_Tex[animationDef.attachments.Count];
                 for (int i = 0; i < attachments.Length; i++)
                 {
-                    attachments[i] = animationDef.attachments[i].FindSpineTexAsset();
+                    attachments[i] = animationDef.attachments[i].TryGetAsset<Asset_Tex>();
                     if (attachments[i] == null) 
                     {
                         Log.Error("SpriteEvo." + animationDef.defName + "Failed Applying Attachments.");
@@ -72,16 +72,16 @@ namespace SpriteEvo
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
             return animation.gameObject;
         }
-        public static void InitializeMonoBehaviour(GameObject @object, List<CompatibleMonoBehaviourProperties> props)
+        public static void InitializeMonoBehaviour(GameObject @object, List<ScriptProperties> props)
         {
             if (props == null) return;
             foreach (var cmp in props)
             {
                 if (cmp?.scriptClass == null) continue;
-                if (typeof(CompatibleMonoBehaviour).IsAssignableFrom(cmp?.scriptClass))
+                if (typeof(ScriptBase).IsAssignableFrom(cmp?.scriptClass))
                 {
                     Component comp = @object.AddComponent(cmp.scriptClass);
-                    if (comp is CompatibleMonoBehaviour cm)
+                    if (comp is ScriptBase cm)
                         cm.props = cmp;
                 }
             }

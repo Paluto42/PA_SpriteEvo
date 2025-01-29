@@ -56,7 +56,7 @@ namespace SpriteEvo
             //单个Skeleton
             if (animationDef.attachments.NullOrEmpty())
             {
-                SkeletonLoader loader = animationDef.mainAsset.TryGetSpineAsset();
+                SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
                 if (loader == null)
                 {
                     Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found");
@@ -93,16 +93,16 @@ namespace SpriteEvo
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
             return animation.gameObject;
         }
-        public static void InitializeMonoBehaviour(GameObject @object, List<CompatibleMonoBehaviourProperties> props)
+        public static void InitializeMonoBehaviour(GameObject @object, List<ScriptProperties> props)
         {
             if (props == null) return;
             foreach (var cmp in props)
             {
                 if (cmp?.scriptClass == null) continue;
-                if (typeof(CompatibleMonoBehaviour).IsAssignableFrom(cmp?.scriptClass))
+                if (typeof(ScriptBase).IsAssignableFrom(cmp?.scriptClass))
                 {
                     Component comp = @object.AddComponent(cmp.scriptClass);
-                    if (comp is CompatibleMonoBehaviour cm)
+                    if (comp is ScriptBase cm)
                         cm.props = cmp;
                 }
             }

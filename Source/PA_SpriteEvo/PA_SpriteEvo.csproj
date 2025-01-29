@@ -113,13 +113,13 @@
     <Compile Include="SpriteEvo\Animation\Interface\ISkeletonConfig.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ITransform.cs" />
     <Compile Include="SpriteEvo\Hierarchy\Hierarchy.cs" />
+    <Compile Include="SpriteEvo\Loader\Asset_Mat.cs" />
+    <Compile Include="SpriteEvo\Loader\Asset_Tex.cs" />
     <Compile Include="SpriteEvo\ThingComp\TC_Animation.cs" />
     <Compile Include="SpriteEvo\Utility\Spine38Lib.cs" />
     <Compile Include="SpriteEvo\Utility\Spine41Lib.cs" />
     <Compile Include="SpriteEvo\Misc\AnimationParams.cs" />
     <Compile Include="SpriteEvo\Defs\AnimationDef.cs" />
-    <Compile Include="SpriteEvo\Loader\SpineMatAsset.cs" />
-    <Compile Include="SpriteEvo\Loader\SpineTexAsset.cs" />
     <Compile Include="SpriteEvo\Tools\AnimationExtensions.cs" />
     <Compile Include="SpriteEvo\Manager\AssetManager.cs" />
     <Compile Include="SpriteEvo\Loader\ISkeletonLoader.cs" />
@@ -132,7 +132,7 @@
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonBinaryMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonJsonMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\Spine\SkeletonMerger.cs" />
-    <Compile Include="SpriteEvo\Script\CompatibleMonoBehaviour.cs" />
+    <Compile Include="SpriteEvo\Script\ScriptBase.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\BodyControllWorker.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ClickEventComp.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FacialControllWorker.cs" />
@@ -147,7 +147,7 @@
     <Compile Include="SpriteEvo\SPE_ModSettings.cs" />
     <Compile Include="SpriteEvo\Defs\SpineAssetDef.cs" />
     <Compile Include="SpriteEvo\Tools\AnimationGenerator.cs" />
-    <Compile Include="SpriteEvo\Script\CompatibleMonoBehaviourProperties.cs" />
+    <Compile Include="SpriteEvo\Script\ScriptProperties.cs" />
     <Compile Include="SpriteEvo\Tools\PA_Helper.cs" />
     <Compile Include="SpriteEvo\Misc\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

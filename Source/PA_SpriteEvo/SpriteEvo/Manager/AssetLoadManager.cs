@@ -67,7 +67,7 @@ namespace SpriteEvo
             {
                 if (def.asset.version == null)
                 {
-                    Log.Message($"SpriteEvo: SpineAsset\"" + def.defName + "\" Has Invalid Skeleton Version, Skiped");
+                    Log.Message($"SpriteEvo: SpineAsset\"" + def.defName + "\" Has Invalid Version, Skiped");
                     continue;
                 }
                 TextAsset atlasAsset = null;
@@ -89,7 +89,7 @@ namespace SpriteEvo
                         string abPath = Path.Combine(IndividualPath, def.asset.filePath);
                         if (!File.Exists(abPath)) 
                         {
-                            //写报错
+                            Log.Error("SpriteEvo: Asset \"" + def.defName + "\" Does not exist filePath :\"" + def.asset.filePath + "\"");
                             continue;
                         }
                         ab = AssetBundle.LoadFromFile(abPath);
@@ -181,7 +181,7 @@ namespace SpriteEvo
                             OutputAssetErrorMsg(errorInfos, def.defName, true);
                             continue;
                         }
-                        SpineMatAsset matPack = new(def, atlasAsset, skeletonAsset, materials, usePMA: def.asset.StraightAlphaInput);
+                        Asset_Mat matPack = new(def, atlasAsset, skeletonAsset, materials, usePMA: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, matPack);
                         Log.Message("SpriteEvo: Successful Loaded SkeletonBinary\"" + def.defName + "\" with " + materials.Length + (materials.Length > 1 ? " Materials" : " Material"));
                     }
@@ -215,7 +215,7 @@ namespace SpriteEvo
                             OutputAssetErrorMsg(errorInfos, def.defName, true);
                             continue;
                         }
-                        SpineTexAsset texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
+                        Asset_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, texPack);
                         Log.Message("SpriteEvo: Successful Loaded SkeletonBinary\"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
@@ -332,7 +332,7 @@ namespace SpriteEvo
                     {
                         shader = Shader_DB.TryGetValue(def.asset.shader);
                     }
-                    SpineTexAsset texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
+                    Asset_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)
                         Log.Message("SpriteEvo: Successful Loaded SpineAsset \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));

@@ -10,14 +10,14 @@ using Verse;
 namespace SpriteEvo
 {
     ///<summary>相当于ThingCompProperties的用法,确定如何对动画实例添加脚本属性</summary>
-    public class CompatibleMonoBehaviourProperties
+    public class ScriptProperties
     {
-        public Type scriptClass = typeof(CompatibleMonoBehaviour);
+        public Type scriptClass = typeof(ScriptBase);
 
-        public CompatibleMonoBehaviourProperties() 
+        public ScriptProperties() 
         {
         }
-        public CompatibleMonoBehaviourProperties(Type scriptClass)
+        public ScriptProperties(Type scriptClass)
         {
             this.scriptClass = scriptClass;
         }

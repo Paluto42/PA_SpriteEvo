@@ -9,13 +9,13 @@ namespace SpriteEvo
     ///<para>对于PMA模式问题，请使用本框架提供的预设启用PMA的额外Spine/Skeleton Shader</para>
     ///<para>了解详细信息,请查看<a cref="SkeletonLoader"></a>类</para>
     ///</summary>
-    public class SpineTexAsset : SkeletonLoader
+    public class Asset_Tex : SkeletonLoader
     {
         public Texture2D[] textures;
         public Shader shader;
         public bool useStraightAlpha;
 
-        public SpineTexAsset(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool usePMA = false) : base(def, atlas, skeleton)
+        public Asset_Tex(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool usePMA = false) : base(def, atlas, skeleton)
         {
             this.textures = texs;
             this.shader = shader;

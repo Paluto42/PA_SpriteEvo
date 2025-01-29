@@ -24,7 +24,7 @@ namespace SpriteEvo.Extensions
             string origincontent = parent.text;
             string toappend = child.text;
             string result = origincontent + "\n\n" + toappend;
-            TextAsset newatlas = new TextAsset(result)
+            TextAsset newatlas = new(result)
             {
                 name = parent.name
             };
@@ -45,7 +45,7 @@ namespace SpriteEvo.Extensions
             }
             return mergedTexArray;
         }
-        public static Spine41.Unity.SpineAtlasAsset MergeAtlases(SpineTexAsset parent, SpineTexAsset[] childs)
+        public static Spine41.Unity.SpineAtlasAsset MergeAtlases(Asset_Tex parent, Asset_Tex[] childs)
         {
             TextAsset mergedAtlas = childs[0].atlasInput.AppendToAtlasText(parent.atlasInput);
             Texture2D[] mergedTexs = childs[0].textures.AppendToTextureArray(parent.textures);
@@ -63,12 +63,12 @@ namespace SpriteEvo.Extensions
             var newSkeletonDataAsset = CreateMergedRuntimeInstance(parent.skeletonInput, child.skeletonInput, atlasAsset, initialize: true);
             return newSkeletonDataAsset;
         }*/
-        public static Spine41.Unity.SkeletonDataAsset MergeSkeletonFromJSONs(SpineTexAsset parent, SpineTexAsset[] childs)
+        public static Spine41.Unity.SkeletonDataAsset MergeSkeletonFromJSONs(Asset_Tex parent, Asset_Tex[] childs)
         {
             //使用合并后的AtlasAsset创建新的SkeletonDataAsset实例
             Spine41.Unity.SpineAtlasAsset atlasAsset = MergeAtlases(parent, childs);
-            List<TextAsset> childstextAssets = new List<TextAsset>();
-            foreach (SpineTexAsset child in childs) 
+            List<TextAsset> childstextAssets = new();
+            foreach (Asset_Tex child in childs) 
             {
                 childstextAssets.Add(child.skeletonInput);
             }

@@ -10,11 +10,11 @@ namespace SpriteEvo
     /// <summary>
     /// 相当于ThingComp的用法
     /// </summary>
-    public class CompatibleMonoBehaviour : MonoBehaviour
+    public class ScriptBase : MonoBehaviour
     {
         public GameObject Parent => base.gameObject;
 
-        public CompatibleMonoBehaviourProperties props;
+        public ScriptProperties props;
         public void Enable() { this.enabled = true; }
         public void Disable() { this.enabled = false; }
         //添加后调用
