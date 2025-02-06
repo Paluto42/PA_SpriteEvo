@@ -42,7 +42,7 @@ namespace SpriteEvo
             if (!ShouldInstantiate) return;
             if (Props == null) return;
             if (Animation == null || Skin == null || IdleAnimation == null) return;
-            instance ??=SkeletonAnimationUtility.InstantiateInGameOnly(Animation, parent);
+            instance ??=SkeletonAnimationUtility.InstantiateSpine(Animation, parent);
         }
         public virtual void InitializeAnimation() 
         {

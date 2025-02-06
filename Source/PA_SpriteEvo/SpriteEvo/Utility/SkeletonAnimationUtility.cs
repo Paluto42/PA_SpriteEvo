@@ -6,6 +6,14 @@ using Verse;
 
 namespace SpriteEvo
 {
+    [Flags]
+    public enum ProgramStateFlags : byte
+    {
+        Entry = 1,
+        MapInitializing = 2,
+        Playing = 4,
+    }
+
     public static class SkeletonAnimationUtility
     {
         public static bool currentlyGenerating = false;
@@ -31,36 +39,39 @@ namespace SpriteEvo
             return obj;
         }*/
         //可副本 生命周期仅限每局游戏内,加载新游戏就会被清理 没有key怎么获取自己想吧 写新方法可以用
-        public static GameObject InstantiateInGame(AnimationDef def, bool loop = true, bool active = true)
+        /*public static GameObject InstantiateInGame(AnimationDef def, bool loop = true, bool active = true)
         {
             return InstantiateInGame(def, layer: 2, loop, active);
         }
-        public static GameObject InstantiateInGame(AnimationDef def, int layer = 2, bool loop = true, bool active = true) 
+        public static GameObject InstantiateInGame(AnimationDef def, int layer = 2, bool loop = true, bool active = true)
         {
             if (Current.ProgramState != ProgramState.Playing) return null;
             return Instantiate(def, layer, loop, active, DontDestroyOnLoad: false);
-        }
+        }*/
         //可副本,每局游戏内 一个key绑定一个运行时实例 不可传入NULL作为Key
-        public static GameObject InstantiateInGameOnly(AnimationDef def, object key) 
+        /*public static GameObject InstantiateInGameOnly(AnimationDef def, object key)
         {
-            return InstantiateInGameOnly(def, key, layer: 2, loop: true, active: true);
-        }
-        public static GameObject InstantiateInGameOnly(AnimationDef def, object key, int layer = 2, bool loop = true, bool active = true)
+            return InstantiateSpine(def, key, layer: 2, loop: true, active: true);
+        }*/
+        public static GameObject InstantiateSpine(AnimationDef def, object key, int layer = 2, bool loop = true, bool active = true, bool docuSaved = true, ProgramStateFlags allowProgramStates = ProgramStateFlags.Playing)
         {
-            if (Current.ProgramState != ProgramState.Playing) return null;
-            if (key == null) return null;
-            if (GC_AnimationDocument.TryGet(key) != null)
+            if (((ProgramStateFlags)Current.ProgramState & allowProgramStates) == 0) return null; //游戏状况不允许
+            //if (Current.ProgramState != ProgramState.Playing) return null;
+            if (key == null) return null; //任何情况不允许空key
+            if (docuSaved && GC_AnimationDocument.ObjectDataBase.TryGetValue(key, out GameObject res))
             {
-                Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
-                return null;
+                //Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
+                return res;
             }
             GameObject instance = Instantiate(def, layer, loop, active, DontDestroyOnLoad: false);
-            if (instance != null)
+            if (instance != null && docuSaved)
+            {
                 GC_AnimationDocument.TryAdd(key, instance);
+            }
             return instance;
         }
         //因为开一个新档会清掉所有物件，所以全局使用要DontDestroyOnLoad 基本上不考虑对它做删除操作和额外管理. 可副本
-        public static GameObject InstantiateGlobal(AnimationDef def, int layer = 5, bool loop = true, bool active = true)
+        /*public static GameObject InstantiateGlobal(AnimationDef def, int layer = 5, bool loop = true, bool active = true)
         {
             return Instantiate(def, layer, loop, active, DontDestroyOnLoad: true);
         }
@@ -77,7 +88,7 @@ namespace SpriteEvo
             if (instance != null)
                 AssetManager.GlobalObjectDatabase.Add(key, instance);
             return instance;
-        }
+        }*/
         /// <summary>接受所有可选参数的主方法</summary>
         public static GameObject Instantiate(AnimationDef def, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
@@ -101,17 +112,17 @@ namespace SpriteEvo
             }
             return instance;
         }
-        public static void SetPosition(this GameObject instance, Vector3 pos) 
+        public static void SetPosition(this GameObject instance, Vector3 pos)
         {
             if (instance == null) return;
             instance.transform.position = pos;
         }
-        public static Texture AnimationTexture(this GameObject instance) 
+        public static Texture AnimationTexture(this GameObject instance)
         {
             if (instance == null) return null;
             return instance.RenderCamera()?.targetTexture;
         }
-        public static void DrawAnimation(Texture aTex, Rect screenRect) 
+        public static void DrawAnimation(Texture aTex, Rect screenRect)
         {
             if (aTex == null) return;
             Graphics.DrawTexture(screenRect, aTex);
@@ -120,7 +131,7 @@ namespace SpriteEvo
         {
             return instance?.GetComponentInChildren<Camera>();
         }
-        public static void ResizeRenderTexture(this Camera renderCam, int width, int height) 
+        public static void ResizeRenderTexture(this Camera renderCam, int width, int height)
         {
             if (renderCam == null) return;
             renderCam.targetTexture = new RenderTexture(width, height, 32, RenderTextureFormat.ARGB32, 0);
