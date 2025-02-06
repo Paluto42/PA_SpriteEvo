@@ -53,7 +53,7 @@ namespace SpriteEvo
         {
             return InstantiateSpine(def, key, layer: 2, loop: true, active: true);
         }*/
-        public static GameObject InstantiateSpineByDefname(string defname, string key = null, int layer = 2, bool loop = true, bool active = true, bool docuSaved = true, ProgramStateFlags allowProgramStates = ProgramStateFlags.Playing)
+        public static GameObject InstantiateSpineByDefname(string defname, string key = null, int layer = 2, bool loop = true, bool active = true, bool docuSaved = true, List<ProgramState> programStates = null)
         {
             AnimationDef def = DefDatabase<AnimationDef>.GetNamed(defname);
             if (def == null)
@@ -62,7 +62,17 @@ namespace SpriteEvo
                 return null;
             }
             key ??= defname;
-            return InstantiateSpine(def, key, layer, loop, active, docuSaved, allowProgramStates);
+            ProgramStateFlags flag = (ProgramStateFlags)0;
+            if (programStates == null) flag |= (ProgramStateFlags)ProgramState.Playing;
+            else
+            {
+                foreach(ProgramState stat in programStates)
+                {
+                    flag |= (ProgramStateFlags)stat;
+                }
+            }
+
+            return InstantiateSpine(def, key, layer, loop, active, docuSaved, flag);
         }
 
         public static GameObject InstantiateSpine(AnimationDef def, object key, int layer = 2, bool loop = true, bool active = true, bool docuSaved = true, ProgramStateFlags allowProgramStates = ProgramStateFlags.Playing)
