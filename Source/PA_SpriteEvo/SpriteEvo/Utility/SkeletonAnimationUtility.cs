@@ -53,6 +53,18 @@ namespace SpriteEvo
         {
             return InstantiateSpine(def, key, layer: 2, loop: true, active: true);
         }*/
+        public static GameObject InstantiateSpineByDefname(string defname, string key = null, int layer = 2, bool loop = true, bool active = true, bool docuSaved = true, ProgramStateFlags allowProgramStates = ProgramStateFlags.Playing)
+        {
+            AnimationDef def = DefDatabase<AnimationDef>.GetNamed(defname);
+            if (def == null)
+            {
+                Log.Error($"[PA] 无{defname}的AnimationDef");
+                return null;
+            }
+            key ??= defname;
+            return InstantiateSpine(def, key, layer, loop, active, docuSaved, allowProgramStates);
+        }
+
         public static GameObject InstantiateSpine(AnimationDef def, object key, int layer = 2, bool loop = true, bool active = true, bool docuSaved = true, ProgramStateFlags allowProgramStates = ProgramStateFlags.Playing)
         {
             if (((ProgramStateFlags)Current.ProgramState & allowProgramStates) == 0) return null; //游戏状况不允许
