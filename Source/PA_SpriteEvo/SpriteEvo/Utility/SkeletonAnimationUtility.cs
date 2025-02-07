@@ -66,7 +66,7 @@ namespace SpriteEvo
             if (programStates == null) flag |= (ProgramStateFlags)ProgramState.Playing;
             else
             {
-                foreach(ProgramState stat in programStates)
+                foreach (ProgramState stat in programStates)
                 {
                     flag |= (ProgramStateFlags)stat;
                 }
@@ -82,6 +82,7 @@ namespace SpriteEvo
             if (key == null) return null; //任何情况不允许空key
             if (docuSaved && GC_AnimationDocument.ObjectDataBase.TryGetValue(key, out GameObject res))
             {
+                res.SetActive(true);
                 //Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
                 return res;
             }
@@ -151,7 +152,8 @@ namespace SpriteEvo
         }
         public static Camera RenderCamera(this GameObject instance)
         {
-            return instance?.GetComponentInChildren<Camera>();
+            Camera camera = instance?.GetComponentInChildren<Camera>();
+            return camera;
         }
         public static void ResizeRenderTexture(this Camera renderCam, int width, int height)
         {
