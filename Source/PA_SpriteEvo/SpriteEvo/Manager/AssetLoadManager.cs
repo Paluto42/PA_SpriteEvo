@@ -81,7 +81,7 @@ namespace SpriteEvo
                 bool isInvalid = false;
                 if (def.skelFormat == SkelFormat.SkeletonBinary)
                 {
-                    if (def.asset.filePath == null) return;
+                    if (def.asset.filePath == null) continue;
                     AssetBundle ab;
                     string assetBundleName = Path.GetFileName(def.asset.filePath);
                     if (!AssetBundle_Loaded.Exists((AssetBundle a) => a.name == assetBundleName))
