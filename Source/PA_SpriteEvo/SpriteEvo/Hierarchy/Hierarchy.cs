@@ -9,7 +9,7 @@ using Verse;
 
 namespace SpriteEvo
 {
-    [StaticConstructorOnStartup]
+    /*[StaticConstructorOnStartup]
     public class HierarchyWindow : Window
     {
         public override Vector2 InitialSize => new(850f, 850f);
@@ -37,5 +37,5 @@ namespace SpriteEvo
         {
 
         }
-    }
+    }*/
 }
