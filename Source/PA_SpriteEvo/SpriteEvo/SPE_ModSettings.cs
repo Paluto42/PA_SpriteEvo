@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using Verse;
 
 namespace SpriteEvo
@@ -23,6 +18,7 @@ namespace SpriteEvo
         public SPE_ModConfig(ModContentPack content) : base(content)
         {
         }
+
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Listing_Standard list = new();

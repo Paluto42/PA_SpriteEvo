@@ -1,6 +1,8 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -10,8 +12,20 @@ namespace SpriteEvo
 {
     public static class SkeletonGraphicUtility
     {
-        public static Material Spine_SkeletonGraphic => AssetLoadManager.SkeletonGraphic;
+        public static Shader Spine_SkeletonGraphic => AssetLoadManager.Spine_SkeletonGraphic;
         public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.GlobalObjectDatabase;
+
+        public static Material EnsureInitializedMaterialProperySource(Shader shader, bool usePMA = false) 
+        {
+            if (shader == null) return null;
+            Material material = new(shader);
+            if (usePMA)
+            {
+                material.EnableKeyword("_STRAIGHT_ALPHA_INPUT");
+                material.SetFloat("_StraightAlphaInput", 1);
+            }
+            return material;
+        }
 
         ///<summary>[Pending] 在Canvas上渲染Spine动画 </summary>
         [Obsolete]

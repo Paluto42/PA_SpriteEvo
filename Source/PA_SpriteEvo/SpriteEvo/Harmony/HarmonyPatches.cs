@@ -1,10 +1,5 @@
 ﻿using HarmonyLib;
-using SpriteEvo.Unity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using Verse;
 
 namespace SpriteEvo
@@ -14,7 +9,7 @@ namespace SpriteEvo
     {
         static HarmonyPatches()
         {
-            Harmony Instance = new Harmony("paluto22.SpriteEvo.patch");
+            Harmony Instance = new("paluto22.SpriteEvo.patch");
             Instance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
@@ -39,15 +34,20 @@ namespace SpriteEvo
     [HarmonyPatch(typeof(UIRoot_Entry), "DoMainMenu")]
     public class Patch_UIRoot
     {
+        public delegate void PrefixEventDelegate();
+
+        public static event PrefixEventDelegate DoMainMenuOnce;
+
         [HarmonyPrefix]
         public static bool Prefix(UIRoot_Entry __instance)
         {
-            if (!AssetLoadManager.AllAssetsLoaded)
-            {
-                AssetLoadManager.ResloveAllAssetBundle();
-                AssetLoadManager.AllAssetsLoaded = true;
-            }
+            DoMainMenuOnce?.Invoke();
             return true;
+        }
+
+        public static void ClearEvents()
+        {
+            DoMainMenuOnce = null;
         }
     }
     //用来清除

@@ -14,9 +14,12 @@ namespace SpriteEvo
     }
     //动画属性,相当于一个Request结构体保存一套默认初始化信息
     public class SpineProperty
-    {    
+    {
+        [Obsolete]
         public bool OnIMGUI = false;//是否产生贴图用于UI渲染
-        public Vector3 uioffset = new(0f, 0f, 0f);//暂时没用
+        public bool OnUGUI = false;
+
+        public Vector3 uioffset = new(0f, 0f, 0f);//调整贴图位置
         public Vector2 uiDrawSize = new(1024, 1024);//产生的贴图大小
 
         public Color color = Color.white;//骨架整体颜色,可以用(255,255,255,A)的方式改变整体透明度
