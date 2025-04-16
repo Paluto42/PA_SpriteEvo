@@ -166,6 +166,10 @@
       <Project>{da3dbdc2-8712-45d9-8005-6c5e42236f8c}</Project>
       <Name>Spine41</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Spine42\Spine42.csproj">
+      <Project>{94144e22-2431-4a8f-ac04-dec22f7edd8f}</Project>
+      <Name>Spine42</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

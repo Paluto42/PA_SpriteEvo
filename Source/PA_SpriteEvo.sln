@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spine38", "Spine38\Spine38.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spine41", "Spine41\Spine41.csproj", "{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spine42", "Spine42\Spine42.csproj", "{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA3DBDC2-8712-45D9-8005-6C5E42236F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

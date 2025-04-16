@@ -99,7 +99,7 @@ namespace SpriteEvo.Extensions
                     skeletonDataAsset.Clear();
                     return null;
                 }
-                if (skeletonDataAsset.skeletonDataInternal() != null)
+                if (skeletonDataAsset.SkeletonDataInternal() != null)
                     return skeletonDataAsset;
                 Spine41.AttachmentLoader attachmentLoader;
                 float skeletonDataScale;
