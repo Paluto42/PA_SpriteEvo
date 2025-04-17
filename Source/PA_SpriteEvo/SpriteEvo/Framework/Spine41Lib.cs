@@ -4,6 +4,7 @@ using SpriteEvo.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 using Verse;
 
 namespace SpriteEvo
@@ -11,51 +12,65 @@ namespace SpriteEvo
     ///<summary>Spine4.1版本方法库</summary>
     public static class Spine41Lib
     {
+        private static SkeletonDataAsset GetSkeletonDataFrom(AnimationDef animationDef)
+        {
+            SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
+            if (loader == null)
+            {
+                Log.Error($"SpriteEvo.{animationDef.defName} Main Asset Not Found");
+                return null;
+            }
+            if (loader.def.asset.version != "4.1")
+            {
+                Log.Error($"SpriteEvo.{animationDef.defName} Wrong AnimationDef Version");
+                return null;
+            }
+            return loader.SkeletonDataAsset41();
+        }
+
+        private static SkeletonDataAsset GetMergeSkeletonDataFrom(AnimationDef animationDef)
+        {
+            Asset_Tex parent = animationDef.mainAsset.TryGetAsset<Asset_Tex>();
+            if (parent == null)
+            {
+                Log.Error($"SpriteEvo.{animationDef.defName} Main Asset Not Found.");
+                return null;
+            }
+            Asset_Tex[] attachments = new Asset_Tex[animationDef.attachments.Count];
+            for (int i = 0; i < attachments.Length; i++)
+            {
+                attachments[i] = animationDef.attachments[i].TryGetAsset<Asset_Tex>();
+                if (attachments[i] == null)
+                {
+                    Log.Error($"SpriteEvo.{animationDef.defName} Failed Applying Attachments.");
+                    return null;
+                }
+            }
+            return JsonMerger.MergeSkeletonFromJSONs(parent, attachments);
+        }
+
+        public static SkeletonDataAsset EnsureInitializedSkeletonData(AnimationDef animationDef) 
+        {
+            if (animationDef == null) return null;
+            SkeletonDataAsset skeletonDataAsset;
+            if (animationDef.attachments.NullOrEmpty()){
+                skeletonDataAsset = GetSkeletonDataFrom(animationDef);
+            }
+            //合并Skeleton
+            else{
+                skeletonDataAsset = GetMergeSkeletonDataFrom(animationDef);
+            }
+            if (skeletonDataAsset == null) return null;
+            skeletonDataAsset.name = animationDef.defName + "_SkeletonData.asset";
+            return skeletonDataAsset;
+        }
+
         public static GameObject NewSkeletonAnimation(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (animationDef == null || animationDef.version != "4.1" || animationDef.mainAsset == null) return null;
-            SkeletonDataAsset skeletonDataAsset;
+
+            SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
             //单个Skeleton
-            if (animationDef.attachments.NullOrEmpty())
-            {
-                SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
-                if (loader == null)
-                {
-                    Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found");
-                    return null;
-                }
-                if (loader.def.asset.version != "4.1")
-                {
-                    Log.Error("SpriteEvo." + animationDef.defName + " Wrong AnimationDef Version");
-                    return null;
-                }
-                skeletonDataAsset = loader.SkeletonDataAsset41();
-                if (skeletonDataAsset == null) return null;
-                skeletonDataAsset.name = animationDef.defName + "_SkeletonData.asset";
-            }
-            //合并Skeleton
-            else
-            {
-                Asset_Tex parent = animationDef.mainAsset.TryGetAsset<Asset_Tex>();
-                if (parent == null)
-                {
-                    Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found.");
-                    return null;
-                }
-                Asset_Tex[] attachments = new Asset_Tex[animationDef.attachments.Count];
-                for (int i = 0; i < attachments.Length; i++)
-                {
-                    attachments[i] = animationDef.attachments[i].TryGetAsset<Asset_Tex>();
-                    if (attachments[i] == null) 
-                    {
-                        Log.Error("SpriteEvo." + animationDef.defName + "Failed Applying Attachments.");
-                        return null;
-                    }
-                }
-                skeletonDataAsset = JsonMerger.MergeSkeletonFromJSONs(parent, attachments);
-                if (skeletonDataAsset == null) return null;
-                skeletonDataAsset.name = animationDef.defName + "_SkeletonData.asset";
-            }
             SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonDataAsset);
             animation.gameObject.name = animationDef.defName;
             animation.gameObject.layer = layer;
@@ -66,12 +81,40 @@ namespace SpriteEvo
             animation.Skeleton.SetSkin(@params.skin);
             animation.Skeleton.ApplyColor(@params.color, @params.slotSettings);
             InitializeAnimation(animation, @params);
-            InitializeMonoBehaviour(animation.gameObject, animationDef.scriptProperties);
+            InitializeMonoBehaviour(animation.gameObject, animationDef.scripts);
             animation.gameObject.SetActive(value: active);
             if (DontDestroyOnLoad)
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
             return animation.gameObject;
         }
+
+        public static GameObject NewSkeletonGraphic(AnimationDef animationDef, Material materialProperySource, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
+        {
+            if (animationDef == null || animationDef.version != "4.1" || animationDef.mainAsset == null) return null;
+
+            SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
+            //单个Skeleton
+            GameObject canvas = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler));
+            Canvas compCanvas = canvas.GetComponent<Canvas>();
+            compCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+
+            SkeletonGraphic graphic = SkeletonGraphic.NewSkeletonGraphicGameObject(skeletonDataAsset, canvas.transform, materialProperySource);
+            graphic.gameObject.name = animationDef.defName;
+            graphic.gameObject.layer = layer;
+            graphic.gameObject.SetActive(false);
+            AnimationParams @params = PA_Helper.GetSkeletonParams(animationDef, loop);//获取def属性
+
+            InitializeTransform(graphic.gameObject, @params);
+            graphic.Skeleton.SetSkin(@params.skin);//设置默认皮肤
+            graphic.Skeleton.ApplyColor(@params.color, @params.slotSettings);//设置默认颜色
+            InitializeGraphic(graphic, @params);
+            InitializeMonoBehaviour(graphic.gameObject, animationDef.scripts);
+            graphic.gameObject.SetActive(value: active);
+            if (DontDestroyOnLoad)
+                UnityEngine.Object.DontDestroyOnLoad(graphic.gameObject);
+            return canvas.gameObject;
+        }
+
         public static void InitializeMonoBehaviour(GameObject @object, List<ScriptProperties> props)
         {
             if (props == null) return;
@@ -113,6 +156,14 @@ namespace SpriteEvo
             instance.loop = @params.loop;
             instance.timeScale = @params.timeScale;
             instance.AnimationName = @params.defaultAnimation;
+            //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
+        }
+        public static void InitializeGraphic(this SkeletonGraphic instance, AnimationParams @params)
+        {
+            if (instance == null) return;
+            instance.startingLoop = @params.loop;
+            instance.timeScale = @params.timeScale;
+            instance.startingAnimation = @params.defaultAnimation;
             //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
         }
         /// <summary>

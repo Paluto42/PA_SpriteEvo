@@ -57,7 +57,7 @@ namespace SpriteEvo
             AnimationDef def = DefDatabase<AnimationDef>.GetNamed(defname);
             if (def == null)
             {
-                Log.Error($"[PA] 无{defname}的AnimationDef");
+                Log.Error($"[SpriteEvo] 无{defname}的AnimationDef");
                 return null;
             }
             key ??= defname;
@@ -70,7 +70,6 @@ namespace SpriteEvo
                     flag |= (ProgramStateFlags)stat;
                 }
             }
-
             return InstantiateSpine(def, key, layer, loop, active, docuSaved, flag);
         }
 
@@ -128,10 +127,10 @@ namespace SpriteEvo
             {
                 return null;
             }
-            if (def.props.OnIMGUI)
+            /*if (def.props.OnIMGUI)
             {
                 instance.AddRenderCameraToSkeletonAnimation(def.props.uioffset, (int)def.props.uiDrawSize.x, (int)def.props.uiDrawSize.y);
-            }
+            }*/
             return instance;
         }
         public static void SetPosition(this GameObject instance, Vector3 pos)
@@ -139,7 +138,7 @@ namespace SpriteEvo
             if (instance == null) return;
             instance.transform.position = pos;
         }
-        public static Texture AnimationTexture(this GameObject instance)
+        /*public static Texture AnimationTexture(this GameObject instance)
         {
             if (instance == null) return null;
             return instance.RenderCamera()?.targetTexture;
@@ -158,7 +157,7 @@ namespace SpriteEvo
         {
             if (renderCam == null) return;
             renderCam.targetTexture = new RenderTexture(width, height, 32, RenderTextureFormat.ARGB32, 0);
-        }
+        }*/
         ///<summary>(具有全局唯一性地)初始化创建一个SkeletonAnimation实例对象后返回该运行时实例</summary>
         /*public static GameObject CreateGlobalAnimationInstance(this AnimationDef def, int layer = 2, bool Isloop = true, bool DontDestroyOnLoad = true)
         {
@@ -214,7 +213,7 @@ namespace SpriteEvo
             DynamicObjectDatabase.Add(def.defName, instance);
             return instance;
         }*/
-        public static Camera AddRenderCameraToSkeletonAnimation(this GameObject instance, Vector3 uioffset, int width = 1024, int height = 1024)
+        /*public static Camera AddRenderCameraToSkeletonAnimation(this GameObject instance, Vector3 uioffset, int width = 1024, int height = 1024)
         {
             //添加Camera
             if (instance == null) return null;
@@ -237,7 +236,7 @@ namespace SpriteEvo
             cam.depth = Current.Camera.depth - 1f;
             cam.targetTexture = new RenderTexture(width, height, 32, RenderTextureFormat.ARGB32, 0);
             return cam;
-        }
+        }*/
         public static void Destory_SpineAnimationModel(string name)
         {
             GameObject obj = DynamicObjectDatabase.TryGetValue(name);

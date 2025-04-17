@@ -15,7 +15,10 @@ namespace SpriteEvo
         private static readonly string Spine_Dict = "Asset/";
         //SkeletonAnimation使用Spine/Skeleton.shader && 而Graphic使用Spine/SkeletonGraphic.shader
         public static Shader Spine_Skeleton;
-        public static Shader Spine_SkeletonGraphic;
+        //public static Shader Spine_SkeletonGraphic;
+        //这两个比较特殊 不能运行时改
+        public static Material SkeletonGraphicDefault;
+        public static Material SkeletonGraphicDefaul_Straight;
 
         //public static Shader Spine_Skeleton_PMA;
         //public static Material SkeletonGraphic;
@@ -48,11 +51,23 @@ namespace SpriteEvo
                 Spine_Skeleton = skeletonShader;
                 Log.Message("SpriteEvo: Spine/Skeleton.Shader Loaded");
             }
-            Shader skeletonGraphicShader = ab.LoadAsset<Shader>("Spine-SkeletonGraphic");
+            /*Shader skeletonGraphicShader = ab.LoadAsset<Shader>("Spine-SkeletonGraphic");
             if (skeletonGraphicShader != null && Spine_SkeletonGraphic == null)
             {
                 Spine_SkeletonGraphic = skeletonGraphicShader;
                 Log.Message("SpriteEvo: Spine/SkeletonGraphic.Shader Loaded");
+            }*/
+            Material SkeletonGraphic = ab.LoadAsset<Material>("SkeletonGraphicDefault");
+            if (SkeletonGraphic != null && SkeletonGraphicDefault == null)
+            {
+                Log.Message("SpriteEvo: Spine/SkeletonGraphicDefault.Material Loaded");
+                SkeletonGraphicDefault = SkeletonGraphic;
+            }
+            Material SkeletonGraphic_Straight = ab.LoadAsset<Material>("SkeletonGraphicDefaul-Straight");
+            if (SkeletonGraphic_Straight != null && SkeletonGraphicDefault == null)
+            {
+                Log.Message("SpriteEvo: Spine/SkeletonGraphicDefault-Straight.Material Loaded");
+                SkeletonGraphicDefaul_Straight = SkeletonGraphic_Straight;
             }
             Shader[] shaders = ab.LoadAllAssets<Shader>();
             foreach (Shader s in shaders)

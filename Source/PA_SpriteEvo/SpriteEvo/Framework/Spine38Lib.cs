@@ -4,6 +4,7 @@ using SpriteEvo.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 using Verse;
 
 namespace SpriteEvo
@@ -49,45 +50,59 @@ namespace SpriteEvo
             }
             return null;
         }*/
-        public static GameObject NewSkeletonAnimation(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
+        private static SkeletonDataAsset GetSkeletonDataFrom(AnimationDef animationDef)
         {
-            if (animationDef == null || animationDef.version != "3.8" || animationDef.mainAsset == null) return null;
-            SkeletonDataAsset skeletonDataAsset = null;
-            //单个Skeleton
+            SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
+            if (loader == null)
+            {
+                Log.Error($"SpriteEvo.{animationDef.defName} Main Asset Not Found");
+                return null;
+            }
+            if (loader.def.asset.version != "3.8")
+            {
+                Log.Error($"SpriteEvo.{animationDef.defName} Wrong AnimationDef Version");
+                return null;
+            }
+            return loader.SkeletonDataAsset38();
+        }
+
+        public static SkeletonDataAsset EnsureInitializedSkeletonData(AnimationDef animationDef)
+        {
+            if (animationDef == null) return null;
+            SkeletonDataAsset skeletonDataAsset;
             if (animationDef.attachments.NullOrEmpty())
             {
-                SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
-                if (loader == null)
-                {
-                    Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found");
-                    return null;
-                }
-                if (loader.def.asset.version != "3.8")
-                {
-                    Log.Error("SpriteEvo." + animationDef.defName + " Wrong AnimationDef Version");
-                    return null;
-                }
-                skeletonDataAsset = loader.SkeletonDataAsset38();
-                if (skeletonDataAsset == null) return null;
-                skeletonDataAsset.name = animationDef.defName + "_SkeletonData.asset";
+                skeletonDataAsset = GetSkeletonDataFrom(animationDef);
             }
-            //暂时不考虑做3.8的合并
+            //合并Skeleton 暂时不考虑做3.8的合并
             else
             {
                 Log.Error("暂不支持Spine3.8骨架合并");
+                skeletonDataAsset = null;
             }
             if (skeletonDataAsset == null) return null;
+            skeletonDataAsset.name = animationDef.defName + "_SkeletonData.asset";
+            return skeletonDataAsset;
+        }
+
+        public static GameObject NewSkeletonAnimation(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
+        {
+            if (animationDef == null || animationDef.version != "3.8" || animationDef.mainAsset == null) return null;
+
+            SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
+            //单个Skeleton
             SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonDataAsset);
             animation.gameObject.name = animationDef.defName;
             animation.gameObject.layer = layer;
             animation.gameObject.SetActive(false);
             DisableProbe(animation.gameObject);//关闭反射器
             AnimationParams @params = PA_Helper.GetSkeletonParams(animationDef, loop);//获取def属性
+
             InitializeTransform(animation.gameObject, @params);
             animation.Skeleton.SetSkin(@params.skin);//设置默认皮肤
             animation.Skeleton.ApplyColor(@params.color, @params.slotSettings);//设置默认颜色
             InitializeAnimation(animation, @params);
-            InitializeMonoBehaviour(animation.gameObject, animationDef.scriptProperties);
+            InitializeMonoBehaviour(animation.gameObject, animationDef.scripts);
             animation.gameObject.SetActive(value: active);
             if (DontDestroyOnLoad)
                 UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
@@ -97,49 +112,31 @@ namespace SpriteEvo
         public static GameObject NewSkeletonGraphic(AnimationDef animationDef, Material materialProperySource, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (animationDef == null || animationDef.version != "3.8" || animationDef.mainAsset == null) return null;
-            SkeletonDataAsset skeletonDataAsset = null;
-            //单个Skeleton
-            if (animationDef.attachments.NullOrEmpty())
-            {
-                SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
-                if (loader == null)
-                {
-                    Log.Error("SpriteEvo." + animationDef.defName + " Main Asset Not Found");
-                    return null;
-                }
-                if (loader.def.asset.version != "3.8")
-                {
-                    Log.Error("SpriteEvo." + animationDef.defName + " Wrong AnimationDef Version");
-                    return null;
-                }
-                skeletonDataAsset = loader.SkeletonDataAsset38();
-                if (skeletonDataAsset == null) return null;
-                skeletonDataAsset.name = animationDef.defName + "_SkeletonData.asset";
-            }
-            //暂时不考虑做3.8的合并
-            else
-            {
-                Log.Error("暂不支持Spine3.8骨架合并");
-            }
-            if (skeletonDataAsset == null) return null;
 
-            GameObject canvas = new("Canvas", typeof(Canvas));
+            SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
+            //单个Skeleton
+            GameObject canvas = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler));
+            Canvas compCanvas = canvas.GetComponent<Canvas>();
+            compCanvas.renderMode = RenderMode.ScreenSpaceCamera;
 
             SkeletonGraphic graphic = SkeletonGraphic.NewSkeletonGraphicGameObject(skeletonDataAsset, canvas.transform, materialProperySource);
+            //不开这个会导致多页材质的模型变成碎片
+            graphic.allowMultipleCanvasRenderers = true;
             graphic.gameObject.name = animationDef.defName;
             graphic.gameObject.layer = layer;
             graphic.gameObject.SetActive(false);
-            AnimationParams @params = PA_Helper.GetSkeletonParams(animationDef, loop);//获取def属性
+            AnimationParams @params = animationDef.GetSkeletonParams(loop);//获取def属性
 
             InitializeTransform(graphic.gameObject, @params);
+            graphic.gameObject.transform.localPosition = Vector3.zero;
             graphic.Skeleton.SetSkin(@params.skin);//设置默认皮肤
             graphic.Skeleton.ApplyColor(@params.color, @params.slotSettings);//设置默认颜色
             InitializeGraphic(graphic, @params);
-            InitializeMonoBehaviour(graphic.gameObject, animationDef.scriptProperties);
+            InitializeMonoBehaviour(graphic.gameObject, animationDef.scripts);
             graphic.gameObject.SetActive(value: active);
             if (DontDestroyOnLoad)
                 UnityEngine.Object.DontDestroyOnLoad(graphic.gameObject);
-            return graphic.gameObject;
+            return canvas.gameObject;
         }
 
         public static void InitializeMonoBehaviour(GameObject @object, List<ScriptProperties> props)
