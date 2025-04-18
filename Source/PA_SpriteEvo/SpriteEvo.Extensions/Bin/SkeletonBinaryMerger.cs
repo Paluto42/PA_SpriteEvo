@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SpriteEvo.Extensions
 {
-    internal class SkeletonBinaryMerger : SkeletonBinary
+    /*internal class SkeletonBinaryMerger : SkeletonBinary
     {
         public SkeletonBinaryMerger(AttachmentLoader attachmentLoader)
             : base(attachmentLoader)
@@ -19,5 +19,5 @@ namespace SpriteEvo.Extensions
         {
             return null;
         }
-    }
+    }*/
 }

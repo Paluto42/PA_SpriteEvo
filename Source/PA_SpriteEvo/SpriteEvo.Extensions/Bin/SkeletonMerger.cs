@@ -7,9 +7,9 @@ using Verse;
 namespace SpriteEvo.Extensions
 {
     //从内部对象修改SkeletonData的尝试，失败
-    public class SkeletonMerger
+    /*public class SkeletonMerger
     {
-        /*
+        
             public SkeletonMerger(Spine41.Unity.SkeletonDataAsset parent, Spine41.Unity.SkeletonDataAsset child)
             {
                 try{
@@ -356,6 +356,6 @@ namespace SpriteEvo.Extensions
                         }
                 }
                 return null;
-            }*/
-    }
+            }
+    }*/
 }

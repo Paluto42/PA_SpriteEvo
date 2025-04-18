@@ -256,7 +256,7 @@ namespace SpriteEvo.Extensions
                 StringReader input = new(text2[i]);
                 input2[i] = input;
             }
-            SkeletonJsonMerger json1 = new(attachmentLoader)
+            SkeletonJsonMerge json1 = new(attachmentLoader)
             {
                 Scale = scale
             };

@@ -7,13 +7,13 @@ using Verse;
 namespace SpriteEvo.Extensions
 {
 
-    public class SkeletonJsonMerger : SkeletonJson
+    public class SkeletonJsonMerge : SkeletonJson
     {
-        public SkeletonJsonMerger(AttachmentLoader attachmentLoader) 
+        public SkeletonJsonMerge(AttachmentLoader attachmentLoader) 
             : base(attachmentLoader){
         }
 
-        public SkeletonJsonMerger(params Atlas[] atlasArray) 
+        public SkeletonJsonMerge(params Atlas[] atlasArray) 
             : base(atlasArray){
         }
         public SkeletonData ReadSkeletonDatasToMerge(TextReader reader1, TextReader[] reader2)
@@ -526,7 +526,7 @@ namespace SpriteEvo.Extensions
             return skeletonData;
         }
         //必须两个JSON的骨骼里必须要有相同的parent(父级)
-        public SkeletonData ReadSkeletonDataToMerge(TextReader reader1, TextReader reader2)
+        /*public SkeletonData ReadSkeletonDataToMerge(TextReader reader1, TextReader reader2)
         {
             if (reader1 == null || reader2 == null) throw new ArgumentNullException("reader", "reader cannot be null.");
 
@@ -1016,6 +1016,6 @@ namespace SpriteEvo.Extensions
             skeletonData.animations.TrimExcess();
             skeletonData.ikConstraints.TrimExcess();
             return skeletonData;
-        }
+        }*/
     }
 }

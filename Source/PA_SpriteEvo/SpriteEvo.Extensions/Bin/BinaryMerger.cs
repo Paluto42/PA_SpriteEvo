@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpriteEvo.Extensions
 {
-    public class BinaryMerger
+    /*public static class BinaryMerger
     {
-    }
+    }*/
 }

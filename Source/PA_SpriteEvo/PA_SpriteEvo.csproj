@@ -104,6 +104,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpriteEvo.Extensions\Bin\BinaryMerger.cs" />
+    <Compile Include="SpriteEvo.Extensions\JsonMerger.cs" />
+    <Compile Include="SpriteEvo.Extensions\Bin\SkeletonBinaryMerger.cs" />
+    <Compile Include="SpriteEvo.Extensions\Spine41\SkeletonJsonMerge.cs" />
+    <Compile Include="SpriteEvo.Extensions\Bin\SkeletonMerger.cs" />
     <Compile Include="SpriteEvo\Animation\Animation38.cs" />
     <Compile Include="SpriteEvo\Animation\Animation41.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ISkeletonConfig.cs" />
@@ -124,11 +129,6 @@
     <Compile Include="SpriteEvo\Framework\EffectsUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonGraphicUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonAnimationUtility.cs" />
-    <Compile Include="SpriteEvo.Extensions\Spine\BinaryMerger.cs" />
-    <Compile Include="SpriteEvo.Extensions\Spine\JsonMerger.cs" />
-    <Compile Include="SpriteEvo.Extensions\Spine\SkeletonBinaryMerger.cs" />
-    <Compile Include="SpriteEvo.Extensions\Spine\SkeletonJsonMerger.cs" />
-    <Compile Include="SpriteEvo.Extensions\Spine\SkeletonMerger.cs" />
     <Compile Include="SpriteEvo\Script\ScriptBase.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\BodyControllWorker.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ClickEventComp.cs" />
@@ -150,7 +150,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="SpriteEvo.Extensions\Spine42\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
