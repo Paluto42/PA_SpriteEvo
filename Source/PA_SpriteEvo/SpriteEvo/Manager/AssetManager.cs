@@ -7,14 +7,16 @@ namespace SpriteEvo
     [StaticConstructorOnStartup]
     public static class AssetManager
     {
-        public static Shader Spine_Skeleton;
-                
-        public static Material SkeletonGraphic;
+        public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
+        
+        public static Material SkeletonGraphic => AssetLoadManager.SkeletonGraphicDefault;
+        public static Material SkeletonGraphic_Straight => AssetLoadManager.SkeletonGraphicDefaul_Straight;
+
 
         public static Dictionary<string, Shader> SpineShaderDatabase = new();
 
         //设置为DontDestroyOnLoad的GameObject才能在这里引用。
-        public static Dictionary<object, GameObject> GlobalObjectDatabase = new();
+        public static Dictionary<object, GameObject> DontDestroyOnLoadObjectDatabase = new();
 
         public static Dictionary<string, SkeletonLoader> spine38_Database = new();
 

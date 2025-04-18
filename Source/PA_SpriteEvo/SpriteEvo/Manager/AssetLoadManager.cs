@@ -9,10 +9,11 @@ namespace SpriteEvo
     [StaticConstructorOnStartup]
     internal static class AssetLoadManager
     {
+        private const string Spine_Dict = "Asset/";
+
         private static bool AllAssetsLoaded = false;
         private static bool AllShadersLoaded = false;
 
-        private static readonly string Spine_Dict = "Asset/";
         //SkeletonAnimation使用Spine/Skeleton.shader && 而Graphic使用Spine/SkeletonGraphic.shader
         public static Shader Spine_Skeleton;
         //public static Shader Spine_SkeletonGraphic;
@@ -20,8 +21,6 @@ namespace SpriteEvo
         public static Material SkeletonGraphicDefault;
         public static Material SkeletonGraphicDefaul_Straight;
 
-        //public static Shader Spine_Skeleton_PMA;
-        //public static Material SkeletonGraphic;
         private static Dictionary<string, Shader> Shader_DB => AssetManager.SpineShaderDatabase;
         private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SkeletonLoader> Spine41_DB => AssetManager.spine41_Database;

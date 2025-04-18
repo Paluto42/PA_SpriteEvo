@@ -17,7 +17,7 @@ namespace SpriteEvo
     {
         public static bool currentlyGenerating = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
-        public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.GlobalObjectDatabase;
+        public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.DontDestroyOnLoadObjectDatabase;
 
         ///<summary>
         ///根据AnimationDef信息创建并初始化一个没有额外附加脚本SkeletonAnimation素体实例，默认在场景Layer的第2层

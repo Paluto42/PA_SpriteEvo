@@ -3,7 +3,6 @@ using Spine41.Unity;
 using SpriteEvo.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Verse;
 
@@ -12,7 +11,7 @@ namespace SpriteEvo
     ///<summary>Spine4.1版本方法库</summary>
     public static class Spine41Lib
     {
-        private static SkeletonDataAsset GetSkeletonDataFrom(AnimationDef animationDef)
+        public static SkeletonDataAsset GetSkeletonDataFrom(AnimationDef animationDef)
         {
             SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
             if (loader == null)
@@ -69,132 +68,140 @@ namespace SpriteEvo
         {
             if (animationDef == null || animationDef.version != "4.1" || animationDef.mainAsset == null) return null;
 
+            AnimationParams @params = animationDef.GetSkeletonParams(loop);//获取def属性
+
             SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
             //单个Skeleton
             SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonDataAsset);
-            animation.gameObject.name = animationDef.defName;
-            animation.gameObject.layer = layer;
-            animation.gameObject.SetActive(false);
-            DisableProbe(animation.gameObject);
-            AnimationParams @params = PA_Helper.GetSkeletonParams(animationDef, loop);
-            InitializeTransform(animation.gameObject, @params);
-            animation.Skeleton.SetSkin(@params.skin);
-            animation.Skeleton.ApplyColor(@params.color, @params.slotSettings);
-            InitializeAnimation(animation, @params);
-            InitializeMonoBehaviour(animation.gameObject, animationDef.scripts);
-            animation.gameObject.SetActive(value: active);
+            GameObject baseObj = animation.gameObject;
+            baseObj.SetActive(false);
+
+            baseObj.name = animationDef.defName;
+            baseObj.layer = layer;
+            baseObj.DisableProbe();//关闭反射器
+            baseObj.SetTransform(@params.position, @params.rotation, @params.scale);
+
+            animation.Skeleton.SetSkin(@params.skin);//设置默认皮肤
+            animation.SetColor(@params.color, @params.slotSettings);//设置默认颜色
+            animation.InitializeAnimation(@params.defaultAnimation, @params.timeScale, @params.loop);
+
+            baseObj.AddScriptsFrom(animationDef.scripts);
+            baseObj.SetActive(value: active);
             if (DontDestroyOnLoad)
-                UnityEngine.Object.DontDestroyOnLoad(animation.gameObject);
-            return animation.gameObject;
+                UnityEngine.Object.DontDestroyOnLoad(baseObj);
+            return baseObj;
         }
 
         public static GameObject NewSkeletonGraphic(AnimationDef animationDef, Material materialProperySource, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (animationDef == null || animationDef.version != "4.1" || animationDef.mainAsset == null) return null;
 
+            AnimationParams @params = animationDef.GetSkeletonParams(loop);//获取def属性
+
             SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
             //单个Skeleton
-            GameObject canvas = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler));
-            Canvas compCanvas = canvas.GetComponent<Canvas>();
+            GameObject baseObj = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler));
+            Canvas compCanvas = baseObj.GetComponent<Canvas>();
             compCanvas.renderMode = RenderMode.ScreenSpaceCamera;
 
-            SkeletonGraphic graphic = SkeletonGraphic.NewSkeletonGraphicGameObject(skeletonDataAsset, canvas.transform, materialProperySource);
-            graphic.gameObject.name = animationDef.defName;
-            graphic.gameObject.layer = layer;
-            graphic.gameObject.SetActive(false);
-            AnimationParams @params = PA_Helper.GetSkeletonParams(animationDef, loop);//获取def属性
+            SkeletonGraphic graphic = SkeletonGraphic.NewSkeletonGraphicGameObject(skeletonDataAsset, baseObj.transform, materialProperySource);
+            GameObject parentObj = graphic.gameObject;
+            parentObj.SetActive(false);
 
-            InitializeTransform(graphic.gameObject, @params);
-            graphic.Skeleton.SetSkin(@params.skin);//设置默认皮肤
-            graphic.Skeleton.ApplyColor(@params.color, @params.slotSettings);//设置默认颜色
-            InitializeGraphic(graphic, @params);
-            InitializeMonoBehaviour(graphic.gameObject, animationDef.scripts);
-            graphic.gameObject.SetActive(value: active);
+            parentObj.name = animationDef.defName;
+            parentObj.layer = layer;
+            parentObj.SetTransform(@params.position, @params.rotation, @params.scale); //设置RectTransform属性
+
+            graphic.allowMultipleCanvasRenderers = true; //不开这个会导致多页材质的模型变成碎片
+            graphic.Skeleton.SetSkin(@params.skin); //设置默认皮肤
+            graphic.SetColor(@params.color, @params.slotSettings); //设置默认颜色
+            graphic.InitializeAnimation(@params.defaultAnimation, @params.timeScale, @params.loop); //设置动画属性
+
+            parentObj.AddScriptsFrom(animationDef.scripts);
+            parentObj.SetActive(value: active);
             if (DontDestroyOnLoad)
-                UnityEngine.Object.DontDestroyOnLoad(graphic.gameObject);
-            return canvas.gameObject;
+                UnityEngine.Object.DontDestroyOnLoad(baseObj.gameObject);
+            return baseObj.gameObject;
         }
 
-        public static void InitializeMonoBehaviour(GameObject @object, List<ScriptProperties> props)
+        public static Vector3 GetBonePositon(this ISkeletonComponent instance, Transform transform, string name)
         {
-            if (props == null) return;
-            foreach (var cmp in props)
-            {
-                if (cmp?.scriptClass == null) continue;
-                if (typeof(ScriptBase).IsAssignableFrom(cmp?.scriptClass))
-                {
-                    Component comp = @object.AddComponent(cmp.scriptClass);
-                    if (comp is ScriptBase cm)
-                        cm.props = cmp;
-                }
-            }
+            Bone bone = instance.Skeleton.FindBone(name);
+            return bone.GetWorldPosition(transform);
         }
+
+        public static void InitializeAnimation(this SkeletonAnimation instance, string defaultAnimation, float timeScale, bool loop = true)
+        {
+            instance.AnimationName = defaultAnimation;
+            instance.loop = loop;
+            instance.timeScale = timeScale;
+            //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
+        }
+        public static void InitializeAnimation(this SkeletonGraphic instance, string defaultAnimation, float timeScale, bool loop = true)
+        {
+            instance.startingAnimation = defaultAnimation;
+            instance.startingLoop = loop;
+            instance.timeScale = timeScale;
+            //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
+        }
+
+        public static void DoFlipX(this ISkeletonComponent instance, bool IsFlip)
+        {
+            float x = IsFlip ? -1f : 1f;
+            instance.Skeleton.ScaleX = x;
+        }
+
         /// <summary>
         /// 在实例层面对动画进行颜色修改，可以多次覆盖
         /// </summary>
-        public static void ApplyColor(this Skeleton skeleton, Color color, List<SlotSettings> slotSettings)
+        public static void SetColor(this ISkeletonComponent instance, Color color, List<SlotSettings> slotSettings)
         {
-            if (skeleton == null) return;
-            skeleton.SetColor(color);
+            instance.Skeleton.SetColor(color);
             foreach (SlotSettings s in slotSettings)
             {
-                Slot slot = skeleton.FindSlot(s.slot);
+                Slot slot = instance.Skeleton.FindSlot(s.slot);
                 slot?.SetColor(color);
             }
         }
-        public static void InitializeTransform(this GameObject @object, AnimationParams @params)
+
+        public static void SetTransparency(this ISkeletonComponent instance, float alpha = 0f)
         {
-            if (@object == null) return;
-            Vector3 scale = new(@params.scale.x, @params.scale.y, 1f);
-            @object.transform.position = @params.position;
-            @object.transform.rotation = Quaternion.Euler(@params.rotation);
-            @object.transform.localScale = scale;
+            instance.Skeleton.a = alpha;
         }
-        public static void InitializeAnimation(this SkeletonAnimation instance, AnimationParams @params)
+
+        //直接对着动画组件用就行
+        public static TrackEntry SetAnimation(this IAnimationStateComponent instance, int trackIndex, string name, bool loop = true)
         {
-            if (instance == null) return;
-            instance.loop = @params.loop;
-            instance.timeScale = @params.timeScale;
-            instance.AnimationName = @params.defaultAnimation;
-            //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
+            return instance.AnimationState.SetAnimation(trackIndex, name, loop);
         }
-        public static void InitializeGraphic(this SkeletonGraphic instance, AnimationParams @params)
-        {
-            if (instance == null) return;
-            instance.startingLoop = @params.loop;
-            instance.timeScale = @params.timeScale;
-            instance.startingAnimation = @params.defaultAnimation;
-            //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
-        }
+
         /// <summary>
         /// 对Spine运行时骨架实例更新Skin.会重置骨骼和Slots的材质以及丢失之前的动画状态
-        /// <para>如果切换的两个skin之间骨骼是一样的 <paramref name="resetBones"/>应设为false</para>
+        /// <para>如果切换的两个skin之间骨骼是一样的 <paramref name="forceResetBones"/>应设为false</para>
         /// </summary>
-        public static void UpdateSkin(this ISkeletonComponent animated, string newskin, bool resetBones = true)
+        public static void UpdateSkin(this ISkeletonComponent animated, string newskin, bool forceResetBones = true)
         {
-            if (animated.SkeletonDataAsset == null)
-                return;
             animated.Skeleton.SetSkin(newskin);
-            if (resetBones)
+            if (forceResetBones)
                 animated.Skeleton.SetBonesToSetupPose();
             animated.Skeleton.SetSlotsToSetupPose();
         }
+
         //重新读取SkeletonData并重置骨架实例所有状态，包括AnimationState.如果替换了SkeletonDataAsset会重新加载SkeletonData.
-        public static void ReloadSkeleton(this SkeletonAnimation instance, string skin = "default", SkeletonDataAsset newAsset = null)
+        public static void ReloadSkeletonFrom(this SkeletonAnimation instance, string skin = "default", SkeletonDataAsset newAsset = null)
         {
             if (newAsset != null && newAsset.IsLoaded)
-            {
                 instance.skeletonDataAsset = newAsset;
-            }
             instance.initialSkinName = skin;
             instance.Initialize(overwrite: true);
         }
-        public static void DisableProbe(GameObject obj)
+
+        public static void ReloadSkeletonFrom(this SkeletonGraphic instance, string skin = "default", SkeletonDataAsset newAsset = null)
         {
-            MeshRenderer MeshRenderer = obj.GetComponent<MeshRenderer>();
-            if (MeshRenderer == null) return;
-            MeshRenderer.lightProbeUsage = LightProbeUsage.Off;
-            MeshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            if (newAsset != null && newAsset.IsLoaded)
+                instance.skeletonDataAsset = newAsset;
+            instance.initialSkinName = skin;
+            instance.Initialize(overwrite: true);
         }
     }
 }

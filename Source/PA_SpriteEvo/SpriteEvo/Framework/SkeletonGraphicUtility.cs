@@ -11,7 +11,7 @@ namespace SpriteEvo
         public static bool currentlyGenerating = false;
         public static Material SkeletonGraphicDefault => AssetLoadManager.SkeletonGraphicDefault;
         public static Material SkeletonGraphicDefaul_Straight => AssetLoadManager.SkeletonGraphicDefaul_Straight;
-        public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.GlobalObjectDatabase;
+        public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.DontDestroyOnLoadObjectDatabase;
 
         public static Material EnsureInitializedMaterialProperySource(bool StraightAlphaInput = false) 
         {
@@ -78,12 +78,25 @@ namespace SpriteEvo
             }
             if (def.props.OnIMGUI || def.props.OnUGUI)
             {
-                instance.AddRenderCameraToSkeletonGraphic(def.props.uioffset, (int)def.props.uiDrawSize.x, (int)def.props.uiDrawSize.y);
+                /*Transform transform;
+                if (def.version == "3.8")
+                {
+                    transform = instance.Get
+                }
+                else if (def.version == "4.1")
+                {
+                    
+                }
+                if (def.props.uiAutoAlign && def.props.alignBone != null)
+                {
+                    Vector3 focus = 
+                }*/
+                instance.AddRenderCameraToCanvas(def.props.uioffset, (int)def.props.uiDrawSize.x, (int)def.props.uiDrawSize.y);
             }
             return instance;
         }
 
-        public static Camera AddRenderCameraToSkeletonGraphic(this GameObject instance, Vector3 uioffset, int width = 2048, int height = 2048)
+        public static Camera AddRenderCameraToCanvas(this GameObject instance, Vector3 uioffset, int width = 2048, int height = 2048)
         {
             //添加Camera
             if (instance == null) return null;
@@ -92,18 +105,15 @@ namespace SpriteEvo
             myGO.transform.SetParent(instance.transform);
             myGO.transform.localRotation = Quaternion.identity;
             myGO.transform.localPosition = uioffset; // X:0, Y:10, Z:-15
+
             Camera cam = myGO.GetComponent<Camera>();
-            //设置清除标志
-            cam.clearFlags = CameraClearFlags.Color;
-            //剔除遮罩: UI层
-            cam.cullingMask = 1 << 5;
+            cam.clearFlags = CameraClearFlags.Color; //设置清除标志
+            cam.cullingMask = 1 << 5; //剔除遮罩: UI层
             cam.fieldOfView = 60f;
-            cam.backgroundColor = new Color(0f, 0f, 0f, 0f);
-            cam.useOcclusionCulling = false;
+            cam.backgroundColor = Color.clear;
+            cam.useOcclusionCulling = true;
             cam.renderingPath = RenderingPath.Forward;
-            //cam.nearClipPlane = 0.3f;
-            //cam.farClipPlane = 10f;
-            cam.depth = Current.Camera.depth - 1f;
+            cam.depth = Current.Camera.depth - 1;
             cam.targetTexture = new RenderTexture(width, height, 32, RenderTextureFormat.ARGB32, 0);
 
             Canvas canvas = instance.GetComponent<Canvas>();
