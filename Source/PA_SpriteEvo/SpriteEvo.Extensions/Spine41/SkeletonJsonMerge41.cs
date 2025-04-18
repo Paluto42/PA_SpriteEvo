@@ -6,16 +6,153 @@ using Verse;
 
 namespace SpriteEvo.Extensions
 {
-
-    public class SkeletonJsonMerge : SkeletonJson
+    public class SkeletonJsonMerge41 : SkeletonJson
     {
-        public SkeletonJsonMerge(AttachmentLoader attachmentLoader) 
+        public SkeletonJsonMerge41(AttachmentLoader attachmentLoader) 
             : base(attachmentLoader){
         }
 
-        public SkeletonJsonMerge(params Atlas[] atlasArray) 
+        public SkeletonJsonMerge41(params Atlas[] atlasArray) 
             : base(atlasArray){
         }
+
+        private void ProcessBones(SkeletonData skeletonData, Dictionary<string, object> root, bool isSubSkeleton = false) 
+        {
+            foreach (Dictionary<string, Object> boneMap in (List<Object>)root["bones"])
+            {
+                BoneData parent = null;
+                if (boneMap.ContainsKey("parent"))
+                {
+                    parent = skeletonData.FindBone((string)boneMap["parent"]);
+                    if (parent == null)
+                        throw new Exception("Parent bone not found: " + boneMap["parent"]);
+                }
+                BoneData data = new BoneData(skeletonData.Bones.Count, (string)boneMap["name"], parent);
+                data.length = GetFloat(boneMap, "length", 0) * scale;
+                data.x = GetFloat(boneMap, "x", 0) * scale;
+                data.y = GetFloat(boneMap, "y", 0) * scale;
+                data.rotation = GetFloat(boneMap, "rotation", 0);
+                data.scaleX = GetFloat(boneMap, "scaleX", 1);
+                data.scaleY = GetFloat(boneMap, "scaleY", 1);
+                data.shearX = GetFloat(boneMap, "shearX", 0);
+                data.shearY = GetFloat(boneMap, "shearY", 0);
+
+                string tm = GetString(boneMap, "transform", TransformMode.Normal.ToString());
+                data.transformMode = (TransformMode)Enum.Parse(typeof(TransformMode), tm, true);
+                data.skinRequired = GetBoolean(boneMap, "skin", false);
+                //parent已经在上面检查过了，不然会抛出异常
+                if (isSubSkeleton && skeletonData.bones.Exists(pb => pb.name == data.name))
+                {
+                    continue;
+                }
+                skeletonData.bones.Add(data);
+            }
+        }
+
+        private void ProcessSlots(SkeletonData skeletonData, Dictionary<string, object> root) 
+        {
+            foreach (Dictionary<string, Object> slotMap in (List<Object>)root["slots"])
+            {
+                string slotName = (string)slotMap["name"];
+                string boneName = (string)slotMap["bone"];
+                BoneData boneData = skeletonData.FindBone(boneName);
+                if (boneData == null) throw new Exception("Slot bone not found: " + boneName);
+                SlotData data = new SlotData(skeletonData.Slots.Count, slotName, boneData);
+
+                if (slotMap.ContainsKey("color"))
+                {
+                    string color = (string)slotMap["color"];
+                    data.r = ToColor(color, 0);
+                    data.g = ToColor(color, 1);
+                    data.b = ToColor(color, 2);
+                    data.a = ToColor(color, 3);
+                }
+
+                if (slotMap.ContainsKey("dark"))
+                {
+                    string color2 = (string)slotMap["dark"];
+                    data.r2 = ToColor(color2, 0, 6); // expectedLength = 6. ie. "RRGGBB"
+                    data.g2 = ToColor(color2, 1, 6);
+                    data.b2 = ToColor(color2, 2, 6);
+                    data.hasSecondColor = true;
+                }
+
+                data.attachmentName = GetString(slotMap, "attachment", null);
+                if (slotMap.ContainsKey("blend"))
+                    data.blendMode = (BlendMode)Enum.Parse(typeof(BlendMode), (string)slotMap["blend"], true);
+                else
+                    data.blendMode = BlendMode.Normal;
+                skeletonData.slots.Add(data);
+            }
+        }
+
+        private void ProcessSkins(SkeletonData skeletonData, Dictionary<string, object> root) 
+        {
+            foreach (Dictionary<string, object> skinMap in (List<object>)root["skins"])
+            {
+                Skin skin = new Skin((string)skinMap["name"]);
+                if (skinMap.ContainsKey("bones"))
+                {
+                    foreach (string entryName in (List<Object>)skinMap["bones"])
+                    {
+                        BoneData bone = skeletonData.FindBone(entryName);
+                        if (bone == null) throw new Exception("Skin bone not found: " + entryName);
+                        skin.bones.Add(bone);
+                    }
+                }
+                skin.bones.TrimExcess();
+                if (skinMap.ContainsKey("ik"))
+                {
+                    foreach (string entryName in (List<Object>)skinMap["ik"])
+                    {
+                        IkConstraintData constraint = skeletonData.FindIkConstraint(entryName);
+                        if (constraint == null) throw new Exception("Skin IK constraint not found: " + entryName);
+                        skin.constraints.Add(constraint);
+                    }
+                }
+                if (skinMap.ContainsKey("transform"))
+                {
+                    foreach (string entryName in (List<Object>)skinMap["transform"])
+                    {
+                        TransformConstraintData constraint = skeletonData.FindTransformConstraint(entryName);
+                        if (constraint == null) throw new Exception("Skin transform constraint not found: " + entryName);
+                        skin.constraints.Add(constraint);
+                    }
+                }
+                if (skinMap.ContainsKey("path"))
+                {
+                    foreach (string entryName in (List<Object>)skinMap["path"])
+                    {
+                        PathConstraintData constraint = skeletonData.FindPathConstraint(entryName);
+                        if (constraint == null) throw new Exception("Skin path constraint not found: " + entryName);
+                        skin.constraints.Add(constraint);
+                    }
+                }
+                skin.constraints.TrimExcess();
+                if (skinMap.ContainsKey("attachments"))
+                {
+                    foreach (KeyValuePair<string, Object> slotEntry in (Dictionary<string, Object>)skinMap["attachments"])
+                    {
+                        int slotIndex = FindSlotIndex(skeletonData, slotEntry.Key);
+                        foreach (KeyValuePair<string, Object> entry in ((Dictionary<string, Object>)slotEntry.Value))
+                        {
+                            try
+                            {
+                                Attachment attachment = ReadAttachment((Dictionary<string, Object>)entry.Value, skin, slotIndex, entry.Key, skeletonData);
+                                if (attachment != null) skin.SetAttachment(slotIndex, entry.Key, attachment);
+                            }
+                            catch (Exception e)
+                            {
+                                throw new Exception("Error reading attachment: " + entry.Key + ", skin: " + skin, e);
+                            }
+                        }
+                    }
+                }
+                skeletonData.skins.Add(skin);
+                if (skin.name == "default") skeletonData.defaultSkin = skin;
+            }
+        }
+
         public SkeletonData ReadSkeletonDatasToMerge(TextReader reader1, TextReader[] reader2)
         {
             if (reader1 == null || reader2.NullOrEmpty()) throw new ArgumentNullException("reader", "reader cannot be null.");
@@ -51,141 +188,25 @@ namespace SpriteEvo.Extensions
             // Bones. 
             if (root1.ContainsKey("bones"))
             {
-                foreach (Dictionary<string, Object> boneMap in (List<Object>)root1["bones"])
-                {
-                    BoneData parent = null;
-                    if (boneMap.ContainsKey("parent"))
-                    {
-                        parent = skeletonData.FindBone((string)boneMap["parent"]);
-                        if (parent == null)
-                            throw new Exception("Parent bone not found: " + boneMap["parent"]);
-                    }
-                    BoneData data = new BoneData(skeletonData.Bones.Count, (string)boneMap["name"], parent);
-                    data.length = GetFloat(boneMap, "length", 0) * scale;
-                    data.x = GetFloat(boneMap, "x", 0) * scale;
-                    data.y = GetFloat(boneMap, "y", 0) * scale;
-                    data.rotation = GetFloat(boneMap, "rotation", 0);
-                    data.scaleX = GetFloat(boneMap, "scaleX", 1);
-                    data.scaleY = GetFloat(boneMap, "scaleY", 1);
-                    data.shearX = GetFloat(boneMap, "shearX", 0);
-                    data.shearY = GetFloat(boneMap, "shearY", 0);
-
-                    string tm = GetString(boneMap, "transform", TransformMode.Normal.ToString());
-                    data.transformMode = (TransformMode)Enum.Parse(typeof(TransformMode), tm, true);
-                    data.skinRequired = GetBoolean(boneMap, "skin", false);
-
-                    skeletonData.bones.Add(data);
-                }
+                ProcessBones(skeletonData, root1);
             }
             foreach (var root2 in roots) 
             {
                 if (root2.ContainsKey("bones"))
                 {
-                    foreach (Dictionary<string, Object> boneMap in (List<Object>)root2["bones"])
-                    {
-                        BoneData parent = null;
-                        if (boneMap.ContainsKey("parent"))
-                        {
-                            parent = skeletonData.FindBone((string)boneMap["parent"]);
-                            if (parent == null)
-                                throw new Exception("Parent bone not found: " + boneMap["parent"]);
-                        }
-                        BoneData data = new BoneData(skeletonData.Bones.Count, (string)boneMap["name"], parent);
-                        data.length = GetFloat(boneMap, "length", 0) * scale;
-                        data.x = GetFloat(boneMap, "x", 0) * scale;
-                        data.y = GetFloat(boneMap, "y", 0) * scale;
-                        data.rotation = GetFloat(boneMap, "rotation", 0);
-                        data.scaleX = GetFloat(boneMap, "scaleX", 1);
-                        data.scaleY = GetFloat(boneMap, "scaleY", 1);
-                        data.shearX = GetFloat(boneMap, "shearX", 0);
-                        data.shearY = GetFloat(boneMap, "shearY", 0);
-
-                        string tm = GetString(boneMap, "transform", TransformMode.Normal.ToString());
-                        data.transformMode = (TransformMode)Enum.Parse(typeof(TransformMode), tm, true);
-                        data.skinRequired = GetBoolean(boneMap, "skin", false);
-                        //parent已经在上面检查过了，不然会抛出异常
-                        if (skeletonData.bones.Exists(pb => pb.name == data.name))
-                        {
-                            continue;
-                        }
-                        skeletonData.bones.Add(data);
-                    }
+                    ProcessBones(skeletonData, root2);
                 }
             }
             // Slots.
             if (root1.ContainsKey("slots"))
             {
-                foreach (Dictionary<string, Object> slotMap in (List<Object>)root1["slots"])
-                {
-                    string slotName = (string)slotMap["name"];
-                    string boneName = (string)slotMap["bone"];
-                    BoneData boneData = skeletonData.FindBone(boneName);
-                    if (boneData == null) throw new Exception("Slot bone not found: " + boneName);
-                    SlotData data = new SlotData(skeletonData.Slots.Count, slotName, boneData);
-
-                    if (slotMap.ContainsKey("color"))
-                    {
-                        string color = (string)slotMap["color"];
-                        data.r = ToColor(color, 0);
-                        data.g = ToColor(color, 1);
-                        data.b = ToColor(color, 2);
-                        data.a = ToColor(color, 3);
-                    }
-
-                    if (slotMap.ContainsKey("dark"))
-                    {
-                        string color2 = (string)slotMap["dark"];
-                        data.r2 = ToColor(color2, 0, 6); // expectedLength = 6. ie. "RRGGBB"
-                        data.g2 = ToColor(color2, 1, 6);
-                        data.b2 = ToColor(color2, 2, 6);
-                        data.hasSecondColor = true;
-                    }
-
-                    data.attachmentName = GetString(slotMap, "attachment", null);
-                    if (slotMap.ContainsKey("blend"))
-                        data.blendMode = (BlendMode)Enum.Parse(typeof(BlendMode), (string)slotMap["blend"], true);
-                    else
-                        data.blendMode = BlendMode.Normal;
-                    skeletonData.slots.Add(data);
-                }
+                ProcessSlots(skeletonData, root1);
             }
             foreach (var root2 in roots)
             {
                 if (root2.ContainsKey("slots"))
                 {
-                    foreach (Dictionary<string, Object> slotMap in (List<Object>)root2["slots"])
-                    {
-                        string slotName = (string)slotMap["name"];
-                        string boneName = (string)slotMap["bone"];
-                        BoneData boneData = skeletonData.FindBone(boneName);
-                        if (boneData == null) throw new Exception("Slot bone not found: " + boneName);
-                        SlotData data = new SlotData(skeletonData.Slots.Count, slotName, boneData);
-
-                        if (slotMap.ContainsKey("color"))
-                        {
-                            string color = (string)slotMap["color"];
-                            data.r = ToColor(color, 0);
-                            data.g = ToColor(color, 1);
-                            data.b = ToColor(color, 2);
-                            data.a = ToColor(color, 3);
-                        }
-
-                        if (slotMap.ContainsKey("dark"))
-                        {
-                            string color2 = (string)slotMap["dark"];
-                            data.r2 = ToColor(color2, 0, 6); // expectedLength = 6. ie. "RRGGBB"
-                            data.g2 = ToColor(color2, 1, 6);
-                            data.b2 = ToColor(color2, 2, 6);
-                            data.hasSecondColor = true;
-                        }
-
-                        data.attachmentName = GetString(slotMap, "attachment", null);
-                        if (slotMap.ContainsKey("blend"))
-                            data.blendMode = (BlendMode)Enum.Parse(typeof(BlendMode), (string)slotMap["blend"], true);
-                        else
-                            data.blendMode = BlendMode.Normal;
-                        skeletonData.slots.Add(data);
-                    }
+                    ProcessSlots(skeletonData, root2);
                 }
             }
             // IK constraints.
@@ -307,69 +328,7 @@ namespace SpriteEvo.Extensions
             // Skins.
             if (root1.ContainsKey("skins"))
             {
-                foreach (Dictionary<string, object> skinMap in (List<object>)root1["skins"])
-                {
-                    Skin skin = new Skin((string)skinMap["name"]);
-                    if (skinMap.ContainsKey("bones"))
-                    {
-                        foreach (string entryName in (List<Object>)skinMap["bones"])
-                        {
-                            BoneData bone = skeletonData.FindBone(entryName);
-                            if (bone == null) throw new Exception("Skin bone not found: " + entryName);
-                            skin.bones.Add(bone);
-                        }
-                    }
-                    skin.bones.TrimExcess();
-                    if (skinMap.ContainsKey("ik"))
-                    {
-                        foreach (string entryName in (List<Object>)skinMap["ik"])
-                        {
-                            IkConstraintData constraint = skeletonData.FindIkConstraint(entryName);
-                            if (constraint == null) throw new Exception("Skin IK constraint not found: " + entryName);
-                            skin.constraints.Add(constraint);
-                        }
-                    }
-                    if (skinMap.ContainsKey("transform"))
-                    {
-                        foreach (string entryName in (List<Object>)skinMap["transform"])
-                        {
-                            TransformConstraintData constraint = skeletonData.FindTransformConstraint(entryName);
-                            if (constraint == null) throw new Exception("Skin transform constraint not found: " + entryName);
-                            skin.constraints.Add(constraint);
-                        }
-                    }
-                    if (skinMap.ContainsKey("path"))
-                    {
-                        foreach (string entryName in (List<Object>)skinMap["path"])
-                        {
-                            PathConstraintData constraint = skeletonData.FindPathConstraint(entryName);
-                            if (constraint == null) throw new Exception("Skin path constraint not found: " + entryName);
-                            skin.constraints.Add(constraint);
-                        }
-                    }
-                    skin.constraints.TrimExcess();
-                    if (skinMap.ContainsKey("attachments"))
-                    {
-                        foreach (KeyValuePair<string, Object> slotEntry in (Dictionary<string, Object>)skinMap["attachments"])
-                        {
-                            int slotIndex = FindSlotIndex(skeletonData, slotEntry.Key);
-                            foreach (KeyValuePair<string, Object> entry in ((Dictionary<string, Object>)slotEntry.Value))
-                            {
-                                try
-                                {
-                                    Spine41.Attachment attachment = ReadAttachment((Dictionary<string, Object>)entry.Value, skin, slotIndex, entry.Key, skeletonData);
-                                    if (attachment != null) skin.SetAttachment(slotIndex, entry.Key, attachment);
-                                }
-                                catch (Exception e)
-                                {
-                                    throw new Exception("Error reading attachment: " + entry.Key + ", skin: " + skin, e);
-                                }
-                            }
-                        }
-                    }
-                    skeletonData.skins.Add(skin);
-                    if (skin.name == "default") skeletonData.defaultSkin = skin;
-                }
+                ProcessSkins(skeletonData, root1);
             }
             foreach (var root2 in roots)
             {
@@ -431,7 +390,7 @@ namespace SpriteEvo.Extensions
                                 {
                                     try
                                     {
-                                        Spine41.Attachment attachment = ReadAttachment((Dictionary<string, Object>)entry.Value, skin, slotIndex, entry.Key, skeletonData);
+                                        Attachment attachment = ReadAttachment((Dictionary<string, Object>)entry.Value, skin, slotIndex, entry.Key, skeletonData);
                                         if (attachment != null) skin.SetAttachment(slotIndex, entry.Key, attachment);
                                     }
                                     catch (Exception e)
@@ -456,7 +415,7 @@ namespace SpriteEvo.Extensions
                 LinkedMesh linkedMesh = linkedMeshes[i];
                 Skin skin = linkedMesh.skin == null ? skeletonData.defaultSkin : skeletonData.FindSkin(linkedMesh.skin);
                 if (skin == null) throw new Exception("Slot not found: " + linkedMesh.skin);
-                Spine41.Attachment parent = skin.GetAttachment(linkedMesh.slotIndex, linkedMesh.parent);
+                Attachment parent = skin.GetAttachment(linkedMesh.slotIndex, linkedMesh.parent);
                 if (parent == null) throw new Exception("Parent mesh not found: " + linkedMesh.parent);
                 linkedMesh.mesh.TimelineAttachment = linkedMesh.inheritTimelines ? (VertexAttachment)parent : linkedMesh.mesh;
                 linkedMesh.mesh.ParentMesh = (MeshAttachment)parent;
@@ -525,6 +484,7 @@ namespace SpriteEvo.Extensions
             skeletonData.ikConstraints.TrimExcess();
             return skeletonData;
         }
+
         //必须两个JSON的骨骼里必须要有相同的parent(父级)
         /*public SkeletonData ReadSkeletonDataToMerge(TextReader reader1, TextReader reader2)
         {

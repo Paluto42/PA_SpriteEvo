@@ -67,13 +67,11 @@ namespace SpriteEvo
         #endregion
         public static Spine38.Unity.SkeletonAnimation GetSkeletonAnimation38(GameObject instance) 
         {
-            if (instance == null) return null;
-            return instance.GetComponent<Spine38.Unity.SkeletonAnimation>();
+            return instance?.GetComponent<Spine38.Unity.SkeletonAnimation>();
         }
         public static Spine41.Unity.SkeletonAnimation GetSkeletonAnimation41(GameObject instance)
         {
-            if (instance == null) return null;
-            return instance.GetComponent<Spine41.Unity.SkeletonAnimation>();
+            return instance?.GetComponent<Spine41.Unity.SkeletonAnimation>();
         }
         //对整个骨架染色。在激活后调用,应在实例级别的骨架上修改
         /*public static void SetColor(this Spine38.Unity.SkeletonAnimation instance, Color color, List<SlotSettings> slotSettings) 

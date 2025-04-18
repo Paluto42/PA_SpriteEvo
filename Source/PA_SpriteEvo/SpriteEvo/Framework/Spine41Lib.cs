@@ -45,7 +45,7 @@ namespace SpriteEvo
                     return null;
                 }
             }
-            return JsonMerger.MergeSkeletonFromJSONs(parent, attachments);
+            return JsonMerger.MergeSkeletonFromJSONs41(parent, attachments);
         }
 
         public static SkeletonDataAsset EnsureInitializedSkeletonData(AnimationDef animationDef) 

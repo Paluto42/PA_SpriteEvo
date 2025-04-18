@@ -52,7 +52,7 @@ namespace Spine42 {
 	/// Runtimes Guide.</para>
 	/// </summary>
 	public class SkeletonJson : SkeletonLoader {
-		private readonly List<LinkedMesh> linkedMeshes = new List<LinkedMesh>();
+		protected readonly List<LinkedMesh> linkedMeshes = new List<LinkedMesh>();
 
 		public SkeletonJson (AttachmentLoader attachmentLoader)
 			: base(attachmentLoader) {
@@ -426,7 +426,7 @@ namespace Spine42 {
 			return skeletonData;
 		}
 
-		private Attachment ReadAttachment (Dictionary<string, Object> map, Skin skin, int slotIndex, string name, SkeletonData skeletonData) {
+		protected Attachment ReadAttachment (Dictionary<string, Object> map, Skin skin, int slotIndex, string name, SkeletonData skeletonData) {
 			float scale = this.scale;
 			name = GetString(map, "name", name);
 
@@ -589,14 +589,14 @@ namespace Spine42 {
 			attachment.vertices = weights.ToArray();
 		}
 
-		private int FindSlotIndex (SkeletonData skeletonData, string slotName) {
+		protected int FindSlotIndex (SkeletonData skeletonData, string slotName) {
 			SlotData[] slots = skeletonData.slots.Items;
 			for (int i = 0, n = skeletonData.slots.Count; i < n; i++)
 				if (slots[i].name == slotName) return i;
 			throw new Exception("Slot not found: " + slotName);
 		}
 
-		private void ReadAnimation (Dictionary<string, Object> map, string name, SkeletonData skeletonData) {
+		protected void ReadAnimation (Dictionary<string, Object> map, string name, SkeletonData skeletonData) {
 			float scale = this.scale;
 			ExposedList<Timeline> timelines = new ExposedList<Timeline>();
 
@@ -1220,7 +1220,7 @@ namespace Spine42 {
 			skeletonData.animations.Add(new Animation(name, timelines, duration));
 		}
 
-		static Timeline ReadTimeline (ref List<object>.Enumerator keyMapEnumerator, CurveTimeline1 timeline, float defaultValue, float scale) {
+		protected static Timeline ReadTimeline (ref List<object>.Enumerator keyMapEnumerator, CurveTimeline1 timeline, float defaultValue, float scale) {
 			Dictionary<string, object> keyMap = (Dictionary<string, Object>)keyMapEnumerator.Current;
 			float time = GetFloat(keyMap, "time", 0);
 			float value = GetFloat(keyMap, "value", defaultValue) * scale;
@@ -1243,7 +1243,7 @@ namespace Spine42 {
 			}
 		}
 
-		static Timeline ReadTimeline (ref List<object>.Enumerator keyMapEnumerator, CurveTimeline2 timeline, String name1, String name2, float defaultValue,
+		protected static Timeline ReadTimeline (ref List<object>.Enumerator keyMapEnumerator, CurveTimeline2 timeline, String name1, String name2, float defaultValue,
 			float scale) {
 
 			Dictionary<string, object> keyMap = (Dictionary<string, Object>)keyMapEnumerator.Current;
@@ -1270,7 +1270,7 @@ namespace Spine42 {
 			}
 		}
 
-		static int ReadCurve (object curve, CurveTimeline timeline, int bezier, int frame, int value, float time1, float time2,
+		protected static int ReadCurve (object curve, CurveTimeline timeline, int bezier, int frame, int value, float time1, float time2,
 			float value1, float value2, float scale) {
 
 			string curveString = curve as string;
@@ -1288,12 +1288,12 @@ namespace Spine42 {
 			return bezier + 1;
 		}
 
-		static void SetBezier (CurveTimeline timeline, int frame, int value, int bezier, float time1, float value1, float cx1, float cy1,
+		protected static void SetBezier (CurveTimeline timeline, int frame, int value, int bezier, float time1, float value1, float cx1, float cy1,
 			float cx2, float cy2, float time2, float value2) {
 			timeline.SetBezier(bezier, frame, value, time1, value1, cx1, cy1, cx2, cy2, time2, value2);
 		}
 
-		static float[] GetFloatArray (Dictionary<string, Object> map, string name, float scale) {
+		protected static float[] GetFloatArray (Dictionary<string, Object> map, string name, float scale) {
 			List<object> list = (List<Object>)map[name];
 			float[] values = new float[list.Count];
 			if (scale == 1) {
@@ -1306,7 +1306,7 @@ namespace Spine42 {
 			return values;
 		}
 
-		static int[] GetIntArray (Dictionary<string, Object> map, string name) {
+		protected static int[] GetIntArray (Dictionary<string, Object> map, string name) {
 			List<object> list = (List<Object>)map[name];
 			int[] values = new int[list.Count];
 			for (int i = 0, n = list.Count; i < n; i++)
@@ -1314,38 +1314,38 @@ namespace Spine42 {
 			return values;
 		}
 
-		static float GetFloat (Dictionary<string, Object> map, string name, float defaultValue) {
+		protected static float GetFloat (Dictionary<string, Object> map, string name, float defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (float)map[name];
 		}
 
-		static int GetInt (Dictionary<string, Object> map, string name, int defaultValue) {
+		protected static int GetInt (Dictionary<string, Object> map, string name, int defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (int)(float)map[name];
 		}
 
-		static int GetInt (Dictionary<string, Object> map, string name) {
+		protected static int GetInt (Dictionary<string, Object> map, string name) {
 			if (!map.ContainsKey(name)) throw new ArgumentException("Named value not found: " + name);
 			return (int)(float)map[name];
 		}
 
-		static bool GetBoolean (Dictionary<string, Object> map, string name, bool defaultValue) {
+		protected static bool GetBoolean (Dictionary<string, Object> map, string name, bool defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (bool)map[name];
 		}
 
-		static string GetString (Dictionary<string, Object> map, string name, string defaultValue) {
+		protected static string GetString (Dictionary<string, Object> map, string name, string defaultValue) {
 			if (!map.ContainsKey(name)) return defaultValue;
 			return (string)map[name];
 		}
 
-		static float ToColor (string hexString, int colorIndex, int expectedLength = 8) {
+		protected static float ToColor (string hexString, int colorIndex, int expectedLength = 8) {
 			if (hexString.Length < expectedLength)
 				throw new ArgumentException("Color hexadecimal length must be " + expectedLength + ", received: " + hexString, "hexString");
 			return Convert.ToInt32(hexString.Substring(colorIndex * 2, 2), 16) / (float)255;
 		}
 
-		private class LinkedMesh {
+		protected class LinkedMesh {
 			internal string parent, skin;
 			internal int slotIndex;
 			internal MeshAttachment mesh;
