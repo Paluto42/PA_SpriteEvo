@@ -17,7 +17,7 @@ namespace SpriteEvo
     {
         public static bool currentlyGenerating = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
-        public static Dictionary<object, GameObject> DynamicObjectDatabase => AssetManager.DontDestroyOnLoadObjectDatabase;
+        public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjectDatabase;
 
         ///<summary>
         ///根据AnimationDef信息创建并初始化一个没有额外附加脚本SkeletonAnimation素体实例，默认在场景Layer的第2层
@@ -78,7 +78,7 @@ namespace SpriteEvo
             if (((ProgramStateFlags)Current.ProgramState & allowProgramStates) == 0) return null; //游戏状况不允许
             //if (Current.ProgramState != ProgramState.Playing) return null;
             if (key == null) return null; //任何情况不允许空key
-            if (docuSaved && GC_AnimationDocument.ObjectDataBase.TryGetValue(key, out GameObject res))
+            if (docuSaved && ObjectManager.CurrentGameObjectDataBase.TryGetValue(key, out GameObject res))
             {
                 res.SetActive(true);
                 //Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
@@ -87,7 +87,7 @@ namespace SpriteEvo
             GameObject instance = Instantiate(def, layer, loop, active, DontDestroyOnLoad: false);
             if (instance != null && docuSaved)
             {
-                GC_AnimationDocument.TryAdd(key, instance);
+                ObjectManager.TryAddToCurrentGame(instance, key);
             }
             return instance;
         }
@@ -133,11 +133,7 @@ namespace SpriteEvo
             }*/
             return instance;
         }
-        public static void SetPosition(this GameObject instance, Vector3 pos)
-        {
-            if (instance == null) return;
-            instance.transform.position = pos;
-        }
+
         /*public static Texture AnimationTexture(this GameObject instance)
         {
             if (instance == null) return null;

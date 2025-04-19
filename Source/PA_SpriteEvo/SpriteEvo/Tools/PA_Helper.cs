@@ -5,11 +5,6 @@ namespace SpriteEvo
 {
     public static class PA_Helper
     {
-        public static AnimationDef FindDef(this string defName)
-        {
-            if (defName == null) return null;
-            return DefDatabase<AnimationDef>.AllDefsListForReading.Find(a => a.defName == defName);
-        }
         /// <summary>从AnimationDef中读取动画属性作为参数结构体返回</summary>
         public static AnimationParams GetSkeletonParams(this AnimationDef def, bool loop = true)
         {

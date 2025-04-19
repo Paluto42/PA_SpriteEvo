@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Verse;
 
@@ -67,13 +68,19 @@ namespace SpriteEvo
     ///<summary>用来缓存动画信息的GC,在游戏中才可以使用</summary>
     public class GC_AnimationDocument : GameComponent
     {
-        public static Dictionary<object, GameObject> ObjectDataBase;
+        public static GC_AnimationDocument instance;
+
+        //key没有其他强引用时，这里面的key的键值对会在gc时被自动移除。但是gc不是实时的。
+        public ConditionalWeakTable<object, GameObject> ObjectDataBase = new();
+
+        //public static Dictionary<object, GameObject> ObjectDataBase;
         //public static Dictionary<string, List<ThingDocument>> animationDataBase;
         //public static HashSet<Thing> cachedThings;
         //internal static HashSet<Thing> cachedThings = new HashSet<Thing>();
         public GC_AnimationDocument(Game game)
         {
-            ObjectDataBase = new Dictionary<object, GameObject>();
+            instance = this;
+            //ObjectDataBase = new Dictionary<object, GameObject>();
             //animationDataBase = new Dictionary<string, List<ThingDocument>>();
         }
         public override void StartedNewGame()
@@ -83,7 +90,7 @@ namespace SpriteEvo
             {
                 Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(Translator.Translate("AK_StartLabel"), Translator.Translate("AK_StartDesc"), LetterDefOf.NeutralEvent, null, null));
             }*/
-            ObjectDataBase = new Dictionary<object, GameObject>();
+            //ObjectDataBase = new Dictionary<object, GameObject>();
         }
 
         public override void FinalizeInit()
@@ -103,7 +110,7 @@ namespace SpriteEvo
         public override void LoadedGame()
         {
             base.LoadedGame();
-            ObjectDataBase = new Dictionary<object, GameObject>();
+            //ObjectDataBase = new Dictionary<object, GameObject>();
  
         }
         public override void ExposeData()
@@ -121,7 +128,8 @@ namespace SpriteEvo
                 catch { Log.Error("Failed to save AnimationDoc"); }
             }*/
         }
-        public static void TryAdd(object key, GameObject value)
+
+        /*public static void TryAdd(object key, GameObject value)
         {
             if (ObjectDataBase.ContainsKey(key)) 
             {
@@ -132,9 +140,10 @@ namespace SpriteEvo
             {
                 ObjectDataBase.Add(key, value);
             }
-        }
+        }*/
+
         //May be Null
-        public static GameObject TryGet(object key)
+        /*public static GameObject TryGet(object key)
         {
             if (ObjectDataBase.ContainsKey(key)) 
             {
@@ -145,6 +154,6 @@ namespace SpriteEvo
                 return null;
             }
 
-        }
+        }*/
     }
 }

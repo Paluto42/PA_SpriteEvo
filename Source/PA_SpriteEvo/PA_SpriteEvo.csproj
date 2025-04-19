@@ -114,10 +114,12 @@
     <Compile Include="SpriteEvo\Animation\Animation41.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ISkeletonConfig.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ITransform.cs" />
-    <Compile Include="SpriteEvo\Framework\ObjectUtility.cs" />
+    <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
+    <Compile Include="SpriteEvo\Tools\ObjectUtility.cs" />
     <Compile Include="SpriteEvo\Hierarchy\Hierarchy.cs" />
     <Compile Include="SpriteEvo\Loader\Asset_Mat.cs" />
     <Compile Include="SpriteEvo\Loader\Asset_Tex.cs" />
+    <Compile Include="SpriteEvo\Manager\ObjectManager.cs" />
     <Compile Include="SpriteEvo\ThingComp\TC_Animation.cs" />
     <Compile Include="SpriteEvo\Framework\Spine38Lib.cs" />
     <Compile Include="SpriteEvo\Framework\Spine41Lib.cs" />
@@ -126,7 +128,6 @@
     <Compile Include="SpriteEvo\Tools\AnimationExtensions.cs" />
     <Compile Include="SpriteEvo\Manager\AssetManager.cs" />
     <Compile Include="SpriteEvo\Loader\ISkeletonLoader.cs" />
-    <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
     <Compile Include="SpriteEvo\Framework\EffectsUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonGraphicUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonAnimationUtility.cs" />
@@ -138,7 +139,7 @@
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FxExtraWorker.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FxHeadWorker.cs" />
     <Compile Include="SpriteEvo.Unity\FxRootWorker.cs" />
-    <Compile Include="SpriteEvo\Harmony\HarmonyPatches.cs" />
+    <Compile Include="SpriteEvo\HarmonyPatch\HarmonyPatches.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadManager.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
     <Compile Include="SpriteEvo\Script\InspectorFieldAttribute.cs" />

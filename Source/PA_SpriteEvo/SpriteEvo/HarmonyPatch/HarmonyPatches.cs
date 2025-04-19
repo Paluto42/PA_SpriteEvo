@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using System.Collections.Generic;
 using System.Reflection;
+using System;
 using Verse;
 
 namespace SpriteEvo
@@ -50,6 +52,33 @@ namespace SpriteEvo
             DoMainMenuOnce = null;
         }
     }
+
+    /*[HarmonyPatch(typeof(PawnRenderTree), "ParallelPreDraw", new Type[] { typeof(PawnDrawParms) } )]
+    public class Patch_PawnRenderTree
+    {
+        [HarmonyPostfix]
+        public static void Postfix(ref Pawn ___pawn, ref List<PawnGraphicDrawRequest> ___drawRequests, PawnDrawParms parms)
+        {
+            if (___drawRequests == null) return;
+
+            int num = ___drawRequests.FindIndex(request => request.node is PawnRenderNode_Head);
+            if (num >= 0)
+            {
+                ___drawRequests.RemoveAt(num);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(PawnRenderer), "ParallelGetPreRenderResults")]
+    public class Patch_PawnRender 
+    {
+        [HarmonyPrefix]
+        public static bool Prefix(Pawn ___pawn, ref bool disableCache)
+        {
+            disableCache = true;
+            return true;
+        }
+    }*/
     //用来清除
 
     //应该合并进AK_DLL的招募流程中，不需要去每帧判断。
