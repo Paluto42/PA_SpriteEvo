@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SpriteEvo
 {
-    public interface ITransform
+    /*public interface ITransform
     {
         Vector3 Position { get; }
         Quaternion Rotation { get; }
@@ -15,5 +15,5 @@ namespace SpriteEvo
         void SetPositon(Vector3 pos);
         void SetRotation(Vector3 rot);
         void SetScale(Vector3 s);
-    }
+    }*/
 }

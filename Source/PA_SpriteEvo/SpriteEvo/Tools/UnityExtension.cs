@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 
 namespace SpriteEvo
 {
-    public static class ObjectUtility
+    public static class UnityExtension
     {
         public static GameObject AddEmptyChild(this GameObject parent, string name)
         {

@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using Verse;
+﻿using System;
+using System.Reflection;
+using UnityEngine;
 
 namespace SpriteEvo
 {
@@ -22,57 +23,28 @@ namespace SpriteEvo
             this.useStraightAlpha = usePMA;
         }
 
-        public override Spine38.Unity.SkeletonDataAsset SkeletonDataAsset38()
+        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
         {
-            if (this.def.asset.version != "3.8") { return null; }
-            if (this.atlasInput == null) 
-            {
-                AtlasException();
-                return null;
-            }
-            if (this.skeletonInput == null)
-            {
-                SkeletonException();
-                return null;
-            }
-            if (this.textures.NullOrEmpty())
-            {
-                Log.Error(def.defName + " SpineAssetPack Missing Textures");
-                return null;
-            }
-            Spine38.Unity.SpineAtlasAsset atlas;
-            Spine38.Unity.SkeletonDataAsset skeleton;
-            //Is_StraightAlphaTexture = pack.useStraightAlpha;
-            atlas = Spine38.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.textures, this.shader, initialize: true, pma: useStraightAlpha);
-            skeleton = Spine38.Unity.SkeletonDataAsset.CreateRuntimeInstance(this.skeletonInput, atlas, initialize: true);
-            //Is_StraightAlphaTexture = false;
+            base.CheckAssets();
+            Type atlasType = typeof(TAtlas);
+            Type skeletonType = typeof(TSkeleton);
+            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(bool) });
+            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool) });
+
+            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, useStraightAlpha });
+            var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true });
             return skeleton;
         }
-
-        public override Spine41.Unity.SkeletonDataAsset SkeletonDataAsset41()
+        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
         {
-            if (this.def.asset.version != "4.1") { return null; }
-            if (this.atlasInput == null)
-            {
-                AtlasException();
-                return null;
-            }
-            if (this.skeletonInput == null)
-            {
-                SkeletonException();
-                return null;
-            }
-            if (this.textures.NullOrEmpty())
-            {
-                Log.Error(this.def.defName + " SpineAssetPack textures为空");
-                return null;
-            }
-            Spine41.Unity.SpineAtlasAsset atlas;
-            Spine41.Unity.SkeletonDataAsset skeleton;
-            //Is_StraightAlphaTexture = pack.useStraightAlpha;
-            atlas = Spine41.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.textures, this.shader, initialize: true, pma: useStraightAlpha);
-            skeleton = Spine41.Unity.SkeletonDataAsset.CreateRuntimeInstance(this.skeletonInput, atlas, initialize: true);
-            //Is_StraightAlphaTexture = false;
+            base.CheckAssets();
+            Type atlasType = typeof(TAtlas);
+            Type skeletonType = typeof(TSkeleton);
+            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(Func<TAtlas, ITextureLoader>), typeof(bool) });
+            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool) });
+
+            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, null, useStraightAlpha });
+            var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
     }

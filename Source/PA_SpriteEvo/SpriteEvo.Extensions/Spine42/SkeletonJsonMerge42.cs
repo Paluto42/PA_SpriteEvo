@@ -6,7 +6,7 @@ using Verse;
 
 namespace SpriteEvo.Extensions
 {
-    public class SkeletonJsonMerge42 : SkeletonJson
+    /*public class SkeletonJsonMerge42 : SkeletonJson
     {
         public SkeletonJsonMerge42(AttachmentLoader attachmentLoader)
             : base(attachmentLoader){
@@ -541,5 +541,5 @@ namespace SpriteEvo.Extensions
             skeletonData.ikConstraints.TrimExcess();
             return skeletonData;
         }
-    }
+    }*/
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SpriteEvo
 {
-    public static class AnimationExtensions
+    /*public static class AnimationExtensions
     {
         //public static bool Is_StraightAlphaTexture = false;
         public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
@@ -88,7 +88,7 @@ namespace SpriteEvo
                         Spine38.Unity.SkeletonExtensions.SetColor(slot, color);
                 }
             }
-        }*/
+        }
 
-    }
+    }*/
 }

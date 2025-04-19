@@ -7,6 +7,7 @@ namespace SpriteEvo
     /// </summary>
     public class ScriptBase : MonoBehaviour
     {
+        public object referenceKey;
         public GameObject Parent => base.gameObject;
 
         public ScriptProperties props;

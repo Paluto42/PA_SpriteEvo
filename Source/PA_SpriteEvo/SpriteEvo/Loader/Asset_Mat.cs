@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Reflection;
+using UnityEngine;
 using Verse;
 
 namespace SpriteEvo
@@ -19,53 +21,35 @@ namespace SpriteEvo
             this.materials = mats;
             this.useStraightAlpha = usePMA;
         }
-        public override Spine38.Unity.SkeletonDataAsset SkeletonDataAsset38()
+
+        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
         {
-            if (this.def.asset.version != "3.8") { return null; }
-            if (this.atlasInput == null)
-            {
-                AtlasException();
-                return null;
+            base.CheckAssets();
+            if (this.materials.NullOrEmpty()){
+                throw new NullReferenceException("SpriteEvo. Materials Not Found");
             }
-            if (this.skeletonInput == null)
-            {
-                SkeletonException();
-                return null;
-            }
-            if (this.materials.NullOrEmpty())
-            {
-                Log.Error(this.def.defName + " SpineAssetPack materials为空");
-                return null;
-            }
-            Spine38.Unity.SpineAtlasAsset atlas;
-            Spine38.Unity.SkeletonDataAsset skeleton;
-            atlas = Spine38.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.materials, initialize: true);
-            skeleton = Spine38.Unity.SkeletonDataAsset.CreateRuntimeInstance(this.skeletonInput, atlas, initialize: true);
+            Type atlasType = typeof(TAtlas);
+            Type skeletonType = typeof(TSkeleton);
+            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Material[]), typeof(bool) }); ;
+            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool), typeof(float) });
+
+            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.materials, true });
+            var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
-
-        public override Spine41.Unity.SkeletonDataAsset SkeletonDataAsset41()
+        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
         {
-            if (this.def.asset.version != "4.1") { return null; }
-            if (this.atlasInput == null)
-            {
-                AtlasException();
-                return null;
+            base.CheckAssets();
+            if (this.materials.NullOrEmpty()){
+                throw new NullReferenceException("SpriteEvo. Materials Not Found");
             }
-            if (this.skeletonInput == null)
-            {
-                SkeletonException();
-                return null;
-            }
-            if (this.materials.NullOrEmpty())
-            {
-                Log.Error(this.def.defName + " SpineAssetPack materials为空");
-                return null;
-            }
-            Spine41.Unity.SpineAtlasAsset atlas;
-            Spine41.Unity.SkeletonDataAsset skeleton;
-            atlas = Spine41.Unity.SpineAtlasAsset.CreateRuntimeInstance(this.atlasInput, this.materials, initialize: true);
-            skeleton = Spine41.Unity.SkeletonDataAsset.CreateRuntimeInstance(this.skeletonInput, atlas, initialize: true);
+            Type atlasType = typeof(TAtlas);
+            Type skeletonType = typeof(TSkeleton);
+            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Material[]), typeof(bool), typeof(Func<TAtlas, ITextureLoader>) }); ;
+            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool), typeof(float) });
+
+            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.materials, true, null });
+            var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
     }

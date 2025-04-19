@@ -11,60 +11,12 @@ namespace SpriteEvo
     ///<summary>Spine3.8版本方法库</summary>
     public static class Spine38Lib
     {
-        /*public static Animation38 GenAnimation38(AnimationDef animationDef, int layer = 2, bool loop = true, bool active = true, bool hasCam = false, bool DontDestroyOnLoad = false) 
-        {
-            if (animationDef == null || animationDef.version != "3.8" || animationDef.mainAsset == null) return null;
-            if (animationDef.attachments.NullOrEmpty())
-            {
-                SkeletonLoader loader = animationDef.mainAsset.TryGetSpineAsset();
-                if (loader == null)
-                {
-                    Log.Error("PA.SpriteEvo" + animationDef.defName + " Main Asset Not Found");
-                    return null;
-                }
-                if (loader.def.asset.version != "3.8")
-                {
-                    Log.Error("PA.SpriteEvo" + animationDef.defName + " Wrong AnimationDef Version");
-                    return null;
-                }
-                SkeletonDataAsset skeleton = loader.Create_SkeletonDataAsset38();
-                skeleton.name = animationDef.defName + "_SkeletonData.asset";
-                SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeleton);
-                //Initilize
-                AnimationParams @params = GenAnimation.GetSkeletonParams(animationDef, loop);
-                animation.InitAnimation(@params, layer, active, DontDestroyOnLoad);
-                animation.ApplyColor(@params.color, @params.slotSettings);
-                if (!hasCam)
-                {
-                    return new Animation38(animation);
-                }
-                else
-                {
-                    return new Animation38(animation, animationDef.props.uioffset, animationDef.props.uiDrawSize);
-                }
-            }
-            else
-            {
-                Log.Error("暂不支持Spine3.8骨架合并");
-            }
-            return null;
-        }*/
         public static SkeletonDataAsset GetSkeletonDataFrom(AnimationDef animationDef)
         {
-            SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
-            if (loader == null)
-            {
-                Log.Error($"SpriteEvo.{animationDef.defName} Main Asset Not Found");
-                return null;
-            }
-            if (loader.def.asset.version != "3.8")
-            {
-                Log.Error($"SpriteEvo.{animationDef.defName} Wrong AnimationDef Version");
-                return null;
-            }
-            return loader.SkeletonDataAsset38();
+            return SpineGenericLib.GetSkeletonDataFrom<SkeletonDataAsset>(animationDef);
         }
 
+        //检查是否合并Skeleton 这个功能打算删了
         public static SkeletonDataAsset EnsureInitializedSkeletonData(AnimationDef animationDef)
         {
             if (animationDef == null) return null;
@@ -145,11 +97,11 @@ namespace SpriteEvo
             return baseObj.gameObject;
         }
 
-        public static Vector3 GetBonePositon(this ISkeletonComponent instance, Transform transform, string name) 
+        /*public static Vector3 GetBonePositon(this ISkeletonComponent instance, Transform transform, string name) 
         {
             Bone bone = instance.Skeleton.FindBone(name);
             return bone.GetWorldPosition(transform);
-        }
+        }*/
 
         public static void InitializeAnimation(this SkeletonAnimation instance, string defaultAnimation, float timeScale, bool loop = true)
         {

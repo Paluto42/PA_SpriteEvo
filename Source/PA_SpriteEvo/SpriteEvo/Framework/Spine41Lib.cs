@@ -13,20 +13,10 @@ namespace SpriteEvo
     {
         public static SkeletonDataAsset GetSkeletonDataFrom(AnimationDef animationDef)
         {
-            SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
-            if (loader == null)
-            {
-                Log.Error($"SpriteEvo.{animationDef.defName} Main Asset Not Found");
-                return null;
-            }
-            if (loader.def.asset.version != "4.1")
-            {
-                Log.Error($"SpriteEvo.{animationDef.defName} Wrong AnimationDef Version");
-                return null;
-            }
-            return loader.SkeletonDataAsset41();
+            return SpineGenericLib.GetSkeletonDataFrom<SkeletonDataAsset>(animationDef);
         }
 
+        //检查是否合并Skeleton 这个功能打算删了
         private static SkeletonDataAsset GetMergeSkeletonDataFrom(AnimationDef animationDef)
         {
             Asset_Tex parent = animationDef.mainAsset.TryGetAsset<Asset_Tex>();
@@ -124,11 +114,11 @@ namespace SpriteEvo
             return baseObj.gameObject;
         }
 
-        public static Vector3 GetBonePositon(this ISkeletonComponent instance, Transform transform, string name)
+        /*public static Vector3 GetBonePositon(this ISkeletonComponent instance, Transform transform, string name)
         {
             Bone bone = instance.Skeleton.FindBone(name);
             return bone.GetWorldPosition(transform);
-        }
+        }*/
 
         public static void InitializeAnimation(this SkeletonAnimation instance, string defaultAnimation, float timeScale, bool loop = true)
         {

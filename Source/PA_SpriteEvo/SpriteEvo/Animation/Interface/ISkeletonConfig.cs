@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace SpriteEvo
 {
-    public interface ISkeletonConfig
+    /*public interface ISkeletonConfig
     {
         void DoFlipX(bool boolean);
         void DoFlipY(bool boolean);
@@ -15,5 +15,5 @@ namespace SpriteEvo
         void SetTimeScale(float scale);
         void UpdateSkin(string skin, bool resetBones = true);
         void ReloadSkeleton(string initialSkinName);
-    }
+    }*/
 }

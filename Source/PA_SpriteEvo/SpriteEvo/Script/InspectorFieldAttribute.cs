@@ -2,8 +2,8 @@
 
 namespace SpriteEvo
 {
-    [AttributeUsage(AttributeTargets.Field)]
+    /*[AttributeUsage(AttributeTargets.Field)]
     public class InspectorFieldAttribute : Attribute
     {
-    }
+    }*/
 }

@@ -56,7 +56,7 @@ namespace SpriteEvo.Extensions
             }
             return Spine41.Unity.SpineAtlasAsset.CreateRuntimeInstance(mergedAtlas, mergedTexs, parent.shader, initialize: true);
         }
-        public static Spine42.Unity.SpineAtlasAsset MergeAtlases42(Asset_Tex parent, Asset_Tex[] childs)
+        /*public static Spine42.Unity.SpineAtlasAsset MergeAtlases42(Asset_Tex parent, Asset_Tex[] childs)
         {
             TextAsset mergedAtlas = childs[0].atlasInput.AppendToAtlasText(parent.atlasInput);
             Texture2D[] mergedTexs = childs[0].textures.AppendToTextureArray(parent.textures);
@@ -66,13 +66,6 @@ namespace SpriteEvo.Extensions
                 mergedTexs = childs[i].textures.AppendToTextureArray(mergedTexs);
             }
             return Spine42.Unity.SpineAtlasAsset.CreateRuntimeInstance(mergedAtlas, mergedTexs, parent.shader, initialize: true);
-        }
-        /*public static Spine41.Unity.SkeletonDataAsset MergeSkeletonFromJSON(SpineTexAsset parent, SpineTexAsset child)
-        {
-            //使用合并后的AtlasAsset创建新的SkeletonDataAsset实例
-            Spine41.Unity.SpineAtlasAsset atlasAsset = MergeAtlas(parent, child);
-            var newSkeletonDataAsset = CreateMergedRuntimeInstance(parent.skeletonInput, child.skeletonInput, atlasAsset, initialize: true);
-            return newSkeletonDataAsset;
         }*/
         public static Spine41.Unity.SkeletonDataAsset MergeSkeletonFromJSONs41(Asset_Tex parent, Asset_Tex[] childs)
         {
@@ -86,7 +79,7 @@ namespace SpriteEvo.Extensions
             var newSkeletonDataAsset = CreateMergedRuntimeInstance(parent.skeletonInput, childstextAssets, atlasAsset, initialize: true);
             return newSkeletonDataAsset;
         }
-        public static Spine42.Unity.SkeletonDataAsset MergeSkeletonFromJSONs42(Asset_Tex parent, Asset_Tex[] childs)
+        /*public static Spine42.Unity.SkeletonDataAsset MergeSkeletonFromJSONs42(Asset_Tex parent, Asset_Tex[] childs)
         {
             //使用合并后的AtlasAsset创建新的SkeletonDataAsset实例
             Spine42.Unity.SpineAtlasAsset atlasAsset = MergeAtlases42(parent, childs);
@@ -97,16 +90,12 @@ namespace SpriteEvo.Extensions
             }
             var newSkeletonDataAsset = CreateMergedRuntimeInstance(parent.skeletonInput, childstextAssets, atlasAsset, initialize: true);
             return newSkeletonDataAsset;
-        }
+        }*/
         private static Spine41.Unity.SkeletonDataAsset CreateMergedRuntimeInstance(TextAsset skeletonDataFile, List<TextAsset> skeletonDataFile2, Spine41.Unity.AtlasAssetBase atlasAsset, bool initialize, float scale = 0.01f)
         {
             return CreateMergedRuntimeInstance(skeletonDataFile, skeletonDataFile2, new[] { atlasAsset }, initialize, scale);
         }
-        private static Spine42.Unity.SkeletonDataAsset CreateMergedRuntimeInstance(TextAsset skeletonDataFile, List<TextAsset> skeletonDataFile2, Spine42.Unity.AtlasAssetBase atlasAsset, bool initialize, float scale = 0.01f)
-        {
-            return CreateMergedRuntimeInstance(skeletonDataFile, skeletonDataFile2, new[] { atlasAsset }, initialize, scale);
-        }
-        /*private static Spine41.Unity.SkeletonDataAsset CreateMergedRuntimeInstance(TextAsset skeletonDataFile, TextAsset skeletonDataFile2, Spine41.Unity.AtlasAssetBase atlasAsset, bool initialize, float scale = 0.01f)
+        /*private static Spine42.Unity.SkeletonDataAsset CreateMergedRuntimeInstance(TextAsset skeletonDataFile, List<TextAsset> skeletonDataFile2, Spine42.Unity.AtlasAssetBase atlasAsset, bool initialize, float scale = 0.01f)
         {
             return CreateMergedRuntimeInstance(skeletonDataFile, skeletonDataFile2, new[] { atlasAsset }, initialize, scale);
         }*/
@@ -191,7 +180,7 @@ namespace SpriteEvo.Extensions
             return skeletonDataAsset;
         }
 
-        private static Spine42.Unity.SkeletonDataAsset CreateMergedRuntimeInstance(TextAsset skeletonDataFile, List<TextAsset> skeletonDataFile2, Spine42.Unity.AtlasAssetBase[] atlasAssets, bool initialize, float scale = 0.01f)
+        /*private static Spine42.Unity.SkeletonDataAsset CreateMergedRuntimeInstance(TextAsset skeletonDataFile, List<TextAsset> skeletonDataFile2, Spine42.Unity.AtlasAssetBase[] atlasAssets, bool initialize, float scale = 0.01f)
         {
             Spine42.Unity.SkeletonDataAsset skeletonDataAsset = ScriptableObject.CreateInstance<Spine42.Unity.SkeletonDataAsset>();
             skeletonDataAsset.Clear();
@@ -270,7 +259,7 @@ namespace SpriteEvo.Extensions
 
             }
             return skeletonDataAsset;
-        }
+        }*/
         /*private static Spine41.Unity.SkeletonDataAsset CreateMergedRuntimeInstance(TextAsset skeletonDataFile, TextAsset skeletonDataFile2, Spine41.Unity.AtlasAssetBase[] atlasAssets, bool initialize, float scale = 0.01f) 
         {
             Spine41.Unity.SkeletonDataAsset skeletonDataAsset = ScriptableObject.CreateInstance<Spine41.Unity.SkeletonDataAsset>();
@@ -371,7 +360,7 @@ namespace SpriteEvo.Extensions
             return json1.ReadSkeletonDatasToMerge(input1, input2);
         }
 
-        private static Spine42.SkeletonData ReadSkeletonDatas(string text1, List<string> text2, Spine42.AttachmentLoader attachmentLoader, float scale)
+        /*private static Spine42.SkeletonData ReadSkeletonDatas(string text1, List<string> text2, Spine42.AttachmentLoader attachmentLoader, float scale)
         {
             StringReader input1 = new(text1);
             StringReader[] input2 = new StringReader[text2.Count];
@@ -385,7 +374,7 @@ namespace SpriteEvo.Extensions
                 Scale = scale
             };
             return json1.ReadSkeletonDatasToMerge(input1, input2);
-        }
+        }*/
 
     }
 }
