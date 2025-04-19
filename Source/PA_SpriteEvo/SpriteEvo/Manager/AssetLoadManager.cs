@@ -24,6 +24,7 @@ namespace SpriteEvo
         private static Dictionary<string, Shader> Shader_DB => AssetManager.SpineShaderDatabase;
         private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
         private static Dictionary<string, SkeletonLoader> Spine41_DB => AssetManager.spine41_Database;
+        private static Dictionary<string, SkeletonLoader> Spine42_DB => AssetManager.spine42_Database;
         private static List<ModContentPack> Mods => LoadedModManager.RunningModsListForReading;
         static AssetLoadManager() 
         {
@@ -257,6 +258,7 @@ namespace SpriteEvo
                 //JSON读取
                 else if(def.skelFormat == SkelFormat.SkeletonJSON)
                 {
+                    if (def.asset.filePath == null) continue;
                     string JSONPath;
                     if (!SkeletonJSON_Loaded.Exists((string s) => s == def.asset.filePath))
                     {
@@ -315,7 +317,6 @@ namespace SpriteEvo
                     }
                     //
                     List<string> texinfo = def.asset.textures;
-                    List<string> badtexInfos = new();
                     //Material只能在Unity运行时内部创建,读不了
                     if (!texinfo.NullOrEmpty())
                     {
@@ -330,23 +331,15 @@ namespace SpriteEvo
                             if (!File.Exists(texPath))
                             {
                                 isInvalid = true;
-                                badtexInfos.Add(texinfo[i]);
                             }
                             Texture2D texture = LoadTexture(new FileInfo(texPath));
                             textures[i] = texture;
                         }
                     }
-                    if (textures.NullOrEmpty())
+                    else
                     {
                         isInvalid = true;
                         errorInfos.Add("SpriteEvo: SkeletonBinary\"" + def.defName + "\" Missing Textures");
-                    }
-                    if (badtexInfos.Count != 0)
-                    {
-                        foreach (var texError in badtexInfos)
-                        {
-                            errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Texture\"" + texError + "\"");
-                        }
                     }
                     if (isInvalid)
                     {
@@ -387,6 +380,10 @@ namespace SpriteEvo
             else if (spinedef.asset.version == "4.1" && !Spine41_DB.ContainsKey(spinedef.defName))
             {
                 Spine41_DB.Add(spinedef.defName, pack);
+            }
+            else if (spinedef.asset.version == "4.2" && !Spine42_DB.ContainsKey(spinedef.defName))
+            {
+                Spine42_DB.Add(spinedef.defName, pack);
             }
         }
         private static Texture2D LoadTexture(FileInfo file)

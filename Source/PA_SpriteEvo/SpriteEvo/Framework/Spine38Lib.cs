@@ -99,6 +99,7 @@ namespace SpriteEvo
             baseObj.name = animationDef.defName;
             baseObj.layer = layer;
             baseObj.DisableProbe();//关闭反射器
+            //Vector3 rot = new(90f, 0f, 0f);
             baseObj.SetTransform(@params.position, @params.rotation, @params.scale);
 
             animation.Skeleton.SetSkin(@params.skin);//设置默认皮肤

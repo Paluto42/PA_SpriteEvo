@@ -19,6 +19,8 @@ namespace SpriteEvo
 
         public static Dictionary<string, SkeletonLoader> spine41_Database = new();
 
+        public static Dictionary<string, SkeletonLoader> spine42_Database = new();
+
         //May be Null.
         public static T TryGetAsset<T>(this SpineAssetDef def) where T : SkeletonLoader
         {

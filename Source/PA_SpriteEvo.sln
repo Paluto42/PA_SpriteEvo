@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spine41", "Spine41\Spine41.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spine42", "Spine42\Spine42.csproj", "{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FacialAnimation", "FacialAnimation\FacialAnimation.csproj", "{D6BC7980-00EB-41CA-889D-F3B203AD088F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94144E22-2431-4A8F-AC04-DEC22F7EDD8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6BC7980-00EB-41CA-889D-F3B203AD088F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6BC7980-00EB-41CA-889D-F3B203AD088F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6BC7980-00EB-41CA-889D-F3B203AD088F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6BC7980-00EB-41CA-889D-F3B203AD088F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
