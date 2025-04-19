@@ -72,9 +72,9 @@ namespace SpriteEvo
             {
                 instance = Spine41Lib.NewSkeletonGraphic(def, material, layer, loop, active, DontDestroyOnLoad);
             }
-            if (instance == null)
+            else if (def.version == "4.2")
             {
-                return null;
+                instance = Spine42Lib.NewSkeletonGraphic(def, material, layer, loop, active, DontDestroyOnLoad);
             }
             if (def.props.OnIMGUI || def.props.OnUGUI)
             {

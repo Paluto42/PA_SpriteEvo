@@ -19,12 +19,20 @@ namespace PA_SpriteEvo.FacialAnimation
         [HarmonyPostfix]
         public static void Postfix(Pawn __instance)
         {
+            Log.Message("SpawnSetup");
             if (__instance.Dead || __instance.GetDoc() == null) return;
 
-            string defName = "SE_ChangAn";
+            Log.Message("可以创建Spine");
+
+            string defName = "Chang_An_Test";
             AnimationDef def = DefDatabase<AnimationDef>.GetNamed(defName);
-            GameObject instance = SkeletonAnimationUtility.InstantiateSpine(def, __instance);
-            instance.SetActive(true);
+
+            ProgramStateFlags flag = (ProgramStateFlags)0;
+            flag |= (ProgramStateFlags)ProgramState.Playing;
+
+            GameObject obj = SkeletonAnimationUtility.InstantiateSpine(def, __instance, allowProgramStates: flag);
+            obj.transform.position = __instance.DrawPos;
+            obj.SetActive(true);
         }
     }
 }

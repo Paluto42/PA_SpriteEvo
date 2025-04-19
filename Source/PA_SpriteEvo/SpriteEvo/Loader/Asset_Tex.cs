@@ -29,10 +29,10 @@ namespace SpriteEvo
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
             MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(bool) });
-            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool) });
+            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool), typeof(float) });
 
             var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, useStraightAlpha });
-            var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true });
+            var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
         public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
@@ -41,7 +41,7 @@ namespace SpriteEvo
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
             MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(Func<TAtlas, ITextureLoader>), typeof(bool) });
-            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool) });
+            MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool), typeof(float) });
 
             var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, null, useStraightAlpha });
             var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });

@@ -77,7 +77,9 @@ namespace SpriteEvo
         {
             if (((ProgramStateFlags)Current.ProgramState & allowProgramStates) == 0) return null; //游戏状况不允许
             //if (Current.ProgramState != ProgramState.Playing) return null;
-            if (key == null) return null; //任何情况不允许空key
+            if (key == null) {
+                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null key"); //任何情况不允许空key
+            }
             if (docuSaved && ObjectManager.CurrentGameObjectDataBase.TryGetValue(key, out GameObject res))
             {
                 res.SetActive(true);
@@ -113,24 +115,30 @@ namespace SpriteEvo
         /// <summary>接受所有可选参数的主方法</summary>
         public static GameObject Instantiate(AnimationDef def, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
-            if (def == null) return null;
+            if (def == null) {
+                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null AnimationDef");
+            }
             GameObject instance = null;
             if (def.version == "3.8")
             {
+                Log.Message("加载3.8模型");
                 instance = Spine38Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
             else if (def.version == "4.1")
             {
+                Log.Message("加载4.1模型");
                 instance = Spine41Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
-            if (instance == null)
+            else if (def.version == "4.2")
             {
-                return null;
+                Log.Message("加载4.2模型");
+                instance = Spine42Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
             /*if (def.props.OnIMGUI)
             {
                 instance.AddRenderCameraToSkeletonAnimation(def.props.uioffset, (int)def.props.uiDrawSize.x, (int)def.props.uiDrawSize.y);
             }*/
+            Log.Message("P2");
             return instance;
         }
 

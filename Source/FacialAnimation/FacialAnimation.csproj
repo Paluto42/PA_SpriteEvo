@@ -61,6 +61,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Patch_Main.cs" />
     <Compile Include="Patch_Pawn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,7 +69,7 @@
     <ProjectReference Include="..\PA_SpriteEvo\PA_SpriteEvo.csproj">
       <Project>{c9b6f456-3071-4cb4-b782-944bc428ba27}</Project>
       <Name>PA_SpriteEvo</Name>
-      <Private>False</Private>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Spine38\Spine38.csproj">
       <Project>{23a5c3b0-b715-4d3b-b534-e7eda3b6c1f2}</Project>
