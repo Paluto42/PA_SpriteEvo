@@ -119,7 +119,6 @@
     <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
     <Compile Include="SpriteEvo\Script\SP_Pawn.cs" />
     <Compile Include="SpriteEvo\Tools\UnityExtension.cs" />
-    <Compile Include="SpriteEvo\Hierarchy\Hierarchy.cs" />
     <Compile Include="SpriteEvo\Loader\Asset_Mat.cs" />
     <Compile Include="SpriteEvo\Loader\Asset_Tex.cs" />
     <Compile Include="SpriteEvo\Manager\ObjectManager.cs" />
@@ -151,7 +150,7 @@
     <Compile Include="SpriteEvo\Tools\AnimationGenerator.cs" />
     <Compile Include="SpriteEvo\Script\ScriptProperties.cs" />
     <Compile Include="SpriteEvo\Tools\PA_Helper.cs" />
-    <Compile Include="SpriteEvo\Misc\TypeDef.cs" />
+    <Compile Include="SpriteEvo\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
