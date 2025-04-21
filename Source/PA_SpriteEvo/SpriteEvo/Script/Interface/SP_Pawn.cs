@@ -52,14 +52,11 @@ namespace SpriteEvo
         float blinkMixIn = 0.4f;
         float blinkMixOut = 0.833f;
 
-        public override void Start()
+        public override void OnEnable()
         {
             skeletonComp ??= GetComponent<ISkeletonComponent>();
             animationStateComp ??= GetComponent<IAnimationStateComponent>();
             InitializeRotationSlots();
-        }
-        public override void OnEnable()
-        {
             /*var list = skeletonComp.Skeleton.Slots.FindAll(slot => slot.Data.Name.StartsWith("S_") || slot.Data.Name.StartsWith("B_"));
             foreach (var slot in list)
             {
@@ -67,6 +64,7 @@ namespace SpriteEvo
                 Debug.Log(slot.Data.Name);
             }*/
             if (animationStateComp == null) return;
+            Log.Message("可以播放动画");
             TrackEntry track0 = animationStateComp.AnimationState.SetAnimation(0, "idle", false);
             track0.Complete += CompleteEventHandler;
         }

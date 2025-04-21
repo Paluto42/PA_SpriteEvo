@@ -29,10 +29,10 @@ namespace SpriteEvo
             base.CheckArray(textures);
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
-            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(bool) });
+            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool) });
             MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool), typeof(float) });
 
-            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, useStraightAlpha });
+            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true });
             var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
@@ -42,10 +42,10 @@ namespace SpriteEvo
             base.CheckArray(textures);
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
-            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(Func<TAtlas, ITextureLoader>), typeof(bool) });
+            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(Func<TAtlas, ITextureLoader>)});
             MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool), typeof(float) });
 
-            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, null, useStraightAlpha });
+            var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, null });
             var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }

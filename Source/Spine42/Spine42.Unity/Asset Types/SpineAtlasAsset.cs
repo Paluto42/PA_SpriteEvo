@@ -135,16 +135,12 @@ namespace Spine42.Unity {
 		/// <seealso cref="SpineAtlasAsset.CreateRuntimeInstance(TextAsset, Material[], bool, Func{SpineAtlasAsset, TextureLoader})"/>
 		public static SpineAtlasAsset CreateRuntimeInstance (TextAsset atlasText,
 			Texture2D[] textures, Shader shader, bool initialize,
-			Func<SpineAtlasAsset, TextureLoader> newCustomTextureLoader = null, bool useStraight = false) {
+			Func<SpineAtlasAsset, TextureLoader> newCustomTextureLoader = null) {
 
 			if (shader == null)
 				shader = Shader.Find("Spine/Skeleton");
 
 			Material materialProperySource = new Material(shader);
-            if (useStraight){
-                materialProperySource.EnableKeyword("_STRAIGHT_ALPHA_INPUT");
-                materialProperySource.SetFloat("_StraightAlphaInput", 1);
-            }
             return CreateRuntimeInstance(atlasText, textures, materialProperySource, initialize, newCustomTextureLoader);
 		}
 		#endregion

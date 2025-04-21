@@ -120,8 +120,9 @@
     <Compile Include="SpriteEvo\Loader\Loader_Tex.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadService.cs" />
     <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
-    <Compile Include="SpriteEvo\Script\ITransform.cs" />
-    <Compile Include="SpriteEvo\Script\SP_Pawn.cs" />
+    <Compile Include="SpriteEvo\Script\Interface\IFacialControl.cs" />
+    <Compile Include="SpriteEvo\Script\Interface\ITransform.cs" />
+    <Compile Include="SpriteEvo\Script\Interface\SP_Pawn.cs" />
     <Compile Include="SpriteEvo\Tools\UnityExtension.cs" />
     <Compile Include="SpriteEvo\Manager\ObjectManager.cs" />
     <Compile Include="SpriteEvo\ThingComp\TC_Animation.cs" />

@@ -1,6 +1,5 @@
 ﻿using Spine38;
 using Spine38.Unity;
-using SpriteEvo.Extensions;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
