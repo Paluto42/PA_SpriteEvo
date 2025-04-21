@@ -294,11 +294,6 @@ namespace Spine42.Unity {
 			};
 			return json.ReadSkeletonData(input);
 		}
-
-        internal SkeletonData SkeletonDataInternal()
-        {
-            return skeletonData;
-        }
-    }
+	}
 
 }

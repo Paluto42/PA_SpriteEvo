@@ -476,9 +476,9 @@ namespace Spine38.Unity {
 			} else if (materialsChanged) {
 				meshRenderer.sharedMaterials = rendererBuffers.GetUpdatedSharedMaterialsArray();
 			}
-			/*if (materialsChanged && (this.maskMaterials.AnyMaterialCreated)) {
+			if (materialsChanged && (this.maskMaterials.AnyMaterialCreated)) {
 				this.maskMaterials = new SpriteMaskInteractionMaterials();
-			}*/
+			}
 
 			meshGenerator.FillLateVertexData(currentMesh);
 

@@ -17,7 +17,7 @@ namespace SpriteEvo
         }
 
         //检查是否合并Skeleton 这个功能打算删了
-        private static SkeletonDataAsset GetMergeSkeletonDataFrom(AnimationDef animationDef)
+        /*private static SkeletonDataAsset GetMergeSkeletonDataFrom(AnimationDef animationDef)
         {
             Asset_Tex parent = animationDef.mainAsset.TryGetAsset<Asset_Tex>();
             if (parent == null)
@@ -36,7 +36,7 @@ namespace SpriteEvo
                 }
             }
             return JsonMerger.MergeSkeletonFromJSONs41(parent, attachments);
-        }
+        }*/
 
         public static SkeletonDataAsset EnsureInitializedSkeletonData(AnimationDef animationDef) 
         {
@@ -47,7 +47,9 @@ namespace SpriteEvo
             }
             //合并Skeleton
             else{
-                skeletonDataAsset = GetMergeSkeletonDataFrom(animationDef);
+                Log.Error("暂不支持Spine4.2骨架合并");
+                skeletonDataAsset = null;
+                //skeletonDataAsset = GetMergeSkeletonDataFrom(animationDef);
             }
             if (skeletonDataAsset == null) return null;
             skeletonDataAsset.name = animationDef.defName + "_SkeletonData.asset";

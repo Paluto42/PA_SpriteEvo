@@ -154,23 +154,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spine38\Spine38.csproj">
-      <Project>{23a5c3b0-b715-4d3b-b534-e7eda3b6c1f2}</Project>
-      <Name>Spine38</Name>
+      <Project>{94144e22-2431-4a8f-ac04-dec22f7edd8f}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Spine41\Spine41.csproj">
-      <Project>{da3dbdc2-8712-45d9-8005-6c5e42236f8c}</Project>
-      <Name>Spine41</Name>
+      <Project>{1cd0dd43-6a5e-437c-9be7-3f12add470e6}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Spine42\Spine42.csproj">
-      <Project>{94144e22-2431-4a8f-ac04-dec22f7edd8f}</Project>
-      <Name>Spine42</Name>
+      <Project>{bb345dac-c7df-4a94-95dd-8fbda44b3a59}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

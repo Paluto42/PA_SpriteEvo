@@ -8,7 +8,7 @@ namespace SpriteEvo.Extensions
 {
     public class SkeletonJsonMerge41 : SkeletonJson
     {
-        public SkeletonJsonMerge41(AttachmentLoader attachmentLoader) 
+        /*public SkeletonJsonMerge41(AttachmentLoader attachmentLoader) 
             : base(attachmentLoader){
         }
 
@@ -483,7 +483,7 @@ namespace SpriteEvo.Extensions
             skeletonData.animations.TrimExcess();
             skeletonData.ikConstraints.TrimExcess();
             return skeletonData;
-        }
+        }*/
 
         //必须两个JSON的骨骼里必须要有相同的parent(父级)
         /*public SkeletonData ReadSkeletonDataToMerge(TextReader reader1, TextReader reader2)

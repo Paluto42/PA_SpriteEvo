@@ -280,11 +280,6 @@ namespace Spine41.Unity {
 			};
 			return json.ReadSkeletonData(input);
 		}
-
-        internal SkeletonData SkeletonDataInternal() 
-		{
-			return skeletonData; 
-		}
-    }
+	}
 
 }
