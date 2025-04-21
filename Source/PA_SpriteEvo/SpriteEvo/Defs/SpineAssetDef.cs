@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Verse;
 
 namespace SpriteEvo
@@ -26,5 +27,23 @@ namespace SpriteEvo
     {
         public SkelFormat skelFormat = SkelFormat.SkeletonBinary;
         public SpineAsset asset = new();
+
+        //May be Null.
+        public T Load<T>() where T : AssetLoader
+        {
+            if (asset.version == "3.8")
+            {
+                return AssetManager.spine38_Database.TryGetValue(defName) as T;
+            }
+            else if (asset.version == "4.1")
+            {
+                return AssetManager.spine41_Database.TryGetValue(defName) as T;
+            }
+            else if (asset.version == "4.2")
+            {
+                return AssetManager.spine42_Database.TryGetValue(defName) as T;
+            }
+            throw new NotSupportedException($"SpriteEvo. Invalid Spine Version: {asset.version} In SpineAssetDef");
+        }
     }
 }

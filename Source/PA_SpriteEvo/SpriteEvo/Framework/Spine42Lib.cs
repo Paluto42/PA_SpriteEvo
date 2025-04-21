@@ -1,5 +1,6 @@
 ﻿using Spine42;
 using Spine42.Unity;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +13,9 @@ namespace SpriteEvo
     {
         public static SkeletonDataAsset GetSkeletonDataFrom(AnimationDef animationDef)
         {
-            return SpineGenericLib.GetSkeletonDataFrom<SkeletonDataAsset>(animationDef);
+            AssetLoader loader = animationDef.mainAsset.Load<AssetLoader>() ??
+                throw new NullReferenceException($"SpriteEvo. Main Asset Not Found In {animationDef.defName}");
+            return loader.GetSkeletonDataAssetVer42();
         }
 
         //检查是否合并Skeleton 这个功能打算删了

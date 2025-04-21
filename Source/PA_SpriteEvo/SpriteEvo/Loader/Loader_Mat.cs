@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using UnityEngine;
-using Verse;
 
 namespace SpriteEvo
 {
@@ -16,18 +15,16 @@ namespace SpriteEvo
         public Material[] materials;
         public bool useStraightAlpha;
 
-        public Loader_Mat(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Material[] mats, bool usePMA = false) : base(def, atlas, skeleton) 
+        public Loader_Mat(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Material[] mats, bool usePMA = false) : base(def, atlas, skeleton)
         {
             this.materials = mats;
             this.useStraightAlpha = usePMA;
         }
 
-        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
+        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
         {
-            base.CheckAssets();
-            if (this.materials.NullOrEmpty()){
-                throw new NullReferenceException("SpriteEvo. Materials Not Found");
-            }
+            base.CheckTextAssets();
+            base.CheckArray(materials);
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
             MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Material[]), typeof(bool) }); ;
@@ -37,12 +34,10 @@ namespace SpriteEvo
             var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
-        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
+        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
         {
-            base.CheckAssets();
-            if (this.materials.NullOrEmpty()){
-                throw new NullReferenceException("SpriteEvo. Materials Not Found");
-            }
+            base.CheckTextAssets();
+            base.CheckArray(materials);
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
             MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Material[]), typeof(bool), typeof(Func<TAtlas, ITextureLoader>) }); ;

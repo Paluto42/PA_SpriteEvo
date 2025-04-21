@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Verse;
 
 namespace SpriteEvo
 {
@@ -18,7 +19,7 @@ namespace SpriteEvo
         public SpineAssetDef def;
         public TextAsset atlasInput;
         public TextAsset skeletonInput;
-        public AssetLoader(SpineAssetDef def, TextAsset atlas, TextAsset skeleton) 
+        public AssetLoader(SpineAssetDef def, TextAsset atlas, TextAsset skeleton)
         {
             this.version = def.asset.version;
             this.def = def;
@@ -27,40 +28,42 @@ namespace SpriteEvo
         }
 
         //理论上是全套支持3.8以下和4.0以上版本的
-        public abstract TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>() where TAtlas : ScriptableObject where TSkeleton : ScriptableObject;
-        public abstract TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>() where TAtlas : ScriptableObject where TSkeleton : ScriptableObject;
+        protected virtual TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>() where TAtlas : ScriptableObject where TSkeleton : ScriptableObject
+        {
+            throw new NotImplementedException();
+        }
+        protected virtual TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>() where TAtlas : ScriptableObject where TSkeleton : ScriptableObject
+        {
+            throw new NotImplementedException();
+        }
 
-        public Spine38.Unity.SkeletonDataAsset SkeletonDataAsset38() {
+        public Spine38.Unity.SkeletonDataAsset GetSkeletonDataAssetVer38()
+        {
             return CreateSkeletonDataAsset<Spine38.Unity.SpineAtlasAsset, Spine38.Unity.SkeletonDataAsset>();
         }
-        public Spine41.Unity.SkeletonDataAsset SkeletonDataAsset41() {
+        public Spine41.Unity.SkeletonDataAsset GetSkeletonDataAssetVer41()
+        {
             return CreateSkeletonDataAsset<Spine41.Unity.SpineAtlasAsset, Spine41.Unity.SkeletonDataAsset, Spine41.TextureLoader>();
         }
-        public Spine42.Unity.SkeletonDataAsset SkeletonDataAsset42() {
+        public Spine42.Unity.SkeletonDataAsset GetSkeletonDataAssetVer42()
+        {
             return CreateSkeletonDataAsset<Spine42.Unity.SpineAtlasAsset, Spine42.Unity.SkeletonDataAsset, Spine42.TextureLoader>();
         }
 
-        public TSkeleton GetSkeletonDataAsset<TSkeleton>() where TSkeleton : ScriptableObject
-        {
-            if (typeof(TSkeleton) == typeof(Spine38.Unity.SkeletonDataAsset)){
-                return SkeletonDataAsset38() as TSkeleton;
-            }
-            else if (typeof(TSkeleton) == typeof(Spine41.Unity.SkeletonDataAsset)){
-                return SkeletonDataAsset41() as TSkeleton;
-            }
-            else if (typeof(TSkeleton) == typeof(Spine42.Unity.SkeletonDataAsset)){
-                return SkeletonDataAsset42() as TSkeleton;
-            }
-            throw new NotSupportedException($"SpriteEvo. Invalid Spine Version: {version} In AnimationDef");
-        }
-
-        protected void CheckAssets()
+        protected void CheckTextAssets()
         {
             if (this.atlasInput == null){
                 throw new NullReferenceException("SpriteEvo. Atlas Not Found");
             }
             if (this.skeletonInput == null){
                 throw new NullReferenceException("SpriteEvo. Skeleton Not Found");
+            }
+        }
+
+        protected void CheckArray<T>(T[] array)
+        {
+            if (array.NullOrEmpty()){
+                throw new NullReferenceException("SpriteEvo. Materials or Textures Not Found");
             }
         }
     }

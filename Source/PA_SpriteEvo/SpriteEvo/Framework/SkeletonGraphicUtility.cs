@@ -11,7 +11,7 @@ namespace SpriteEvo
         public static bool currentlyGenerating = false;
         public static Material SkeletonGraphicDefault => AssetLoadService.SkeletonGraphicDefault;
         public static Material SkeletonGraphicDefaul_Straight => AssetLoadService.SkeletonGraphicDefaul_Straight;
-        public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjectDatabase;
+        public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjects;
 
         public static Material EnsureInitializedMaterialProperySource(bool StraightAlphaInput = false) 
         {
@@ -43,8 +43,9 @@ namespace SpriteEvo
         {
             if (((ProgramStateFlags)Current.ProgramState & allowProgramStates) == 0) return null; //游戏状况不允许
             //if (Current.ProgramState != ProgramState.Playing) return null;
-            if (key == null) return null; //任何情况不允许空key
-            if (docuSaved && ObjectManager.CurrentGameObjectDataBase.TryGetValue(key, out GameObject res))
+            if (key == null)
+                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null Foreign Key"); //任何情况不允许空key
+            if (docuSaved && ObjectManager.CurrentGameObjects.TryGetValue(key, out GameObject res))
             {
                 res.SetActive(true);
                 return res;
@@ -59,11 +60,12 @@ namespace SpriteEvo
 
         public static GameObject Instantiate(AnimationDef def, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
-            if (def == null) return null;
+            if (def == null)
+                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate SkeletonGraphic with Null AnimationDef");
             GameObject instance = null;
             //Material material = SkeletonGraphicDefault;
-            bool usePMA = def.mainAsset.asset.StraightAlphaInput;
-            Material material = EnsureInitializedMaterialProperySource( usePMA);
+            bool useStright = def.mainAsset.asset.StraightAlphaInput;
+            Material material = EnsureInitializedMaterialProperySource(useStright);
             if (def.version == "3.8")
             {
                 instance = Spine38Lib.NewSkeletonGraphic(def, material, layer, loop, active, DontDestroyOnLoad);
@@ -124,52 +126,6 @@ namespace SpriteEvo
             canvasScaler.scaleFactor = 1;
             canvas.referencePixelsPerUnit = 100;
             return cam;
-        }
-
-        ///<summary>[Pending] 在Canvas上渲染Spine动画 </summary>
-        [Obsolete]
-        public static GameObject Instantiate(AnimationDef def, Pawn pawn, bool loop = true)
-        {
-            /*
-            Vector3 offset = new Vector3(def.props.offset.x, 0, pack.def.props.offset.y);
-            Vector3 scale = new Vector3(pack.def.props.scale.x * 0.1f, 1f, pack.def.props.scale.y * 0.1f);
-            GameObject obj = DynamicObjectDatabase.TryGetValue(pack.def.defName);
-            if (obj != null)
-            {
-                Log.Error("[PA]. Duplicate Call :  Animation Instance  \"" + pack.def.defName + "\"  Existed in Hierarchy");
-                return null;
-            }
-            GameObject myGO = new GameObject
-            {
-                name = "myGO"
-            };
-            Canvas myCanvas = myGO.AddComponent<Canvas>();
-            Transform parent = myCanvas.transform;
-            parent.position += offset;
-            parent.localScale = scale;
-
-            Material SkeletonGraphic_alpha = Spine_SkeletonGraphic;
-            if (!pack.useStraightAlpha)
-            {
-                SkeletonGraphic_alpha.SetFloat("_StraightAlphaInput", 0);
-                SkeletonGraphic_alpha.DisableKeyword("_STRAIGHT_ALPHA_INPUT");
-                Log.Message("_STRAIGHT_ALPHA_INPUT OFF");
-            }
-            Spine38.Unity.SkeletonDataAsset skeleton = pack.Create_SkeletonDataAsset38();
-            Spine38.Unity.SkeletonGraphic graphic = Spine38.Unity.SkeletonGraphic.NewSkeletonGraphicGameObject(skeleton, parent, SkeletonGraphic_alpha);
-
-            graphic.allowMultipleCanvasRenderers = true;
-            graphic.gameObject.layer = 5;
-            //graphic.rectTransform.position += offset;
-            //graphic.rectTransform.localScale = scale;
-            graphic.rectTransform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            graphic.rectTransform.position = pawn.DrawPos + Vector3.up; ;
-            graphic.AnimationState.SetAnimation(0, "Idle", loop);
-            graphic.Initialize(overwrite: false);
-            graphic.gameObject.SetActive(false);
-            DynamicObjectDatabase.Add(pack.def.defName, graphic.gameObject);
-            */
-            return null;
         }
     }
 }

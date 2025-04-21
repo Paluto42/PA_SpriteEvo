@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AK_DLL;
+﻿using AK_DLL;
 using HarmonyLib;
 using SpriteEvo;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using AnimationDef = SpriteEvo.AnimationDef;
@@ -19,20 +16,46 @@ namespace PA_SpriteEvo.FacialAnimation
         [HarmonyPostfix]
         public static void Postfix(Pawn __instance)
         {
-            Log.Message("SpawnSetup");
             if (__instance.Dead || __instance.GetDoc() == null) return;
+            Log.Message("SpawnSetup");
+
+            if (!Patch_PawnRenderer.registeredPawns.Contains(__instance))
+            {
+                Patch_PawnRenderer.registeredPawns.Add(__instance);
+                Log.Message("缓存了 " + __instance.Label);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(PawnRenderer), "RenderPawnAt", new Type[] { typeof(Vector3), typeof(Rot4?), typeof(bool) })]
+    public class Patch_PawnRenderer
+    {
+        public static HashSet<Pawn> registeredPawns = new HashSet<Pawn>();
+
+        [HarmonyPostfix]
+        public static void Postfix(Pawn ___pawn)
+        {
+            if (Current.ProgramState != ProgramState.Playing) return;
+            if (!registeredPawns.Contains(___pawn)) return;
+
+            if (ObjectManager.CurrentGameObjects.TryGetValue(___pawn, out GameObject res)) return;
 
             Log.Message("可以创建Spine");
-
             string defName = "Chang_An_Test";
             AnimationDef def = DefDatabase<AnimationDef>.GetNamed(defName);
 
             ProgramStateFlags flag = (ProgramStateFlags)0;
             flag |= (ProgramStateFlags)ProgramState.Playing;
 
-            GameObject obj = SkeletonAnimationUtility.InstantiateSpine(def, __instance, allowProgramStates: flag);
-            obj.transform.position = __instance.DrawPos;
+            GameObject obj = SkeletonAnimationUtility.InstantiateSpine(def, ___pawn, allowProgramStates: flag);
+            obj.transform.position = ___pawn.DrawPos;
             obj.SetActive(true);
+
+            /*int num = ___drawRequests.FindIndex(request => request.node is PawnRenderNode_Head);
+            if (num >= 0)
+            {
+                ___drawRequests.RemoveAt(num);
+            }*/
         }
     }
 }

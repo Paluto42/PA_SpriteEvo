@@ -17,7 +17,7 @@ namespace SpriteEvo
     {
         public static bool currentlyGenerating = false;
         public static Shader Spine_Skeleton => AssetLoadService.Spine_Skeleton;
-        public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjectDatabase;
+        public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjects;
 
         ///<summary>
         ///根据AnimationDef信息创建并初始化一个没有额外附加脚本SkeletonAnimation素体实例，默认在场景Layer的第2层
@@ -78,9 +78,9 @@ namespace SpriteEvo
             if (((ProgramStateFlags)Current.ProgramState & allowProgramStates) == 0) return null; //游戏状况不允许
             //if (Current.ProgramState != ProgramState.Playing) return null;
             if (key == null) {
-                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null key"); //任何情况不允许空key
+                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null Foreign Key"); //任何情况不允许空key
             }
-            if (docuSaved && ObjectManager.CurrentGameObjectDataBase.TryGetValue(key, out GameObject res))
+            if (docuSaved && ObjectManager.CurrentGameObjects.TryGetValue(key, out GameObject res))
             {
                 res.SetActive(true);
                 //Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
@@ -116,29 +116,25 @@ namespace SpriteEvo
         public static GameObject Instantiate(AnimationDef def, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
             if (def == null) {
-                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null AnimationDef");
+                throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate SkeletonAnimation with Null AnimationDef");
             }
             GameObject instance = null;
             if (def.version == "3.8")
             {
-                Log.Message("加载3.8模型");
                 instance = Spine38Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
             else if (def.version == "4.1")
             {
-                Log.Message("加载4.1模型");
                 instance = Spine41Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
             else if (def.version == "4.2")
             {
-                Log.Message("加载4.2模型");
                 instance = Spine42Lib.NewSkeletonAnimation(def, layer, loop, active, DontDestroyOnLoad);
             }
             /*if (def.props.OnIMGUI)
             {
                 instance.AddRenderCameraToSkeletonAnimation(def.props.uioffset, (int)def.props.uiDrawSize.x, (int)def.props.uiDrawSize.y);
             }*/
-            Log.Message("P2");
             return instance;
         }
 

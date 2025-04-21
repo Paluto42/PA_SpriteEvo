@@ -115,12 +115,14 @@
     <Compile Include="SpriteEvo\Animation\Interface\ISkeletonConfig.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ITransform.cs" />
     <Compile Include="SpriteEvo\Framework\Spine42Lib.cs" />
-    <Compile Include="SpriteEvo\Framework\SpineGenericLib.cs" />
+    <Compile Include="SpriteEvo\Loader\AssetLoader.cs" />
+    <Compile Include="SpriteEvo\Loader\Loader_Mat.cs" />
+    <Compile Include="SpriteEvo\Loader\Loader_Tex.cs" />
+    <Compile Include="SpriteEvo\Manager\AssetLoadService.cs" />
     <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
+    <Compile Include="SpriteEvo\Script\ITransform.cs" />
     <Compile Include="SpriteEvo\Script\SP_Pawn.cs" />
     <Compile Include="SpriteEvo\Tools\UnityExtension.cs" />
-    <Compile Include="SpriteEvo\Loader\Asset_Mat.cs" />
-    <Compile Include="SpriteEvo\Loader\Asset_Tex.cs" />
     <Compile Include="SpriteEvo\Manager\ObjectManager.cs" />
     <Compile Include="SpriteEvo\ThingComp\TC_Animation.cs" />
     <Compile Include="SpriteEvo\Framework\Spine38Lib.cs" />
@@ -129,7 +131,6 @@
     <Compile Include="SpriteEvo\Defs\AnimationDef.cs" />
     <Compile Include="SpriteEvo\Tools\AnimationExtensions.cs" />
     <Compile Include="SpriteEvo\Manager\AssetManager.cs" />
-    <Compile Include="SpriteEvo\Loader\SkeletonLoader.cs" />
     <Compile Include="SpriteEvo\Framework\EffectsUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonGraphicUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonAnimationUtility.cs" />
@@ -142,7 +143,6 @@
     <Compile Include="SpriteEvo.Unity\MonoBehavior\FxHeadWorker.cs" />
     <Compile Include="SpriteEvo.Unity\FxRootWorker.cs" />
     <Compile Include="SpriteEvo\HarmonyPatch\HarmonyPatches.cs" />
-    <Compile Include="SpriteEvo\Manager\AssetLoadManager.cs" />
     <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
     <Compile Include="SpriteEvo\Script\InspectorFieldAttribute.cs" />
     <Compile Include="SpriteEvo\SPE_ModSettings.cs" />
@@ -167,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SpriteEvo\Script\RenderTexture\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

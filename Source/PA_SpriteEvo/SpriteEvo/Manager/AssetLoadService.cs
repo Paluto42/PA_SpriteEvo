@@ -245,7 +245,7 @@ namespace SpriteEvo
                             OutputAssetErrorMsg(errorInfos, def.defName, true);
                             continue;
                         }
-                        Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
+                        Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, texPack);
                         Log.Message("SpriteEvo: Successful Loaded SkeletonBinary\"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
@@ -354,7 +354,7 @@ namespace SpriteEvo
                     {
                         shader = Shader_DB.TryGetValue(def.asset.shader);
                     }
-                    Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
+                    Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)
                         Log.Message("SpriteEvo: Successful Loaded SkeletonJSON \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));

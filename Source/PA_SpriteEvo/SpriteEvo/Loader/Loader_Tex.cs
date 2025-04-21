@@ -16,16 +16,17 @@ namespace SpriteEvo
         public Shader shader;
         public bool useStraightAlpha;
 
-        public Loader_Tex(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool usePMA = false) : base(def, atlas, skeleton)
+        public Loader_Tex(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool useStraight = false) : base(def, atlas, skeleton)
         {
             this.textures = texs;
             this.shader = shader;
-            this.useStraightAlpha = usePMA;
+            this.useStraightAlpha = useStraight;
         }
 
-        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
+        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
         {
-            base.CheckAssets();
+            base.CheckTextAssets();
+            base.CheckArray(textures);
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
             MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(bool) });
@@ -35,9 +36,10 @@ namespace SpriteEvo
             var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
-        public override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
+        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
         {
-            base.CheckAssets();
+            base.CheckTextAssets();
+            base.CheckArray(textures);
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
             MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(Func<TAtlas, ITextureLoader>), typeof(bool) });
