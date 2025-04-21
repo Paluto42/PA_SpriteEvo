@@ -7,7 +7,7 @@ namespace SpriteEvo
     {
         public static TSkeleton GetSkeletonDataFrom<TSkeleton>(AnimationDef animationDef) where TSkeleton : ScriptableObject 
         {
-            SkeletonLoader loader = animationDef.mainAsset.TryGetAsset<SkeletonLoader>();
+            AssetLoader loader = animationDef.mainAsset.TryGetAsset<AssetLoader>();
             if (loader == null){
                 throw new NullReferenceException($"SpriteEvo. Main Asset Not Found In {animationDef.defName}");
             }

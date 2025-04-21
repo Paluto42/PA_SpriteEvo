@@ -12,13 +12,13 @@ namespace SpriteEvo
     /// <a href = "http://esotericsoftware.com/spine-loading-skeleton-data#JSON-and-binary-data" > JSON and binary data</a> in the Spine
     /// Runtimes Guide.</para>
     /// </summary>
-    public abstract class SkeletonLoader
+    public abstract class AssetLoader
     {
         public string version;
         public SpineAssetDef def;
         public TextAsset atlasInput;
         public TextAsset skeletonInput;
-        public SkeletonLoader(SpineAssetDef def, TextAsset atlas, TextAsset skeleton) 
+        public AssetLoader(SpineAssetDef def, TextAsset atlas, TextAsset skeleton) 
         {
             this.version = def.asset.version;
             this.def = def;

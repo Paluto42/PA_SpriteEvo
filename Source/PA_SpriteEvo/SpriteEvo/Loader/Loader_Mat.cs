@@ -9,14 +9,14 @@ namespace SpriteEvo
     ///对Spine导出文件提供封装实例,保存已创建Material实例的Spine导出文件
     ///<para>一般情况下该Material使用的Shader为Spine/Shader</para>
     ///<para>对于PMA模式问题，请确认在导出前就在Unity中为Mat设置了Straight Alpha Texture选项</para>
-    ///<para>了解详细信息,请查看<a cref="SkeletonLoader"></a>类</para>
+    ///<para>了解详细信息,请查看<a cref="AssetLoader"></a>类</para>
     ///</summary>
-    public class Asset_Mat : SkeletonLoader
+    public class Loader_Mat : AssetLoader
     {
         public Material[] materials;
         public bool useStraightAlpha;
 
-        public Asset_Mat(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Material[] mats, bool usePMA = false) : base(def, atlas, skeleton) 
+        public Loader_Mat(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Material[] mats, bool usePMA = false) : base(def, atlas, skeleton) 
         {
             this.materials = mats;
             this.useStraightAlpha = usePMA;

@@ -9,8 +9,8 @@ namespace SpriteEvo
     public static class SkeletonGraphicUtility
     {
         public static bool currentlyGenerating = false;
-        public static Material SkeletonGraphicDefault => AssetLoadManager.SkeletonGraphicDefault;
-        public static Material SkeletonGraphicDefaul_Straight => AssetLoadManager.SkeletonGraphicDefaul_Straight;
+        public static Material SkeletonGraphicDefault => AssetLoadService.SkeletonGraphicDefault;
+        public static Material SkeletonGraphicDefaul_Straight => AssetLoadService.SkeletonGraphicDefaul_Straight;
         public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjectDatabase;
 
         public static Material EnsureInitializedMaterialProperySource(bool StraightAlphaInput = false) 

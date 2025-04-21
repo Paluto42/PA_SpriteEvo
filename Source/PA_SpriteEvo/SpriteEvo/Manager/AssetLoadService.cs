@@ -7,7 +7,7 @@ using Verse;
 namespace SpriteEvo
 {
     [StaticConstructorOnStartup]
-    internal static class AssetLoadManager
+    internal static class AssetLoadService
     {
         private const string Spine_Dict = "Asset/";
 
@@ -22,11 +22,11 @@ namespace SpriteEvo
         public static Material SkeletonGraphicDefaul_Straight;
 
         private static Dictionary<string, Shader> Shader_DB => AssetManager.SpineShaderDatabase;
-        private static Dictionary<string, SkeletonLoader> Spine38_DB => AssetManager.spine38_Database;
-        private static Dictionary<string, SkeletonLoader> Spine41_DB => AssetManager.spine41_Database;
-        private static Dictionary<string, SkeletonLoader> Spine42_DB => AssetManager.spine42_Database;
+        private static Dictionary<string, AssetLoader> Spine38_DB => AssetManager.spine38_Database;
+        private static Dictionary<string, AssetLoader> Spine41_DB => AssetManager.spine41_Database;
+        private static Dictionary<string, AssetLoader> Spine42_DB => AssetManager.spine42_Database;
         private static List<ModContentPack> Mods => LoadedModManager.RunningModsListForReading;
-        static AssetLoadManager() 
+        static AssetLoadService() 
         {
             //LoadAllShader();
             //Patch_UIRoot.ClearEvents();
@@ -211,7 +211,7 @@ namespace SpriteEvo
                             OutputAssetErrorMsg(errorInfos, def.defName, true);
                             continue;
                         }
-                        Asset_Mat matPack = new(def, atlasAsset, skeletonAsset, materials, usePMA: def.asset.StraightAlphaInput);
+                        Loader_Mat matPack = new(def, atlasAsset, skeletonAsset, materials, usePMA: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, matPack);
                         Log.Message("SpriteEvo: Successful Loaded SkeletonBinary\"" + def.defName + "\" with " + materials.Length + (materials.Length > 1 ? " Materials" : " Material"));
                     }
@@ -245,7 +245,7 @@ namespace SpriteEvo
                             OutputAssetErrorMsg(errorInfos, def.defName, true);
                             continue;
                         }
-                        Asset_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
+                        Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, texPack);
                         Log.Message("SpriteEvo: Successful Loaded SkeletonBinary\"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
@@ -354,7 +354,7 @@ namespace SpriteEvo
                     {
                         shader = Shader_DB.TryGetValue(def.asset.shader);
                     }
-                    Asset_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
+                    Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, usePMA: def.asset.StraightAlphaInput);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)
                         Log.Message("SpriteEvo: Successful Loaded SkeletonJSON \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
@@ -371,7 +371,7 @@ namespace SpriteEvo
             }
         }
 
-        private static void SavePackToVersionDatabase(SpineAssetDef spinedef, SkeletonLoader pack)
+        private static void SavePackToVersionDatabase(SpineAssetDef spinedef, AssetLoader pack)
         {
             if (spinedef.asset.version == "3.8" && !Spine38_DB.ContainsKey(spinedef.defName))
             {

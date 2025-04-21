@@ -16,7 +16,7 @@ namespace SpriteEvo
     public static class SkeletonAnimationUtility
     {
         public static bool currentlyGenerating = false;
-        public static Shader Spine_Skeleton => AssetLoadManager.Spine_Skeleton;
+        public static Shader Spine_Skeleton => AssetLoadService.Spine_Skeleton;
         public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjectDatabase;
 
         ///<summary>

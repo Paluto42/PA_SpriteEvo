@@ -42,8 +42,8 @@ namespace SpriteEvo
     public class AnimationDef : Def
     {
         public string version;
-        public List<ScriptProperties> scripts = new();
         public SpineAssetDef mainAsset;
+        public List<ScriptProperties> scripts = new();
         public List<SpineAssetDef> attachments = new();
         public SpineProperty props = new();
     }
