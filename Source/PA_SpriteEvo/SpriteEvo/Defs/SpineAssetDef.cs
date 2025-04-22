@@ -13,13 +13,16 @@ namespace SpriteEvo
     //文件属性
     public class SpineAsset 
     {
-        public bool StraightAlphaInput = false;//是否关闭PMA
         public string version;//Spine版本号
         public string filePath;//文件相对路径
         public string seriesname;//自动填充用的系列名
         public string atlas;//文件名
         public string skeleton;//文件名
-        public string shader = "Spine-Skeleton.shader";//一般默认不用管
+
+        public string shader = "Spine-Skeleton.shader";//一般默认不用管 但是很重要一定要管
+        public bool StraightAlphaInput = false;//是否关闭PMA
+        public bool ZWriteOn = false; //是否启用深度缓冲区
+
         public List<string> textures = new();//贴图列表
         public List<string> materials = new();//材质列表
     }

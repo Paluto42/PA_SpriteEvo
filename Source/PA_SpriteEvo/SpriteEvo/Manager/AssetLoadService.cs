@@ -250,7 +250,7 @@ namespace SpriteEvo
                                 errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Texture\"" + texError + "\"");
                             }
                         }
-                        shader = ParseFromFileName(def.asset.shader, def.asset.StraightAlphaInput);
+                        shader = ParseShaderOption(def.asset.shader, def.asset.StraightAlphaInput);
                         if (shader == null)
                         {
                             isInvalid = true;
@@ -261,7 +261,7 @@ namespace SpriteEvo
                             OutputAssetErrorMsg(errorInfos, def.defName, true);
                             continue;
                         }
-                        Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
+                        Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput, def.asset.ZWriteOn);
                         SavePackToVersionDatabase(def, texPack);
                         Log.Message("SpriteEvo: Successful Loaded SkeletonBinary \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
@@ -357,7 +357,7 @@ namespace SpriteEvo
                         isInvalid = true;
                         errorInfos.Add("SpriteEvo: SkeletonBinary \"" + def.defName + "\" Missing Textures");
                     }
-                    shader = ParseFromFileName(def.asset.shader, def.asset.StraightAlphaInput);
+                    shader = ParseShaderOption(def.asset.shader, def.asset.StraightAlphaInput);
                     if (shader == null)
                     {
                         isInvalid = true;
@@ -376,19 +376,17 @@ namespace SpriteEvo
                     {
                         shader = Shader_DB.TryGetValue(def.asset.shader);
                     }*/
-                    Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
+                    Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput, def.asset.ZWriteOn);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)
                         Log.Message("SpriteEvo: Successful Loaded SkeletonJSON \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                 }
             }
             AllAssetsLoaded = true;
-            if (Spine38_DB.NullOrEmpty())
-            {
+            if (Spine38_DB.NullOrEmpty()){
                 Log.Warning("SpriteEvo: No Any Asset Found !");
             }
-            else 
-            { 
+            else { 
                 Log.Message("SpriteEvo: All Assets Initialized");
             }
         }
@@ -447,12 +445,17 @@ namespace SpriteEvo
             Log.Error("SpriteEvo: Failed To Load " + SkeletonType + " \"" + defName + "\"");
         }
 
-        private static Shader ParseFromFileName(string originalName, bool useStraight) 
+        private static Shader ParseShaderOption(string originalName, bool useStraight = false, bool ZWrite = false) 
         {
             string name = originalName.ToLower();
             string id = Path.GetFileNameWithoutExtension(name);
             string extension = Path.GetExtension(name);
-            string result = useStraight ? string.Concat(id, "#straight", extension) : name;
+
+            string straight = useStraight ? "#straight" : "";
+            string zwrite = ZWrite ? "#zwrite" : "";
+            //string result = useStraight ? string.Concat(id, "#straight", extension) : name;
+            string result = string.Concat(id, straight, zwrite, extension);
+
             if (Shader_DB.ContainsKey(result)){
                 Shader_DB.TryGetValue(result, out var shaderStright);
                 return shaderStright;

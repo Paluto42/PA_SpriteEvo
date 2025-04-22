@@ -15,10 +15,8 @@ namespace SpriteEvo
     //动画属性,相当于一个Request结构体保存一套默认初始化信息
     public class SpineProperty
     {
-        [Obsolete]
         public bool OnIMGUI = false;//是否产生贴图用于UI渲染
-        public bool OnUGUI = false;
-
+        public int RenderQueue = 3000;
         //public bool uiAutoAlign = false; //是否让摄像机自己自动对齐
         //public string alignBone; //如果自动对齐 选择一个Bone节点的名称
 

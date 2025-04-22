@@ -55,7 +55,7 @@ namespace SpriteEvo
 
         int count = 0;
 
-        public float drawDepth = -1;
+        public float drawDepth = 0.5f;
         float blinkMixIn => Props.blinkMixIn;
         float blinkMixOut => Props.blinkMixOut;
 
