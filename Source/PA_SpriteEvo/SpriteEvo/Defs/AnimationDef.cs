@@ -16,7 +16,7 @@ namespace SpriteEvo
     public class SpineProperty
     {
         public bool OnIMGUI = false;//是否产生贴图用于UI渲染
-        public int renderQueue = 3000;
+        public int renderQueue = 3500;
         //public bool uiAutoAlign = false; //是否让摄像机自己自动对齐
         //public string alignBone; //如果自动对齐 选择一个Bone节点的名称
 
