@@ -69,7 +69,6 @@ namespace SpriteEvo
         public override void OnEnable()
         {
             if (animationStateComp == null) return;
-            Log.Message("可以播放动画");
             TrackEntry track0 = animationStateComp.AnimationState.SetAnimation(0, "idle", true);
             track0.Complete += CompleteEventHandler;
         }
@@ -167,9 +166,7 @@ namespace SpriteEvo
 
         private void CompleteEventHandler(TrackEntry trackEntry)
         {
-            Log.Message("Complete后的原count次数 " + count);
             count++;
-            Log.Message("增加后的count次数 " + count);
             if (count == 1)
             {
                 TrackEntry track1 = animationStateComp.AnimationState.AddAnimation(1, "blink", false, blinkMixIn);
