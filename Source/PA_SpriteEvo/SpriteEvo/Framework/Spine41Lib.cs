@@ -65,14 +65,14 @@ namespace SpriteEvo
             AnimationParams @params = animationDef.GetSkeletonParams(loop);//获取def属性
 
             SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
-            if (animationDef.props.RenderQueue != 3000)
+            if (animationDef.props.renderQueue != 3000)
             {
                 var atlasAssets = skeletonDataAsset.atlasAssets;
                 foreach (var atlas in atlasAssets)
                 {
                     foreach (var mat in atlas.Materials)
                     {
-                        mat.renderQueue = animationDef.props.RenderQueue;
+                        mat.renderQueue = animationDef.props.renderQueue;
                     }
                 }
             }

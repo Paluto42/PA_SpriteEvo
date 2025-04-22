@@ -261,7 +261,7 @@ namespace SpriteEvo
                             OutputAssetErrorMsg(errorInfos, def.defName, true);
                             continue;
                         }
-                        Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput, def.asset.ZWriteOn);
+                        Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, texPack);
                         Log.Message("SpriteEvo: Successful Loaded SkeletonBinary \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
@@ -376,7 +376,7 @@ namespace SpriteEvo
                     {
                         shader = Shader_DB.TryGetValue(def.asset.shader);
                     }*/
-                    Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput, def.asset.ZWriteOn);
+                    Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)
                         Log.Message("SpriteEvo: Successful Loaded SkeletonJSON \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
@@ -445,16 +445,16 @@ namespace SpriteEvo
             Log.Error("SpriteEvo: Failed To Load " + SkeletonType + " \"" + defName + "\"");
         }
 
-        private static Shader ParseShaderOption(string originalName, bool useStraight = false, bool ZWrite = false) 
+        private static Shader ParseShaderOption(string originalName, bool useStraight = false) 
         {
             string name = originalName.ToLower();
             string id = Path.GetFileNameWithoutExtension(name);
             string extension = Path.GetExtension(name);
 
             string straight = useStraight ? "#straight" : "";
-            string zwrite = ZWrite ? "#zwrite" : "";
+            //string zwrite = ZWrite ? "#zwrite" : "";
             //string result = useStraight ? string.Concat(id, "#straight", extension) : name;
-            string result = string.Concat(id, straight, zwrite, extension);
+            string result = string.Concat(id, straight, extension);
 
             if (Shader_DB.ContainsKey(result)){
                 Shader_DB.TryGetValue(result, out var shaderStright);

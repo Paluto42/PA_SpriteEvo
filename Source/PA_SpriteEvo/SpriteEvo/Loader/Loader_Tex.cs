@@ -15,14 +15,12 @@ namespace SpriteEvo
         public Texture2D[] textures;
         public Shader shader;
         public bool useStraightAlpha;
-        public bool ZWriteOn;
 
-        public Loader_Tex(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool useStraight = false, bool ZWriteOn = false) : base(def, atlas, skeleton)
+        public Loader_Tex(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool useStraight = false) : base(def, atlas, skeleton)
         {
             this.textures = texs;
             this.shader = shader;
             this.useStraightAlpha = useStraight;
-            this.ZWriteOn = ZWriteOn;
         }
 
         protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()

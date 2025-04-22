@@ -21,7 +21,7 @@ namespace SpriteEvo
 
         public string shader = "Spine-Skeleton.shader";//一般默认不用管 但是很重要一定要管
         public bool StraightAlphaInput = false;//是否关闭PMA
-        public bool ZWriteOn = false; //是否启用深度缓冲区
+        //public bool ZWriteOn = false; //是否启用深度缓冲区
 
         public List<string> textures = new();//贴图列表
         public List<string> materials = new();//材质列表
