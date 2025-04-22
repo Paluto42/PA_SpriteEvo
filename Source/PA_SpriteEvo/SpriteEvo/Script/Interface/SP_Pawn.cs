@@ -54,15 +54,20 @@ namespace SpriteEvo
         }
 
         int count = 0;
+
+        public float drawDepth = -1;
         float blinkMixIn => Props.blinkMixIn;
         float blinkMixOut => Props.blinkMixOut;
 
-        public override void OnEnable()
+        public override void Awake()
         {
             skeletonComp ??= GetComponent<ISkeletonComponent>();
             animationStateComp ??= GetComponent<IAnimationStateComponent>();
             InitializeRotationSlots();
+        }
 
+        public override void OnEnable()
+        {
             if (animationStateComp == null) return;
             Log.Message("可以播放动画");
             TrackEntry track0 = animationStateComp.AnimationState.SetAnimation(0, "idle", true);
@@ -137,7 +142,7 @@ namespace SpriteEvo
         public void Move()
         {
             if (Owner != null){
-                transform.position = Owner.DrawPos;
+                transform.position = Owner.DrawPos + Vector3.up * drawDepth;
             }
         }
 

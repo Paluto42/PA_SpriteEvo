@@ -9,10 +9,12 @@ namespace SpriteEvo
     #if DEBUG_BUILD
     public class ControllerTrackerContainer : ScriptBase
     {
-        //
         public ControllerTracker tracker;
 
         public ControllerTrackerContainer()
+        {
+        }
+        public override void Awake()
         {
         }
 
