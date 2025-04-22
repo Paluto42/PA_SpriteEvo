@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SpriteEvo
 {
+    #if DEBUG_BUILD
     public interface IFacialControl
     {
         //待机状态
@@ -20,4 +21,5 @@ namespace SpriteEvo
         void PerformSad();
 
     }
+    #endif
 }

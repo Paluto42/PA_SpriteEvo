@@ -1,5 +1,6 @@
 ﻿namespace SpriteEvo
 {
+    #if DEBUG_BUILD
     public interface ITransform
     {
         void PoseSouth();
@@ -8,4 +9,5 @@
         void PoseEast();
         void Move();
     }
+    #endif
 }

@@ -5,6 +5,7 @@ using Verse;
 
 namespace SpriteEvo
 {
+    #if DEBUG_BUILD
     public enum SlotRotation
     {
         None,
@@ -15,6 +16,9 @@ namespace SpriteEvo
 
     public class ASP_PawnBase : ScriptProperties
     {
+        public float blinkMixIn = 0.4f;
+        public float blinkMixOut = 0.833f;
+
         public ASP_PawnBase()
         {
             scriptClass = typeof(AS_PawnBase);
@@ -23,6 +27,7 @@ namespace SpriteEvo
 
     public class AS_PawnBase : ScriptBase, ITransform
     {
+        ASP_PawnBase Props => props as ASP_PawnBase;
         #region Unity
         Color clearColor = Color.clear;
 
@@ -49,23 +54,18 @@ namespace SpriteEvo
         }
 
         int count = 0;
-        float blinkMixIn = 0.4f;
-        float blinkMixOut = 0.833f;
+        float blinkMixIn => Props.blinkMixIn;
+        float blinkMixOut => Props.blinkMixOut;
 
         public override void OnEnable()
         {
             skeletonComp ??= GetComponent<ISkeletonComponent>();
             animationStateComp ??= GetComponent<IAnimationStateComponent>();
             InitializeRotationSlots();
-            /*var list = skeletonComp.Skeleton.Slots.FindAll(slot => slot.Data.Name.StartsWith("S_") || slot.Data.Name.StartsWith("B_"));
-            foreach (var slot in list)
-            {
-                slot.SetColor(clearColor);
-                Debug.Log(slot.Data.Name);
-            }*/
+
             if (animationStateComp == null) return;
             Log.Message("可以播放动画");
-            TrackEntry track0 = animationStateComp.AnimationState.SetAnimation(0, "idle", false);
+            TrackEntry track0 = animationStateComp.AnimationState.SetAnimation(0, "idle", true);
             track0.Complete += CompleteEventHandler;
         }
 
@@ -162,7 +162,9 @@ namespace SpriteEvo
 
         private void CompleteEventHandler(TrackEntry trackEntry)
         {
+            Log.Message("Complete后的原count次数 " + count);
             count++;
+            Log.Message("增加后的count次数 " + count);
             if (count == 1)
             {
                 TrackEntry track1 = animationStateComp.AnimationState.AddAnimation(1, "blink", false, blinkMixIn);
@@ -172,10 +174,9 @@ namespace SpriteEvo
             if (count >= 2)
             {
                 count = 0;
-                TrackEntry track1 = animationStateComp.AnimationState.AddAnimation(0, "idle", false, 0);
-                track1.Complete += CompleteEventHandler;
                 TrackEntry track2 = animationStateComp.AnimationState.AddAnimation(1, "idle", false, blinkMixOut);
             }
         }
     }
+#endif
 }

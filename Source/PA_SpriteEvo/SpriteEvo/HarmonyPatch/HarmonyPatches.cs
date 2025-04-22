@@ -32,8 +32,8 @@ namespace SpriteEvo
         }
     }*/
 
-    //用来加载全部文件的Prefix方法
-    [HarmonyPatch(typeof(UIRoot_Entry), "DoMainMenu")]
+    //用来加载全部文件的Prefix方法 感觉还是算了 不如初始化的时候加载
+    /*[HarmonyPatch(typeof(UIRoot_Entry), "DoMainMenu")]
     public class Patch_UIRoot
     {
         public delegate void PrefixEventDelegate();
@@ -51,7 +51,7 @@ namespace SpriteEvo
         {
             DoMainMenuOnce = null;
         }
-    }
+    }*/
 
     /*[HarmonyPatch(typeof(PawnRenderTree), "ParallelPreDraw", new Type[] { typeof(PawnDrawParms) } )]
     public class Patch_PawnRenderTree
