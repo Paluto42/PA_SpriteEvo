@@ -1,7 +1,0 @@
-Sprite.South.FrontHair.SE_ChangAn.png
-size:1212,895
-filter:Linear,Linear
-pma:true
-F_前发
-bounds:2,2,1208,891
-offsets:1,2,1210,937

@@ -1,7 +1,0 @@
-Sprite.South.EyeBrow.SE_ChangAn.png
-size:243,31
-filter:Linear,Linear
-pma:true
-F_眉毛
-bounds:2,2,239,27
-offsets:1,1,241,29

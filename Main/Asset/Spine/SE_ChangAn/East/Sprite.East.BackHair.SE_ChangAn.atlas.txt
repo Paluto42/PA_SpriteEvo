@@ -1,7 +1,0 @@
-Sprite.East.BackHair.SE_ChangAn.png
-size:849,1434
-filter:Linear,Linear
-pma:true
-S_后发的后发
-bounds:2,2,845,1430
-offsets:1,1,977,1432

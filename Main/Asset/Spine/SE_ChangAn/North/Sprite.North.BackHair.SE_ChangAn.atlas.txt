@@ -1,7 +1,0 @@
-Sprite.North.BackHair.SE_ChangAn.png
-size:1692,1569
-filter:Linear,Linear
-pma:true
-B_后发的前发
-bounds:2,2,1688,1565
-offsets:1,1,1690,1610
