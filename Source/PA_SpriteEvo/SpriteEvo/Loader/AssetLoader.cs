@@ -15,6 +15,12 @@ namespace SpriteEvo
     /// </summary>
     public abstract class AssetLoader
     {
+        //缓存
+        #region 
+        private Spine38.Unity.SkeletonDataAsset _skeletonDataAsset38;
+        private Spine41.Unity.SkeletonDataAsset _skeletonDataAsset41;
+        private Spine42.Unity.SkeletonDataAsset _skeletonDataAsset42;
+        #endregion
         public string version;
         public SpineAssetDef def;
         public TextAsset atlasInput;
@@ -39,15 +45,18 @@ namespace SpriteEvo
 
         public Spine38.Unity.SkeletonDataAsset GetSkeletonDataAssetVer38()
         {
-            return CreateSkeletonDataAsset<Spine38.Unity.SpineAtlasAsset, Spine38.Unity.SkeletonDataAsset>();
+            _skeletonDataAsset38 ??= CreateSkeletonDataAsset<Spine38.Unity.SpineAtlasAsset, Spine38.Unity.SkeletonDataAsset>();
+            return _skeletonDataAsset38;
         }
         public Spine41.Unity.SkeletonDataAsset GetSkeletonDataAssetVer41()
         {
-            return CreateSkeletonDataAsset<Spine41.Unity.SpineAtlasAsset, Spine41.Unity.SkeletonDataAsset, Spine41.TextureLoader>();
+            _skeletonDataAsset41 ??= CreateSkeletonDataAsset<Spine41.Unity.SpineAtlasAsset, Spine41.Unity.SkeletonDataAsset, Spine41.TextureLoader>();
+            return _skeletonDataAsset41;
         }
         public Spine42.Unity.SkeletonDataAsset GetSkeletonDataAssetVer42()
         {
-            return CreateSkeletonDataAsset<Spine42.Unity.SpineAtlasAsset, Spine42.Unity.SkeletonDataAsset, Spine42.TextureLoader>();
+            _skeletonDataAsset42 ??= CreateSkeletonDataAsset<Spine42.Unity.SpineAtlasAsset, Spine42.Unity.SkeletonDataAsset, Spine42.TextureLoader>();
+            return _skeletonDataAsset42;
         }
 
         protected void CheckTextAssets()

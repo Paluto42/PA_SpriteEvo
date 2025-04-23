@@ -59,7 +59,7 @@ namespace SpriteEvo.Unity
             FxBodyChild?.SetActive(false);
             FxExtraChild?.SetActive(false);*/
         }
-        public override void OnDestory()
+        public override void OnDestroy()
         {
         }
         //检查Pawn是否在地图上 因为切换地图不会触发自动回收 要禁用不在当前地图上的动画实例

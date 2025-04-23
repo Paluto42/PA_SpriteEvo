@@ -23,12 +23,10 @@ namespace SpriteEvo
         {
             if (animationDef == null) return null;
             SkeletonDataAsset skeletonDataAsset;
-            if (animationDef.attachments.NullOrEmpty())
-            {
+            if (animationDef.attachments.NullOrEmpty()){
                 skeletonDataAsset = GetSkeletonDataFrom(animationDef);
             }
-            else
-            {
+            else{
                 Log.Error("暂不支持Spine4.2骨架合并");
                 skeletonDataAsset = null;
             }
@@ -44,24 +42,14 @@ namespace SpriteEvo
             AnimationParams @params = animationDef.GetSkeletonParams(loop);//获取def属性
 
             SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
-            if (animationDef.props.renderQueue != 3000)
-            {
-                var atlasAssets = skeletonDataAsset.atlasAssets;
-                foreach (var atlas in atlasAssets)
-                {
-                    foreach (var mat in atlas.Materials)
-                    {
-                        mat.renderQueue = animationDef.props.renderQueue;
-                    }
-                }
-            }
+            UnityExtension.FixMeshRenderQueue<AtlasAssetBase, SkeletonDataAsset>(skeletonDataAsset, animationDef.props.renderQueue);
             //单个Skeleton
             SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonDataAsset);
             GameObject baseObj = animation.gameObject;
             baseObj.SetActive(false);
 
             baseObj.name = animationDef.defName;
-            baseObj.layer = layer;
+            //baseObj.layer = layer;
             baseObj.DisableProbe();//关闭反射器
             //Vector3 rot = new(90f, 0f, 0f);
             baseObj.SetTransform(@params.position, @params.rotation, @params.scale);

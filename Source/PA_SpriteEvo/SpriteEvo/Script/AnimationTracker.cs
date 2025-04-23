@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace SpriteEvo
 {
     #if DEBUG_BUILD
-    public class AnimationController
+    public class AnimationTracker
     {
-        public void Update() 
+        public virtual void Tick() 
         {
         }
     }
