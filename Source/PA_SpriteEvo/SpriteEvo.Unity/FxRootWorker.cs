@@ -4,6 +4,7 @@ using Verse;
 
 namespace SpriteEvo.Unity
 {
+    #if OLD_BUILD
     //控制坐标更新和旋转方向的Root物件
     public class FxRootWorker : ScriptBase
     {
@@ -92,4 +93,5 @@ namespace SpriteEvo.Unity
             }
         }
     }
+    #endif
 }

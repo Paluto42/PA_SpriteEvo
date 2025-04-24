@@ -6,13 +6,14 @@ using Verse;
 
 namespace SpriteEvo
 {
+    //打算整合进GC里
     [StaticConstructorOnStartup]
     public static class ObjectManager
     {
         //设置为DontDestroyOnLoad的GameObject才能在这里引用。
         public static Dictionary<object, GameObject> NeverDestoryObjects = new();
         //String会自带内存驻留，用string就是字典 用Thing就是弱表
-        public static ConditionalWeakTable<object, AnimationTracker> CurrentObjectTrackers => GC_AnimationDocument.instance.TrackerDataBase;
+        public static ConditionalWeakTable<object, AnimationTracker> CurrentObjectTrackers => GC_AnimationDocument.instance.animationTrackerDocument;
 
         public static void TryAddToCurrentGame(GameObject val, object key)
         {

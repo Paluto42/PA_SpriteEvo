@@ -1,34 +1,43 @@
 ﻿using Spine42;
-using System;
-using System.Collections;
+using Spine42.Unity;
 using UnityEngine;
 using Verse;
 
 namespace SpriteEvo
 {
-    #if DEBUG_BUILD
-    public class PawnController : AnimationController_Base, IPawnRotate
+#if DEBUG_BUILD
+    public enum SlotRotation
     {
-        int count = 0;
-        float blinkMixIn = 0.4f;
-        float blinkMixOut = 0.833f;
-        //旋转
-        #region
-        public enum SlotRotation
+        None,
+        Front,
+        Back,
+        Side
+    }
+    public class ACP_PawnController : ScriptProperties
+    {
+        public float blinkMixIn = 0.4f;
+        public float blinkMixOut = 0.833f;
+
+        public ACP_PawnController()
         {
-            None,
-            Front,
-            Back,
-            Side
+            scriptClass = typeof(AC_PawnController);
         }
+    }
 
-        private SlotRotation lastRot = SlotRotation.None;
-        #endregion
+    public class AC_PawnController : AnimationControllerBase<ISkeletonComponent, IAnimationStateComponent>, IPawnRotate
+    {
+        ACP_PawnController Props => props as ACP_PawnController;
 
+        int count = 0;
+        float BlinkMixIn => Props.blinkMixIn;
+        float BlinkMixOut => Props.blinkMixOut;
+
+        // 槽位属性
         #region
-        ExposedList<Slot> frontSlotInt = new();
-        ExposedList<Slot> backSlotInt = new();
-        ExposedList<Slot> sideSlotInt = new();
+        private SlotRotation LastRotation = SlotRotation.None;
+        private readonly ExposedList<Slot> frontSlotInt = new();
+        private readonly ExposedList<Slot> backSlotInt = new();
+        private readonly ExposedList<Slot> sideSlotInt = new();
         #endregion
 
         protected Pawn ownerInt;
@@ -47,9 +56,8 @@ namespace SpriteEvo
             track0.Complete += CompleteEventHandler;
         }
 
-        public override void ControllerTick()
+        protected override void Update()
         {
-            if (Owner == null) return;
             UpdateRotation();
             UpdatePosition();
         }
@@ -63,14 +71,10 @@ namespace SpriteEvo
         {
             switch (Owner.Rotation.AsInt)
             {
-                case 0: FaceNorth();
-                    break;
-                case 1: FaceEast();
-                    break;
-                case 2: FaceSouth();
-                    break;
-                case 3: FaceWest();
-                    break;
+                case 0: FaceNorth(); break;
+                case 1: FaceEast();  break;
+                case 2: FaceSouth(); break;
+                case 3: FaceWest();  break;
             }
         }
 
@@ -78,42 +82,42 @@ namespace SpriteEvo
         #region
         public virtual void FaceNorth()
         {
-            if (lastRot == SlotRotation.Back) return;
+            if (LastRotation == SlotRotation.Back) return;
             SetSlotVisible(frontSlotInt, false);
             SetSlotVisible(backSlotInt, true);
             SetSlotVisible(sideSlotInt, false);
-            lastRot = SlotRotation.Back;
+            LastRotation = SlotRotation.Back;
         }
 
         public virtual void FaceEast()
         {
-            if (lastRot != SlotRotation.Side){
+            if (LastRotation != SlotRotation.Side){
                 SetSlotVisible(frontSlotInt, false);
                 SetSlotVisible(backSlotInt, false);
                 SetSlotVisible(sideSlotInt, true);
             }
             skeletonInt.DoFlipX(false);
-            lastRot = SlotRotation.Side;
+            LastRotation = SlotRotation.Side;
         }
 
         public virtual void FaceSouth()
         {
-            if (lastRot == SlotRotation.Front) return;
+            if (LastRotation == SlotRotation.Front) return;
             SetSlotVisible(frontSlotInt, true);
             SetSlotVisible(backSlotInt, false);
             SetSlotVisible(sideSlotInt, false);
-            lastRot = SlotRotation.Front;
+            LastRotation = SlotRotation.Front;
         }
 
         public virtual void FaceWest()
         {
-            if (lastRot != SlotRotation.Side){
+            if (LastRotation != SlotRotation.Side){
                 SetSlotVisible(frontSlotInt, false);
                 SetSlotVisible(backSlotInt, false);
                 SetSlotVisible(sideSlotInt, true);
             }
             skeletonInt.DoFlipX(true);
-            lastRot = SlotRotation.Side;
+            LastRotation = SlotRotation.Side;
         }
         #endregion
 
@@ -141,14 +145,14 @@ namespace SpriteEvo
             count++;
             if (count == 1)
             {
-                TrackEntry track1 = animationStateInt.AnimationState.AddAnimation(1, "blink", false, blinkMixIn);
+                TrackEntry track1 = animationStateInt.AnimationState.AddAnimation(1, "blink", false, BlinkMixIn);
                 track1.Complete += CompleteEventHandler;
                 return;
             }
             if (count >= 2)
             {
                 count = 0;
-                TrackEntry track2 = animationStateInt.AnimationState.AddAnimation(1, "idle", false, blinkMixOut);
+                TrackEntry track2 = animationStateInt.AnimationState.AddAnimation(1, "idle", false, BlinkMixOut);
             }
         }
     }

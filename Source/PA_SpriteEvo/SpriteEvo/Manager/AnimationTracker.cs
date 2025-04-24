@@ -9,7 +9,7 @@ namespace SpriteEvo
     {
         public GameObject instanceInt;
 
-        public List<AnimationController_Base> allAnimationControllers = new();
+        public List<AnimationControllerBase<MonoBehaviour, MonoBehaviour>> allAnimationControllers = new();
 
         public AnimationTracker() 
         {
@@ -19,19 +19,11 @@ namespace SpriteEvo
         {
             this.instanceInt = instance;
             if (instance == null) return;
-            var controllers = instanceInt.GetComponents<AnimationController_Base>();
+            var controllers = instanceInt.GetComponents<AnimationControllerBase<MonoBehaviour, MonoBehaviour>>();
             foreach (var controller in controllers) 
             {
                 allAnimationControllers.Add(controller);
                 Log.Message("AnimationTracker获取到Controller脚本");
-            }
-        }
-
-        public virtual void Tick() 
-        {
-            foreach (var controller in allAnimationControllers) 
-            {
-                controller?.ControllerTick();
             }
         }
     }

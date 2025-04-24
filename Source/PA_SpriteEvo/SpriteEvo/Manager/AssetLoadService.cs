@@ -14,19 +14,21 @@ namespace SpriteEvo
         private static bool AllAssetsLoaded = false;
         private static bool AllShadersLoaded = false;
 
+        #region
         //SkeletonAnimation使用Spine/Skeleton.shader && 而Graphic使用Spine/SkeletonGraphic.shader
-        public static Shader Spine_Skeleton;
-        public static Shader Spine_Skeleton_Straight;
-        //public static Shader Spine_SkeletonGraphic;
+        public static Shader Spine_Skeleton = AssetManager.Spine_Skeleton;
+        public static Shader Spine_Skeleton_Straight = AssetManager.Spine_Skeleton_Straight;
         //这两个比较特殊 不能运行时改
-        public static Material SkeletonGraphicDefault;
-        public static Material SkeletonGraphicDefaul_Straight;
+        public static Material SkeletonGraphicDefault = AssetManager.SkeletonGraphic;
+        public static Material SkeletonGraphicDefaul_Straight = AssetManager.SkeletonGraphic_Straight;
 
-        private static Dictionary<string, Shader> Shader_DB => AssetManager.SpineShaderDatabase;
-        private static Dictionary<string, AssetLoader> Spine38_DB => AssetManager.spine38_Database;
-        private static Dictionary<string, AssetLoader> Spine41_DB => AssetManager.spine41_Database;
-        private static Dictionary<string, AssetLoader> Spine42_DB => AssetManager.spine42_Database;
+        private static readonly Dictionary<string, Shader> Shader_DB = AssetManager.SpineShaderDatabase;
+        private static readonly Dictionary<string, AssetLoader> Spine38_DB = AssetManager.spine38_Database;
+        private static readonly Dictionary<string, AssetLoader> Spine41_DB = AssetManager.spine41_Database;
+        private static readonly Dictionary<string, AssetLoader> Spine42_DB = AssetManager.spine42_Database;
         private static List<ModContentPack> Mods => LoadedModManager.RunningModsListForReading;
+        #endregion
+
         static AssetLoadService() 
         {
             LoadAllShader();
@@ -368,14 +370,6 @@ namespace SpriteEvo
                         OutputAssetErrorMsg(errorInfos, def.defName, false);
                         continue;
                     }
-                    /*if (def.asset.shader == "Spine-Skeleton.shader")
-                    {
-                        shader = Spine_Skeleton;
-                    }
-                    else
-                    {
-                        shader = Shader_DB.TryGetValue(def.asset.shader);
-                    }*/
                     Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)

@@ -68,90 +68,75 @@ namespace SpriteEvo
     ///<summary>用来缓存动画信息的GC,在游戏中才可以使用</summary>
     public class GC_AnimationDocument : GameComponent
     {
+        private bool isRegisterUpdated = false;
+
         public static GC_AnimationDocument instance;
 
         //key没有其他强引用时，这里面的key的键值对会在gc时被自动移除。但是gc不是实时的。
         //public ConditionalWeakTable<object, GameObject> ObjectDataBase = new();
-        public ConditionalWeakTable<object, AnimationTracker> TrackerDataBase = new();
+        public ConditionalWeakTable<object, AnimationTracker> animationTrackerDocument = new();
 
-        //public static Dictionary<object, GameObject> ObjectDataBase;
-        //public static Dictionary<string, List<ThingDocument>> animationDataBase;
-        //public static HashSet<Thing> cachedThings;
-        //internal static HashSet<Thing> cachedThings = new HashSet<Thing>();
+        // 使用动画的小人的缓存
+        private HashSet<Pawn> registedPawns = new();
+        public Dictionary<Pawn, AnimationTracker> pawnTrackerDocument = new();
+
+
         public GC_AnimationDocument(Game game)
         {
             instance = this;
-            //ObjectDataBase = new Dictionary<object, GameObject>();
-            //animationDataBase = new Dictionary<string, List<ThingDocument>>();
-        }
-        public override void StartedNewGame()
-        {
-            /*if (ModLister.GetActiveModWithIdentifier("PA.SpriteEvo") != null) 
-            {
-                Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(Translator.Translate("AK_StartLabel"), Translator.Translate("AK_StartDesc"), LetterDefOf.NeutralEvent, null, null));
-            }*/
-            //ObjectDataBase = new Dictionary<object, GameObject>();
         }
 
-        public override void FinalizeInit()
+        public override void GameComponentTick()
         {
-            /*List<string> key = new();
-            List<List<ThingDocument>> value = new();
-            Scribe.mode = LoadSaveMode.ResolvingCrossRefs;
-            try
+            if (isRegisterUpdated == false) return;
+
+            foreach (var pawn in registedPawns)
             {
-                Scribe_Collections.Look(ref animationDataBase, "animationDocument", LookMode.Value, LookMode.Deep, ref key, ref value);
-            }
-            catch 
-            { Log.Error("Failed to save AnimationDoc"); }
-            //复原
-            Scribe.mode = LoadSaveMode.Inactive;*/
-        }
-        public override void LoadedGame()
-        {
-            //ObjectDataBase = new Dictionary<object, GameObject>();
- 
-        }
-        public override void ExposeData()
-        {
-            /*
-            if (Scribe.mode != LoadSaveMode.ResolvingCrossRefs)
-            {
-                List<string> key = new();
-                List<List<ThingDocument>> value = new();
-                try 
+                if (pawnTrackerDocument.ContainsKey(pawn) == false)
                 {
-                    Scribe_Collections.Look(ref animationDataBase, "animationDocoment", LookMode.Value, LookMode.Deep, ref key, ref value);
+                    if (animationTrackerDocument.TryGetValue(pawn, out AnimationTracker res))
+                    {
+                        CacheToDocument(pawn, res);
+                    }
+                    else
+                    {
+                        Instantiate(pawn);
+                    }
                 }
-                catch { Log.Error("Failed to save AnimationDoc"); }
-            }*/
+                //tracker?.Tick();
+            }
+            isRegisterUpdated = false;
         }
 
-        /*public static void TryAdd(object key, GameObject value)
+        public bool Contains(Pawn pawn) 
         {
-            if (ObjectDataBase.ContainsKey(key)) 
-            {
-                Log.Error("SpriteEvo. Error while Adding new Value: The same Key already exists in Current Game"); 
-                return; 
-            }
-            else
-            {
-                ObjectDataBase.Add(key, value);
-            }
-        }*/
+            return registedPawns.Contains(pawn);
+        }
 
-        //May be Null
-        /*public static GameObject TryGet(object key)
+        //必须通过这里来刷新状态
+        public void Register(Pawn pawn) 
         {
-            if (ObjectDataBase.ContainsKey(key)) 
-            {
-                return ObjectDataBase[key]; 
-            }
-            else 
-            {
-                return null;
-            }
+            if (pawn == null) return;
+            registedPawns.Add(pawn);
+            isRegisterUpdated = true;
+        }
 
-        }*/
+        private void CacheToDocument(Pawn pawn, AnimationTracker tracker)
+        {
+            if (pawnTrackerDocument.ContainsKey(pawn)) return;
+            pawnTrackerDocument.Add(pawn, tracker);
+        }
+
+        //test
+        private void Instantiate(Pawn pawn, string defName = "Chang_An_Test")
+        {
+            AnimationDef def = DefDatabase<AnimationDef>.GetNamed(defName);
+            if (def == null) return;
+            ProgramStateFlags flag = (ProgramStateFlags)0;
+            flag |= (ProgramStateFlags)ProgramState.Playing;
+            GameObject obj = SkeletonAnimationUtility.InstantiateSpine(def, pawn, allowProgramStates: flag);
+            obj.transform.position = pawn.DrawPos + Vector3.up;//debug
+            obj.SetActive(true);
+        }
     }
 }

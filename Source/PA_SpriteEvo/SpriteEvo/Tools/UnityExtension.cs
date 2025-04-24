@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -54,20 +53,6 @@ namespace SpriteEvo
             if (MeshRenderer == null) return;
             MeshRenderer.lightProbeUsage = LightProbeUsage.Off;
             MeshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
-        }
-
-        public static void FixMeshRenderQueue<TAtlas, TSkeleton>(TSkeleton asset, int renderQueue = 3000) where TAtlas : ScriptableObject where TSkeleton : ScriptableObject
-        {
-            FieldInfo atlasAssetsInfo = typeof(TSkeleton).GetField("atlasAssets", BindingFlags.Instance | BindingFlags.Public);
-            PropertyInfo primaryMaterialProperty = typeof(TAtlas).GetProperty("PrimaryMaterial");
-
-            TAtlas[] atlasAssets = (TAtlas[])atlasAssetsInfo.GetValue(asset);
-            foreach (TAtlas atlas in atlasAssets) 
-            {
-                Material primaryMaterial = (Material)primaryMaterialProperty.GetValue(atlas);
-                if (primaryMaterial != null)
-                    primaryMaterial.renderQueue = renderQueue;
-            }
         }
     }
 }

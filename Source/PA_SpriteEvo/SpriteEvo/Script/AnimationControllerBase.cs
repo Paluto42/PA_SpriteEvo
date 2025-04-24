@@ -1,14 +1,7 @@
-﻿using Spine42.Unity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Verse;
-
-namespace SpriteEvo
+﻿namespace SpriteEvo
 {
-    public class AnimationController_Base : ScriptBase
+    //多版本兼容 要用哪个版本就声明对应版本的类
+    public class AnimationControllerBase<ISkeletonComponent, IAnimationStateComponent> : ScriptBase
     {
         //绘制相对深度(高度)
         public float drawDepth = 1;

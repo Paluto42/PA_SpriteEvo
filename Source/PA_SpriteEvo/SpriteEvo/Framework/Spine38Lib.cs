@@ -43,7 +43,7 @@ namespace SpriteEvo
             AnimationParams @params = animationDef.GetSkeletonParams(loop);//获取def属性
 
             SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
-            UnityExtension.FixMeshRenderQueue<AtlasAssetBase, SkeletonDataAsset>(skeletonDataAsset, animationDef.props.renderQueue);
+            Utilities.FixRenderQueueInternal<AtlasAssetBase, SkeletonDataAsset>(skeletonDataAsset, animationDef.props.renderQueue);
             //单个Skeleton
             SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonDataAsset);
             GameObject baseObj = animation.gameObject;

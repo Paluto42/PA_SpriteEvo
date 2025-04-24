@@ -13,6 +13,7 @@ namespace SpriteEvo
             Scribe_Values.Look(ref debugOverride, "debugOverride", defaultValue: false);
         }
     }
+
     public class SPE_ModConfig : Mod
     {
         public SPE_ModConfig(ModContentPack content) : base(content)

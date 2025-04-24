@@ -7,9 +7,11 @@ namespace SpriteEvo
     [StaticConstructorOnStartup]
     public static class AssetManager
     {
-        public static Shader Spine_Skeleton => AssetLoadService.Spine_Skeleton;
-        public static Material SkeletonGraphic => AssetLoadService.SkeletonGraphicDefault;
-        public static Material SkeletonGraphic_Straight => AssetLoadService.SkeletonGraphicDefaul_Straight;
+        public static Shader Spine_Skeleton;
+        public static Shader Spine_Skeleton_Straight;
+
+        public static Material SkeletonGraphic;
+        public static Material SkeletonGraphic_Straight;
 
         public static Dictionary<string, Shader> SpineShaderDatabase = new();
 

@@ -5,10 +5,11 @@ using UnityEngine;
 
 namespace SpriteEvo.Extensions
 {
+    #if OLD_BUILD
     ///<summary>对导出为JSON格式的Spine骨骼进行合并
     /// <para>强制要求使用SpineTexAsset类型的包.</para>
     /// </summary>
-    /*public static class JsonMerger
+    public static class JsonMerger
     {
         //合并Atlas
         //May be Null
@@ -166,5 +167,6 @@ namespace SpriteEvo.Extensions
             };
             return json1.ReadSkeletonDatasToMerge(input1, input2);
         }
-    }*/
+    }
+    #endif
 }
