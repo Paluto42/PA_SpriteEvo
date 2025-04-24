@@ -9,6 +9,9 @@ namespace SpriteEvo
     #if DEBUG_BUILD
     public class PawnController : AnimationController_Base, IPawnRotate
     {
+        int count = 0;
+        float blinkMixIn = 0.4f;
+        float blinkMixOut = 0.833f;
         //旋转
         #region
         public enum SlotRotation
@@ -39,7 +42,9 @@ namespace SpriteEvo
 
         protected override void OnEnable()
         {
-            animationStateInt.AnimationState.SetAnimation(0, "idle", true);
+            if (animationStateInt == null) return;
+            TrackEntry track0 = animationStateInt.AnimationState.SetAnimation(0, "idle", true);
+            track0.Complete += CompleteEventHandler;
         }
 
         public override void ControllerTick()
@@ -129,6 +134,22 @@ namespace SpriteEvo
         {
             float alpha = visible? 1 : 0;
             targetSlots.ForEach(slot => slot.A = alpha);
+        }
+
+        private void CompleteEventHandler(TrackEntry trackEntry)
+        {
+            count++;
+            if (count == 1)
+            {
+                TrackEntry track1 = animationStateInt.AnimationState.AddAnimation(1, "blink", false, blinkMixIn);
+                track1.Complete += CompleteEventHandler;
+                return;
+            }
+            if (count >= 2)
+            {
+                count = 0;
+                TrackEntry track2 = animationStateInt.AnimationState.AddAnimation(1, "idle", false, blinkMixOut);
+            }
         }
     }
     #endif
