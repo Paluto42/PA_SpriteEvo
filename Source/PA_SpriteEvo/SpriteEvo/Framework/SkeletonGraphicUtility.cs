@@ -45,10 +45,10 @@ namespace SpriteEvo
             //if (Current.ProgramState != ProgramState.Playing) return null;
             if (key == null)
                 throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null Foreign Key"); //任何情况不允许空key
-            if (docuSaved && ObjectManager.CurrentGameObjects.TryGetValue(key, out GameObject res))
+            if (docuSaved && ObjectManager.CurrentObjectTrackers.TryGetValue(key, out AnimationTracker res))
             {
-                res.SetActive(true);
-                return res;
+                res.instanceInt.SetActive(true);
+                return res.instanceInt;
             }
             GameObject instance = Instantiate(def, layer, loop, active, DontDestroyOnLoad: false);
             if (instance != null && docuSaved)

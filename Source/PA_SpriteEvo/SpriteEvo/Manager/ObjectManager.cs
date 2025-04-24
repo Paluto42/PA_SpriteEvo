@@ -12,15 +12,15 @@ namespace SpriteEvo
         //设置为DontDestroyOnLoad的GameObject才能在这里引用。
         public static Dictionary<object, GameObject> NeverDestoryObjects = new();
         //String会自带内存驻留，用string就是字典 用Thing就是弱表
-        public static ConditionalWeakTable<object, GameObject> CurrentGameObjects => GC_AnimationDocument.instance.ObjectDataBase;
+        public static ConditionalWeakTable<object, AnimationTracker> CurrentObjectTrackers => GC_AnimationDocument.instance.TrackerDataBase;
 
         public static void TryAddToCurrentGame(GameObject val, object key)
         {
             if (Current.ProgramState == ProgramState.Entry)
                 throw new InvalidOperationException("SpriteEvo. Forbidden to Add Object to GameComponent in UIEntry");
 
-            CurrentGameObjects.TryGetValue(key, out GameObject obj);
-            if (obj != null){
+            CurrentObjectTrackers.TryGetValue(key, out AnimationTracker res);
+            if (res != null){
                 Log.Error("SpriteEvo. Error while Adding new Value: The same Foreign Key already exists in Current Game");
                 return;
             }
@@ -34,17 +34,18 @@ namespace SpriteEvo
                         comp.referenceKey = key;
                     }
                 }
-                CurrentGameObjects.Add(key, val);
+                AnimationTracker tracker = new(val);
+                CurrentObjectTrackers.Add(key, tracker);
             }
         }
 
-        public static GameObject TryGetFromCurrentGame(object key)
+        public static AnimationTracker TryGetFromCurrentGame(object key)
         {
             if (Current.ProgramState == ProgramState.Entry)
                 throw new InvalidOperationException("SpriteEvo. Forbidden to Get Object from GameComponent in UIEntry");
 
-            CurrentGameObjects.TryGetValue(key, out GameObject val);
-            return val;
+            CurrentObjectTrackers.TryGetValue(key, out AnimationTracker res);
+            return res;
         }
 
         public static void TryAddPermanent(object key, GameObject value)

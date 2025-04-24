@@ -71,7 +71,8 @@ namespace SpriteEvo
         public static GC_AnimationDocument instance;
 
         //key没有其他强引用时，这里面的key的键值对会在gc时被自动移除。但是gc不是实时的。
-        public ConditionalWeakTable<object, GameObject> ObjectDataBase = new();
+        //public ConditionalWeakTable<object, GameObject> ObjectDataBase = new();
+        public ConditionalWeakTable<object, AnimationTracker> TrackerDataBase = new();
 
         //public static Dictionary<object, GameObject> ObjectDataBase;
         //public static Dictionary<string, List<ThingDocument>> animationDataBase;
@@ -85,7 +86,6 @@ namespace SpriteEvo
         }
         public override void StartedNewGame()
         {
-            base.StartedNewGame();
             /*if (ModLister.GetActiveModWithIdentifier("PA.SpriteEvo") != null) 
             {
                 Find.LetterStack.ReceiveLetter(LetterMaker.MakeLetter(Translator.Translate("AK_StartLabel"), Translator.Translate("AK_StartDesc"), LetterDefOf.NeutralEvent, null, null));
@@ -109,13 +109,11 @@ namespace SpriteEvo
         }
         public override void LoadedGame()
         {
-            base.LoadedGame();
             //ObjectDataBase = new Dictionary<object, GameObject>();
  
         }
         public override void ExposeData()
         {
-            base.ExposeData();
             /*
             if (Scribe.mode != LoadSaveMode.ResolvingCrossRefs)
             {

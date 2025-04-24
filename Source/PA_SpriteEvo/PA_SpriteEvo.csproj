@@ -121,10 +121,12 @@
     <Compile Include="SpriteEvo\Manager\AssetLoadService.cs" />
     <Compile Include="SpriteEvo\Manager\GC_AnimationController.cs" />
     <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
-    <Compile Include="SpriteEvo\Script\AnimationTracker.cs" />
+    <Compile Include="SpriteEvo\Script\AnimationController_Base.cs" />
+    <Compile Include="SpriteEvo\Script\TCP\AnimationTracker.cs" />
     <Compile Include="SpriteEvo\Script\Interface\IFacialControl.cs" />
-    <Compile Include="SpriteEvo\Script\Interface\ITransform.cs" />
+    <Compile Include="SpriteEvo\Script\Interface\IPawnRotate.cs" />
     <Compile Include="SpriteEvo\Script\SP_Pawn.cs" />
+    <Compile Include="SpriteEvo\Script\TCP\PawnController.cs" />
     <Compile Include="SpriteEvo\Tools\UnityExtension.cs" />
     <Compile Include="SpriteEvo\Manager\ObjectManager.cs" />
     <Compile Include="SpriteEvo\ThingComp\TC_Animation.cs" />

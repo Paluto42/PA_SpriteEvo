@@ -80,11 +80,11 @@ namespace SpriteEvo
             if (key == null) {
                 throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null Foreign Key"); //任何情况不允许空key
             }
-            if (docuSaved && ObjectManager.CurrentGameObjects.TryGetValue(key, out GameObject res))
+            if (docuSaved && ObjectManager.CurrentObjectTrackers.TryGetValue(key, out AnimationTracker res))
             {
-                res.SetActive(true);
+                res.instanceInt.SetActive(true);
                 //Log.Warning("SpriteEvo. Duplicate Call :  Animation Instance \"" + def.defName + "\" corresponding to the key \"" + key + "\" Existed in Hierarchy");
-                return res;
+                return res.instanceInt;
             }
             GameObject instance = Instantiate(def, layer, loop, active, DontDestroyOnLoad: false);
             if (instance != null && docuSaved)

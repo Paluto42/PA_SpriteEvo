@@ -14,23 +14,23 @@ namespace SpriteEvo
 
         /***** 初始化函数 *****/
         // 挂载脚本实例时调用Awake 适合拿来初始化引用
-        public virtual void Awake() { }
+        protected virtual void Awake() { }
         // 当对象已启用并处于活动状态时调用OnEnable
-        public virtual void OnEnable() { }
+        protected virtual void OnEnable() { }
         // 仅在首次调用Update之前调用Start
-        public virtual void Start() { }
+        protected virtual void Start() { }
 
         /***** 更新函数 *****/
         // 如果启用MonoBehavioir,则每个固定帧速率的帧都将调用FixedUpdate
-        public virtual void FixedUpdate() { }
+        protected virtual void FixedUpdate() { }
         // 如果启用MonoBehavioir,则在每一帧都调用Update
-        public virtual void Update() { }
+        protected virtual void Update() { }
         // 如果启用MonoBehavioir,则在每一帧都调用LateUpdate
-        public virtual void LateUpdate() { }
+        protected virtual void LateUpdate() { }
 
         /***** 渲染函数 *****/
         // 在照相机裁剪场景前调用OnPreCull 裁剪操作将确定摄像机可以看到哪些对象
-        public virtual void OnPreCull()  { }
+        /*public virtual void OnPreCull()  { }
         // 对象变为对任何摄像机可见/不可见时调用
         public virtual void OnBecameVisible() { }
         public virtual void OnBecameInvisible() { }
@@ -47,16 +47,16 @@ namespace SpriteEvo
         // 每帧调用多次以响应 GUI 事件。首先处理布局和重新绘制事件，然后为每个输入事件处理布局和键盘/鼠标事件
         public virtual void OnGUI() { }
         // 用于在场景视图中始终绘制gizmos以实现可视化
-        public virtual void OnDrawGizmos() { }
+        public virtual void OnDrawGizmos() { }*/
 
         /***** 退出函数 *****/
         // 在退出应用程序之前在所有游戏对象上调用此函数
-        public virtual void OnApplicationPause() { }
-        public virtual void OnApplicationQuit() { }
+        /*public virtual void OnApplicationPause() { }
+        public virtual void OnApplicationQuit() { }*/
         //行为被禁用时调用
-        public virtual void OnDisable() { }
+        protected virtual void OnDisable() { }
 
         // 被销毁时调用
-        public virtual void OnDestroy() { }
+        protected virtual void OnDestroy() { }
     }
 }

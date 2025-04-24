@@ -10,10 +10,10 @@ namespace SpriteEvo
         public ScriptProperties() 
         {
         }
+
         public ScriptProperties(Type scriptClass)
         {
             this.scriptClass = scriptClass;
         }
-        public virtual void DoWorker() {}
     }
 }

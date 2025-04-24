@@ -25,7 +25,7 @@ namespace SpriteEvo
         }
     }
 
-    public class AS_PawnBase : ScriptBase, ITransform
+    public class AS_PawnBase : ScriptBase, IPawnRotate
     {
         ASP_PawnBase Props => props as ASP_PawnBase;
         #region Unity
@@ -59,44 +59,44 @@ namespace SpriteEvo
         float blinkMixIn => Props.blinkMixIn;
         float blinkMixOut => Props.blinkMixOut;
 
-        public override void Awake()
+        protected override void Awake()
         {
             skeletonComp ??= GetComponent<ISkeletonComponent>();
             animationStateComp ??= GetComponent<IAnimationStateComponent>();
             InitializeRotationSlots();
         }
 
-        public override void OnEnable()
+        protected override void OnEnable()
         {
             if (animationStateComp == null) return;
             TrackEntry track0 = animationStateComp.AnimationState.SetAnimation(0, "idle", true);
             track0.Complete += CompleteEventHandler;
         }
 
-        public override void Update()
+        protected override void Update()
         {
             if (Owner == null) return;
             Rot4 rot = Owner.Rotation;
             switch (rot.AsInt)
             {
                 case 0:
-                    PoseNorth();
+                    FaceNorth();
                     break;
                 //右 east
                 case 1:
-                    PoseEast();
+                    FaceEast();
                     break;
                 case 2:
-                    PoseSouth();
+                    FaceSouth();
                     break;
                 case 3:
-                    PoseWest();
+                    FaceWest();
                     break;
             }
             Move();
         }
 
-        public void PoseSouth()
+        public void FaceSouth()
         {
             if (lastRot == SlotRotation.Front) return;
             SetRotationVisibility(frontSlotInt, true);
@@ -105,7 +105,7 @@ namespace SpriteEvo
             lastRot = SlotRotation.Front;
         }
 
-        public void PoseNorth()
+        public void FaceNorth()
         {
             if (lastRot == SlotRotation.Back) return;
             SetRotationVisibility(frontSlotInt, false);
@@ -114,7 +114,7 @@ namespace SpriteEvo
             lastRot = SlotRotation.Back;
         }
 
-        public void PoseWest()
+        public void FaceWest()
         {
             if (lastRot != SlotRotation.Side)
             {
@@ -126,7 +126,7 @@ namespace SpriteEvo
             lastRot = SlotRotation.Side;
         }
 
-        public void PoseEast()
+        public void FaceEast()
         {
             if (lastRot != SlotRotation.Side)
             {

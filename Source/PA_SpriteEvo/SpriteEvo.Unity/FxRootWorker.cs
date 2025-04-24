@@ -22,45 +22,28 @@ namespace SpriteEvo.Unity
         GameObject FxBodyChild => FxBodyController?.gameObject;
         GameObject FxExtraChild => FxExtraController?.gameObject;*/
 
-        public override void Awake()
-        {
-        }
-        public override void OnEnable()
+        protected override void OnEnable()
         {
             /*FxHeadChild?.SetActive(true);
             FxBodyChild?.SetActive(true);
             FxExtraChild?.SetActive(true);*/
         }
-        // Start is called before the first frame update
-        public override void Start()
-        {
-        }
-        public override void FixedUpdate()
+        protected override void FixedUpdate()
         {
             CheckUserMap();
         }
-        // Update is called once per frame
-        public override void Update()
+        protected override void Update()
         {
             if (!CanDrawNow) return;
             if (User == null) return;
             DoMove();
             DoRot();
         }
-        public override void LateUpdate()
-        {
-        }
-        public override void OnGUI()
-        {
-        }
-        public override void OnDisable()
+        protected override void OnDisable()
         {
             /*FxHeadChild?.SetActive(false);
             FxBodyChild?.SetActive(false);
             FxExtraChild?.SetActive(false);*/
-        }
-        public override void OnDestroy()
-        {
         }
         //检查Pawn是否在地图上 因为切换地图不会触发自动回收 要禁用不在当前地图上的动画实例
         public virtual void CheckUserMap()
