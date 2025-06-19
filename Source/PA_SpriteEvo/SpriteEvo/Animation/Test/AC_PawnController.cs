@@ -1,11 +1,12 @@
 ﻿using Spine42;
 using Spine42.Unity;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using Verse;
 
 namespace SpriteEvo
 {
-#if DEBUG_BUILD
+#if !RELEASE_BUILD
     public enum SlotRotation
     {
         None,
@@ -15,8 +16,9 @@ namespace SpriteEvo
     }
     public class ACP_PawnController : ScriptProperties
     {
-        public float blinkMixIn = 0.4f;
-        public float blinkMixOut = 0.833f;
+        public List<TrackSet> trackSets = new();
+        public List<AnimationDriverDef> animations = new();
+        //animations.OrderByDescending(driver => driver.priority).ToList();
 
         public ACP_PawnController()
         {
@@ -24,13 +26,15 @@ namespace SpriteEvo
         }
     }
 
-    public class AC_PawnController : AnimationControllerBase<ISkeletonComponent, IAnimationStateComponent>, IPawnRotate
+    public class AC_PawnController : PawnBaseController<SkeletonAnimation>, IPawnTransform
     {
         ACP_PawnController Props => props as ACP_PawnController;
+        List<TrackSet> TrackSets => Props.trackSets;
 
-        int count = 0;
-        float BlinkMixIn => Props.blinkMixIn;
-        float BlinkMixOut => Props.blinkMixOut;
+        // 用于存储不同轨道的动画队列
+        private readonly Dictionary<int, TrackSet> trackQueues = new();
+        public ISkeletonComponent ISkeletonComponent => SkeletonInstanceInt;
+        public IAnimationStateComponent IAnimationStateComponent => SkeletonInstanceInt;
 
         // 槽位属性
         #region
@@ -40,23 +44,23 @@ namespace SpriteEvo
         private readonly ExposedList<Slot> sideSlotInt = new();
         #endregion
 
-        protected Pawn ownerInt;
-        public Pawn Owner => ownerInt ??= referenceKey as Pawn;
-
-        protected override void Awake() 
+        protected override void Awake()
         {
             base.Awake();
             InitializeSlotInfo();
+            InitializeQueueInfo();
         }
 
         protected override void OnEnable()
         {
-            if (animationStateInt == null) return;
-            TrackEntry track0 = animationStateInt.AnimationState.SetAnimation(0, "idle", true);
-            track0.Complete += CompleteEventHandler;
+            base.OnEnable();
+            foreach (var queueSet in trackQueues)
+            {
+                StartCoroutine(AnimationQueueHandlerTest(queueSet));
+            }
         }
 
-        protected override void Update()
+        public override void DoMove()
         {
             UpdateRotation();
             UpdatePosition();
@@ -67,14 +71,14 @@ namespace SpriteEvo
             transform.position = Owner.DrawPos + (Vector3.up * drawDepth);
         }
 
-        public virtual void UpdateRotation() 
+        public virtual void UpdateRotation()
         {
             switch (Owner.Rotation.AsInt)
             {
                 case 0: FaceNorth(); break;
-                case 1: FaceEast();  break;
+                case 1: FaceEast(); break;
                 case 2: FaceSouth(); break;
-                case 3: FaceWest();  break;
+                case 3: FaceWest(); break;
             }
         }
 
@@ -91,12 +95,13 @@ namespace SpriteEvo
 
         public virtual void FaceEast()
         {
-            if (LastRotation != SlotRotation.Side){
+            if (LastRotation != SlotRotation.Side)
+            {
                 SetSlotVisible(frontSlotInt, false);
                 SetSlotVisible(backSlotInt, false);
                 SetSlotVisible(sideSlotInt, true);
             }
-            skeletonInt.DoFlipX(false);
+            ISkeletonComponent.DoFlipX(false);
             LastRotation = SlotRotation.Side;
         }
 
@@ -111,20 +116,23 @@ namespace SpriteEvo
 
         public virtual void FaceWest()
         {
-            if (LastRotation != SlotRotation.Side){
+            if (LastRotation != SlotRotation.Side)
+            {
                 SetSlotVisible(frontSlotInt, false);
                 SetSlotVisible(backSlotInt, false);
                 SetSlotVisible(sideSlotInt, true);
             }
-            skeletonInt.DoFlipX(true);
+            ISkeletonComponent.DoFlipX(true);
             LastRotation = SlotRotation.Side;
         }
         #endregion
 
+        //槽位
+        #region
         protected virtual void InitializeSlotInfo()
         {
-            if (animationStateInt == null) return;
-            var list = skeletonInt.Skeleton.Slots;
+            if (ISkeletonComponent == null) return;
+            var list = ISkeletonComponent.Skeleton.Slots;
             foreach (var slot in list)
             {
                 string slotName = slot.Data.Name;
@@ -136,25 +144,52 @@ namespace SpriteEvo
 
         public virtual void SetSlotVisible(ExposedList<Slot> targetSlots, bool visible = true)
         {
-            float alpha = visible? 1 : 0;
+            float alpha = visible ? 1 : 0;
             targetSlots.ForEach(slot => slot.A = alpha);
         }
+        #endregion
 
-        private void CompleteEventHandler(TrackEntry trackEntry)
+        public void InitializeQueueInfo()
         {
-            count++;
-            if (count == 1)
+            foreach (TrackSet item in TrackSets)
             {
-                TrackEntry track1 = animationStateInt.AnimationState.AddAnimation(1, "blink", false, BlinkMixIn);
-                track1.Complete += CompleteEventHandler;
-                return;
+                trackQueues.Add(item.index, item);
             }
-            if (count >= 2)
+        }
+
+        public virtual IEnumerator AnimationQueueHandlerTest(KeyValuePair<int, TrackSet> set)
+        {
+            int index = set.Key;
+            TrackSet queueSet = set.Value;
+            //大量的new Yield实例会导致内存性能问题
+            WaitForSeconds waitForSeconds = new(queueSet.interval);
+            bool shouldRefresh = queueSet.interval > 0;
+            do
             {
-                count = 0;
-                TrackEntry track2 = animationStateInt.AnimationState.AddAnimation(1, "idle", false, BlinkMixOut);
+                if (shouldRefresh)
+                {
+                    yield return waitForSeconds;
+                    IAnimationStateComponent.AnimationState.SetEmptyAnimation(index, 0.2f);
+                }
+                foreach (TrackEntry item in TestQueueTrack(queueSet))
+                {
+                    yield return item;
+                }
+            }
+            while (shouldRefresh);
+        }
+
+        public IEnumerable<TrackEntry> TestQueueTrack(TrackSet set)
+        {
+            int index = set.index;
+            List<TrackSet.TrackQueue> queues = set.queues;
+            foreach (TrackSet.TrackQueue item in queues)
+            {
+                TrackEntry track = IAnimationStateComponent.AnimationState.AddAnimation(index, item.animation, item.loop, item.delay);
+                track.MixBlend = item.blendMode.ParseTo<MixBlend>();
+                yield return track;
             }
         }
     }
-    #endif
+#endif
 }

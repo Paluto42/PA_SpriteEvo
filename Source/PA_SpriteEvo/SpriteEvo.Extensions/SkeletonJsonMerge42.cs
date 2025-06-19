@@ -1,12 +1,6 @@
-﻿using Spine42;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using Verse;
-
-namespace SpriteEvo.Extensions
+﻿namespace SpriteEvo.Extensions
 {
-    #if OLD_BUILD
+#if OLD_BUILD
     public class SkeletonJsonMerge42 : SkeletonJson
     {
         public SkeletonJsonMerge42(AttachmentLoader attachmentLoader)
@@ -543,5 +537,5 @@ namespace SpriteEvo.Extensions
             return skeletonData;
         }
     }
-    #endif
+#endif
 }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SpriteEvo
+﻿namespace SpriteEvo
 {
-    #if DEBUG_BUILD
+#if !RELEASE_BUILD
     public interface IFacialControl
     {
         //待机状态
@@ -21,5 +15,5 @@ namespace SpriteEvo
         void PerformSad();
 
     }
-    #endif
+#endif
 }

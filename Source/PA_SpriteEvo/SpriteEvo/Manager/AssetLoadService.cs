@@ -14,6 +14,9 @@ namespace SpriteEvo
         private static bool AllAssetsLoaded = false;
         private static bool AllShadersLoaded = false;
 
+        private static readonly List<AssetBundle> AssetBundle_Loaded = new();
+        private static readonly List<string> TextAsset_Loaded = new();
+        private static List<SpineAssetDef> Packs => DefDatabase<SpineAssetDef>.AllDefsListForReading;
         #region
         //SkeletonAnimation使用Spine/Skeleton.shader && 而Graphic使用Spine/SkeletonGraphic.shader
         public static Shader Spine_Skeleton = AssetManager.Spine_Skeleton;
@@ -29,10 +32,11 @@ namespace SpriteEvo
         private static List<ModContentPack> Mods => LoadedModManager.RunningModsListForReading;
         #endregion
 
-        static AssetLoadService() 
+        static AssetLoadService()
         {
             LoadAllShader();
             LoadAllAssets();
+            UnloadAllAssetBundles();
             /*Patch_UIRoot.DoMainMenuOnce += LoadAllShader;
             Patch_UIRoot.DoMainMenuOnce += LoadAllAssets;
             Patch_UIRoot.DoMainMenuOnce += Patch_UIRoot.ClearEvents;*/
@@ -74,7 +78,7 @@ namespace SpriteEvo
             }
             //Shader[] shaders = ab.LoadAllAssets<Shader>();
             string[] shaderfiles = ab.GetAllAssetNames();
-            foreach (string fileName in shaderfiles) 
+            foreach (string fileName in shaderfiles)
             {
                 string id = Path.GetFileName(fileName);
                 Shader shader = ab.LoadAsset<Shader>(id);
@@ -97,6 +101,7 @@ namespace SpriteEvo
                 Log.Message("SpriteEvo: All Shader Loaded, Initializing Assets...");
             }
         }
+
         private static void LoadAllAssets()
         {
             if (AllAssetsLoaded) return;
@@ -104,13 +109,21 @@ namespace SpriteEvo
             AllAssetsLoaded = true;
         }
 
+        private static void UnloadAllAssetBundles()
+        {
+            foreach (var assetBundle in AssetBundle_Loaded)
+            {
+                assetBundle.Unload(false);
+            }
+        }
+
         private static void ResloveAllAssetBundle()
         {
             if (!AllShadersLoaded) return;
-            List<AssetBundle> AssetBundle_Loaded = new();
-            List<string> SkeletonJSON_Loaded = new();
-            List<SpineAssetDef> packs = DefDatabase<SpineAssetDef>.AllDefsListForReading;
-            foreach (SpineAssetDef def in packs)
+            //List<AssetBundle> AssetBundle_Loaded = new();
+            //List<string> TextAsset_Loaded = new();
+            //List<SpineAssetDef> packs = DefDatabase<SpineAssetDef>.AllDefsListForReading;
+            foreach (SpineAssetDef def in Packs)
             {
                 if (def.asset.version == null)
                 {
@@ -124,9 +137,9 @@ namespace SpriteEvo
                 Shader shader = null;
                 string IndividualPath = Path.Combine(def.modContentPack.RootDir, Spine_Dict);
                 //AB是唯一读取外部二进制TextAsset的方法 AssetDataBase.LoadAsset<T>()和Resource.Load<T>()都无法使用
-                List<string> errorInfos = new();
                 bool isInvalid = false;
-                if (def.skelFormat == SkelFormat.SkeletonBinary)
+                List<string> errorInfos = new();
+                if (def.skelFormat == ImportFormat.AssetBundle)
                 {
                     if (def.asset.filePath == null) continue;
                     AssetBundle ab;
@@ -134,15 +147,15 @@ namespace SpriteEvo
                     if (!AssetBundle_Loaded.Exists((AssetBundle a) => a.name == assetBundleName))
                     {
                         string abPath = Path.Combine(IndividualPath, def.asset.filePath);
-                        if (!File.Exists(abPath)) 
+                        if (!File.Exists(abPath))
                         {
-                            Log.Error("SpriteEvo: Asset \"" + def.defName + "\" Does not exist filePath :\"" + def.asset.filePath + "\"");
+                            Log.Error("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Does not exist filePath :\"" + def.asset.filePath + "\"");
                             continue;
                         }
                         ab = AssetBundle.LoadFromFile(abPath);
                         AssetBundle_Loaded.Add(ab);
                         if (SPE_ModSettings.debugOverride)
-                            Log.Warning("SpriteEvo: Loading SkeletonBinary" + " From Assetbundle : " + Spine_Dict + ab.name);
+                            Log.Warning("SpriteEvo: Loading (AssetBundle)" + " From : " + Spine_Dict + ab.name);
                     }
                     else
                     {
@@ -176,12 +189,12 @@ namespace SpriteEvo
                     if (atlasAsset == null)
                     {
                         isInvalid = true;
-                        errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Atlas\"" + atlas + "\"");
+                        errorInfos.Add("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Does not exist Atlas \"" + atlas + "\"");
                     }
                     if (skeletonAsset == null)
                     {
                         isInvalid = true;
-                        errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Skeleton\"" + skeleton + "\"");
+                        errorInfos.Add("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Does not exist Skeleton \"" + skeleton + "\"");
                     }
                     /*if (def.asset.shader == "Spine-Skeleton.shader")
                     {
@@ -209,13 +222,13 @@ namespace SpriteEvo
                         if (materials.NullOrEmpty())
                         {
                             isInvalid = true;
-                            errorInfos.Add("SpriteEvo: SkeletonBinary \"" + def.defName + "\" Missing Materials");
+                            errorInfos.Add("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Missing Materials");
                         }
                         if (badmatInfos.Count != 0)
                         {
                             foreach (var matError in badmatInfos)
                             {
-                                errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Material\"" + matError + "\"");
+                                errorInfos.Add("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Does not exist Material\"" + matError + "\"");
                             }
                         }
                         if (isInvalid)
@@ -225,7 +238,7 @@ namespace SpriteEvo
                         }
                         Loader_Mat matPack = new(def, atlasAsset, skeletonAsset, materials, usePMA: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, matPack);
-                        Log.Message("SpriteEvo: Successful Loaded SkeletonBinary \"" + def.defName + "\" with " + materials.Length + (materials.Length > 1 ? " Materials" : " Material"));
+                        Log.Message("SpriteEvo: Successful Loaded (AssetBundle) \"" + def.defName + "\" with " + materials.Length + (materials.Length > 1 ? " Materials" : " Material"));
                     }
                     else if (!texinfo.Empty())
                     {
@@ -243,20 +256,20 @@ namespace SpriteEvo
                         if (textures.NullOrEmpty())
                         {
                             isInvalid = true;
-                            errorInfos.Add("SpriteEvo: SkeletonBinary\"" + def.defName + "\" Missing Textures");
+                            errorInfos.Add("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Missing Textures");
                         }
                         if (badtexInfos.Count != 0)
                         {
                             foreach (var texError in badtexInfos)
                             {
-                                errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Texture\"" + texError + "\"");
+                                errorInfos.Add("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Does not exist Texture\"" + texError + "\"");
                             }
                         }
-                        shader = ParseShaderOption(def.asset.shader, def.asset.StraightAlphaInput);
+                        shader = ParseShader(def.asset.shader, def.asset.StraightAlphaInput);
                         if (shader == null)
                         {
                             isInvalid = true;
-                            errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Failed to load corresponding Shader \"" + def.asset.shader + "\"");
+                            errorInfos.Add("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Failed to load corresponding Shader \"" + def.asset.shader + "\"");
                         }
                         if (isInvalid)
                         {
@@ -265,35 +278,35 @@ namespace SpriteEvo
                         }
                         Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, texPack);
-                        Log.Message("SpriteEvo: Successful Loaded SkeletonBinary \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
+                        Log.Message("SpriteEvo: Successful Loaded (AssetBundle) \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
                     else
                     {
-                        Log.Warning("SpriteEvo: SkeletonBinary \"" + def.defName + "\" Missing Material or Textures");
+                        Log.Warning("SpriteEvo: (AssetBundle) \"" + def.defName + "\" Missing Material or Textures");
                         continue;
                     }
                 }
-                //JSON读取
-                else if(def.skelFormat == SkelFormat.SkeletonJSON)
+                //文件读取
+                else if (def.skelFormat == ImportFormat.TextAsset)
                 {
                     if (def.asset.filePath == null) continue;
-                    string JSONPath;
-                    if (!SkeletonJSON_Loaded.Exists((string s) => s == def.asset.filePath))
+                    string TextAssetPath;
+                    if (!TextAsset_Loaded.Exists((string s) => s == def.asset.filePath))
                     {
-                        JSONPath = Path.Combine(IndividualPath, def.asset.filePath);
-                        if (!Directory.Exists(JSONPath))
+                        TextAssetPath = Path.Combine(IndividualPath, def.asset.filePath);
+                        if (!Directory.Exists(TextAssetPath))
                         {
-                            Log.Error("SpriteEvo: Failed Loading SkeletonJSON \"" + def.defName + "\" : Invalid Directory " + Spine_Dict + def.asset.filePath);
+                            Log.Error("SpriteEvo: Failed Loading (TextAsset) \"" + def.defName + "\" : Invalid Directory " + Spine_Dict + def.asset.filePath);
                             continue;
                         }
-                        SkeletonJSON_Loaded.Add(def.asset.filePath);
+                        TextAsset_Loaded.Add(def.asset.filePath);
                         if (SPE_ModSettings.debugOverride)
-                            Log.Warning("SpriteEvo: Loading SkeletonJSON From Directory : " + Spine_Dict + def.asset.filePath);
+                            Log.Warning("SpriteEvo: Loading (TextAsset) From Directory : " + Spine_Dict + def.asset.filePath);
                     }
-                    else 
+                    else
                     {
-                        string existsPath = SkeletonJSON_Loaded.First((string s) => s == def.asset.filePath);
-                        JSONPath = Path.Combine(IndividualPath, existsPath);
+                        string existsPath = TextAsset_Loaded.First((string s) => s == def.asset.filePath);
+                        TextAssetPath = Path.Combine(IndividualPath, existsPath);
                     }
                     //string folderPath = Path.Combine(JSONPath, def.props.folderPath);
                     string atlas;
@@ -309,22 +322,22 @@ namespace SpriteEvo
                     else
                         skeleton = autofillfilename + ".json";
 
-                    string atlasPath = Path.Combine(JSONPath, atlas);
-                    string skelPath = Path.Combine(JSONPath, skeleton);
-                    if (!File.Exists(atlasPath)) 
+                    string atlasPath = Path.Combine(TextAssetPath, atlas);
+                    string skelPath = Path.Combine(TextAssetPath, skeleton);
+                    if (!File.Exists(atlasPath))
                     {
                         atlas = autofillfilename + ".atlas";
-                        atlasPath = Path.Combine(JSONPath, atlas);
+                        atlasPath = Path.Combine(TextAssetPath, atlas);
                     }
                     if (!File.Exists(atlasPath))
                     {
                         isInvalid = true;
-                        errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Atlas\"" + atlas + "\"");
+                        errorInfos.Add("SpriteEvo: (TextAsset) \"" + def.defName + "\" Does not exist Atlas\"" + atlas + "\"");
                     }
                     if (!File.Exists(skelPath))
                     {
                         isInvalid = true;
-                        errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Does not exist Skeleton\"" + skeleton + "\"");
+                        errorInfos.Add("SpriteEvo: (TextAsset) \"" + def.defName + "\" Does not exist Skeleton\"" + skeleton + "\"");
                     }
                     if (File.Exists(atlasPath) && File.Exists(skelPath))
                     {
@@ -341,8 +354,8 @@ namespace SpriteEvo
                         textures = new Texture2D[texinfo.Count];
                         for (int i = 0; i < texinfo.Count; i++)
                         {
-                            string texPath = Path.Combine(JSONPath, texinfo[i]);
-                            if (!File.Exists(texPath)) 
+                            string texPath = Path.Combine(TextAssetPath, texinfo[i]);
+                            if (!File.Exists(texPath))
                             {
                                 texPath += ".png";
                             }
@@ -357,13 +370,13 @@ namespace SpriteEvo
                     else
                     {
                         isInvalid = true;
-                        errorInfos.Add("SpriteEvo: SkeletonBinary \"" + def.defName + "\" Missing Textures");
+                        errorInfos.Add("SpriteEvo: (TextAsset) \"" + def.defName + "\" Missing Textures");
                     }
-                    shader = ParseShaderOption(def.asset.shader, def.asset.StraightAlphaInput);
+                    shader = ParseShader(def.asset.shader, def.asset.StraightAlphaInput);
                     if (shader == null)
                     {
                         isInvalid = true;
-                        errorInfos.Add("SpriteEvo: Asset \"" + def.defName + "\" Failed to load corresponding Shader \"" + def.asset.shader + "\"");
+                        errorInfos.Add("SpriteEvo: (TextAsset) \"" + def.defName + "\" Failed to load corresponding Shader \"" + def.asset.shader + "\"");
                     }
                     if (isInvalid)
                     {
@@ -373,14 +386,16 @@ namespace SpriteEvo
                     Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)
-                        Log.Message("SpriteEvo: Successful Loaded SkeletonJSON \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
+                        Log.Message("SpriteEvo: Successful Loaded (TextAsset) \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                 }
             }
             AllAssetsLoaded = true;
-            if (Spine38_DB.NullOrEmpty()){
+            if (Spine38_DB.NullOrEmpty())
+            {
                 Log.Warning("SpriteEvo: No Any Asset Found !");
             }
-            else { 
+            else
+            {
                 Log.Message("SpriteEvo: All Assets Initialized");
             }
         }
@@ -425,21 +440,21 @@ namespace SpriteEvo
             return texture2D;
         }
 
-        private static void OutputAssetErrorMsg(List<string> errorInfos, string defName, bool isBinary) 
+        private static void OutputAssetErrorMsg(List<string> errorInfos, string defName, bool isBinary)
         {
             string SkeletonType;
             foreach (var errorInfo in errorInfos)
             {
                 Log.Error(errorInfo);
             }
-            if (isBinary) 
-                SkeletonType = "SkeletonBinary";
-            else 
-                SkeletonType = "SkeletonJSON";
+            if (isBinary)
+                SkeletonType = "(AssetBundle)";
+            else
+                SkeletonType = "(TextAsset)";
             Log.Error("SpriteEvo: Failed To Load " + SkeletonType + " \"" + defName + "\"");
         }
 
-        private static Shader ParseShaderOption(string originalName, bool useStraight = false) 
+        private static Shader ParseShader(string originalName, bool useStraight = false)
         {
             string name = originalName.ToLower();
             string id = Path.GetFileNameWithoutExtension(name);
@@ -450,11 +465,13 @@ namespace SpriteEvo
             //string result = useStraight ? string.Concat(id, "#straight", extension) : name;
             string result = string.Concat(id, straight, extension);
 
-            if (Shader_DB.ContainsKey(result)){
+            if (Shader_DB.ContainsKey(result))
+            {
                 Shader_DB.TryGetValue(result, out var shaderStright);
                 return shaderStright;
             }
-            if(useStraight){
+            if (useStraight)
+            {
                 Shader_DB.TryGetValue(id, out var shaderPMA);
                 return shaderPMA;
             }

@@ -14,7 +14,6 @@ namespace SpriteEvo
     {
         public Texture2D[] textures;
         public Shader shader;
-        public bool useStraightAlpha;
 
         public Loader_Tex(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Texture2D[] texs, Shader shader, bool useStraight = false) : base(def, atlas, skeleton)
         {
@@ -23,7 +22,7 @@ namespace SpriteEvo
             this.useStraightAlpha = useStraight;
         }
 
-        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
+        protected override TSkeleton CreateSkeletonDataAssetInternal<TAtlas, TSkeleton>()
         {
             base.CheckTextAssets();
             base.CheckArray(textures);
@@ -36,13 +35,13 @@ namespace SpriteEvo
             var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
-        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
+        protected override TSkeleton CreateSkeletonDataAssetInternal<TAtlas, TSkeleton, ITextureLoader>()
         {
             base.CheckTextAssets();
             base.CheckArray(textures);
             Type atlasType = typeof(TAtlas);
             Type skeletonType = typeof(TSkeleton);
-            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(Func<TAtlas, ITextureLoader>)});
+            MethodInfo createAtlasMethod = atlasType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), typeof(Texture2D[]), typeof(Shader), typeof(bool), typeof(Func<TAtlas, ITextureLoader>) });
             MethodInfo createSkeletonMethod = skeletonType.GetMethod("CreateRuntimeInstance", new[] { typeof(TextAsset), atlasType, typeof(bool), typeof(float) });
 
             var atlas = (TAtlas)createAtlasMethod.Invoke(null, new object[] { this.atlasInput, this.textures, this.shader, true, null });

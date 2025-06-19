@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;DEBUG_BUILD</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>5</WarningLevel>
     <LangVersion>9.0</LangVersion>
@@ -31,16 +31,15 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;RELEASE_BUILD</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>5</WarningLevel>
     <LangVersion>9.0</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\Rely\0Harmony.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net48\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Rely\Assembly-CSharp.dll</HintPath>
@@ -107,50 +106,40 @@
     <Compile Include="SpriteEvo.Extensions\JsonMerger.cs" />
     <Compile Include="SpriteEvo.Extensions\SkeletonJsonMerge41.cs" />
     <Compile Include="SpriteEvo.Extensions\SkeletonJsonMerge42.cs" />
-    <Compile Include="SpriteEvo\Animation\Animation38.cs" />
-    <Compile Include="SpriteEvo\Animation\Animation41.cs" />
+    <Compile Include="SpriteEvo\Animation\Test\CastConditioner_Base.cs" />
+    <Compile Include="SpriteEvo\Animation\Test\CC_Pawn.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ISkeletonConfig.cs" />
     <Compile Include="SpriteEvo\Animation\Interface\ITransform.cs" />
+    <Compile Include="SpriteEvo\Animation\Test\Test_PawnViewController.cs" />
+    <Compile Include="SpriteEvo\Defs\AnimationDriverDef.cs" />
     <Compile Include="SpriteEvo\Framework\Spine42Lib.cs" />
     <Compile Include="SpriteEvo\Loader\AssetLoader.cs" />
     <Compile Include="SpriteEvo\Loader\Loader_Mat.cs" />
     <Compile Include="SpriteEvo\Loader\Loader_Tex.cs" />
     <Compile Include="SpriteEvo\Manager\AssetLoadService.cs" />
-    <Compile Include="SpriteEvo\Manager\GC_AnimationDocument.cs" />
-    <Compile Include="SpriteEvo\Script\AC_PawnController.cs" />
-    <Compile Include="SpriteEvo\Script\AnimationControllerBase.cs" />
+    <Compile Include="SpriteEvo\Manager\GC_AnimationManager.cs" />
+    <Compile Include="SpriteEvo\Animation\Test\AC_PawnController.cs" />
     <Compile Include="SpriteEvo\Manager\AnimationTracker.cs" />
+    <Compile Include="SpriteEvo\Animation\ControllerBase.cs" />
     <Compile Include="SpriteEvo\Script\Interface\IFacialControl.cs" />
-    <Compile Include="SpriteEvo\Script\Interface\IPawnRotate.cs" />
+    <Compile Include="SpriteEvo\Script\Interface\IPawnTransform.cs" />
+    <Compile Include="SpriteEvo\Animation\Test\PawnBaseController.cs" />
+    <Compile Include="SpriteEvo\Script\ScriptBase.cs" />
     <Compile Include="SpriteEvo\Tools\UnityExtension.cs" />
     <Compile Include="SpriteEvo\Manager\ObjectManager.cs" />
-    <Compile Include="SpriteEvo\ThingComp\TC_Animation.cs" />
     <Compile Include="SpriteEvo\Framework\Spine38Lib.cs" />
     <Compile Include="SpriteEvo\Framework\Spine41Lib.cs" />
     <Compile Include="SpriteEvo\Defs\AnimationDef.cs" />
-    <Compile Include="SpriteEvo\Tools\AnimationExtensions.cs" />
     <Compile Include="SpriteEvo\Manager\AssetManager.cs" />
     <Compile Include="SpriteEvo\Framework\EffectsUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonGraphicUtility.cs" />
     <Compile Include="SpriteEvo\Framework\SkeletonAnimationUtility.cs" />
-    <Compile Include="SpriteEvo\Script\Base\ScriptBase.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\BodyControllWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\ClickEventComp.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\FacialControllWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxBodyWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxExtraWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\FxHeadWorker.cs" />
-    <Compile Include="SpriteEvo.Unity\FxRootWorker.cs" />
     <Compile Include="SpriteEvo\HarmonyPatch\HarmonyPatches.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine38.cs" />
     <Compile Include="SpriteEvo\SPE_ModSettings.cs" />
     <Compile Include="SpriteEvo\Defs\SpineAssetDef.cs" />
-    <Compile Include="SpriteEvo\Tools\AnimationGenerator.cs" />
-    <Compile Include="SpriteEvo\Script\Base\ScriptProperties.cs" />
     <Compile Include="SpriteEvo\Tools\Utilities.cs" />
     <Compile Include="SpriteEvo\TypeDef.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpriteEvo.Unity\MonoBehavior\ParallelAnimation_Spine41.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Spine38\Spine38.csproj">
@@ -166,6 +155,8 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="SpriteEvo.Unity\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

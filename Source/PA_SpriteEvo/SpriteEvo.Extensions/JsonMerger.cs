@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using UnityEngine;
-
-namespace SpriteEvo.Extensions
+﻿namespace SpriteEvo.Extensions
 {
-    #if OLD_BUILD
+#if OLD_BUILD
     ///<summary>对导出为JSON格式的Spine骨骼进行合并
     /// <para>强制要求使用SpineTexAsset类型的包.</para>
     /// </summary>
@@ -168,5 +163,5 @@ namespace SpriteEvo.Extensions
             return json1.ReadSkeletonDatasToMerge(input1, input2);
         }
     }
-    #endif
+#endif
 }

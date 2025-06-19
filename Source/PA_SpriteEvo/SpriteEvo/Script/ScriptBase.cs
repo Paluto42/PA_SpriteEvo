@@ -1,7 +1,22 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace SpriteEvo
 {
+    ///<summary>相当于ThingCompProperties的用法,确定如何对动画实例添加脚本属性</summary>
+    public class ScriptProperties
+    {
+        public Type scriptClass = typeof(ScriptBase);
+
+        public ScriptProperties()
+        {
+        }
+
+        public ScriptProperties(Type scriptClass)
+        {
+            this.scriptClass = scriptClass;
+        }
+    }
     /// <summary>
     /// 相当于ThingComp的用法
     /// </summary>
@@ -18,15 +33,15 @@ namespace SpriteEvo
         // 当对象已启用并处于活动状态时调用OnEnable
         protected virtual void OnEnable() { }
         // 仅在首次调用Update之前调用Start
-        protected virtual void Start() { }
+        //protected virtual void Start() { }
 
         /***** 更新函数 *****/
         // 如果启用MonoBehavioir,则每个固定帧速率的帧都将调用FixedUpdate
-        protected virtual void FixedUpdate() { }
+        //protected virtual void FixedUpdate() { }
         // 如果启用MonoBehavioir,则在每一帧都调用Update
         protected virtual void Update() { }
         // 如果启用MonoBehavioir,则在每一帧都调用LateUpdate
-        protected virtual void LateUpdate() { }
+        //protected virtual void LateUpdate() { }
 
         /***** 渲染函数 *****/
         // 在照相机裁剪场景前调用OnPreCull 裁剪操作将确定摄像机可以看到哪些对象

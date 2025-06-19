@@ -13,7 +13,6 @@ namespace SpriteEvo
     public class Loader_Mat : AssetLoader
     {
         public Material[] materials;
-        public bool useStraightAlpha;
 
         public Loader_Mat(SpineAssetDef def, TextAsset atlas, TextAsset skeleton, Material[] mats, bool usePMA = false) : base(def, atlas, skeleton)
         {
@@ -21,7 +20,7 @@ namespace SpriteEvo
             this.useStraightAlpha = usePMA;
         }
 
-        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton>()
+        protected override TSkeleton CreateSkeletonDataAssetInternal<TAtlas, TSkeleton>()
         {
             base.CheckTextAssets();
             base.CheckArray(materials);
@@ -34,7 +33,7 @@ namespace SpriteEvo
             var skeleton = (TSkeleton)createSkeletonMethod.Invoke(null, new object[] { this.skeletonInput, atlas, true, 0.01f });
             return skeleton;
         }
-        protected override TSkeleton CreateSkeletonDataAsset<TAtlas, TSkeleton, ITextureLoader>()
+        protected override TSkeleton CreateSkeletonDataAssetInternal<TAtlas, TSkeleton, ITextureLoader>()
         {
             base.CheckTextAssets();
             base.CheckArray(materials);

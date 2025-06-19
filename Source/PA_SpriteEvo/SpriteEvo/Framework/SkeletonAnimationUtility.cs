@@ -77,7 +77,8 @@ namespace SpriteEvo
         {
             if (((ProgramStateFlags)Current.ProgramState & allowProgramStates) == 0) return null; //游戏状况不允许
             //if (Current.ProgramState != ProgramState.Playing) return null;
-            if (key == null) {
+            if (key == null)
+            {
                 throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate with Null Foreign Key"); //任何情况不允许空key
             }
             if (docuSaved && ObjectManager.CurrentObjectTrackers.TryGetValue(key, out AnimationTracker res))
@@ -115,7 +116,8 @@ namespace SpriteEvo
         /// <summary>接受所有可选参数的主方法</summary>
         public static GameObject Instantiate(AnimationDef def, int layer = 2, bool loop = true, bool active = true, bool DontDestroyOnLoad = false)
         {
-            if (def == null) {
+            if (def == null)
+            {
                 throw new NullReferenceException("SpriteEvo. Tried to Invoke Instantiate SkeletonAnimation with Null AnimationDef");
             }
             GameObject instance = null;

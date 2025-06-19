@@ -13,7 +13,7 @@ namespace SpriteEvo
         public static Material SkeletonGraphicDefaul_Straight => AssetLoadService.SkeletonGraphicDefaul_Straight;
         public static Dictionary<object, GameObject> DynamicObjectDatabase => ObjectManager.NeverDestoryObjects;
 
-        public static Material EnsureInitializedMaterialProperySource(bool StraightAlphaInput = false) 
+        public static Material EnsureInitializedMaterialProperySource(bool StraightAlphaInput = false)
         {
             return StraightAlphaInput ? SkeletonGraphicDefaul_Straight : SkeletonGraphicDefault;
         }

@@ -23,11 +23,13 @@ namespace SpriteEvo
         {
             if (animationDef == null) return null;
             SkeletonDataAsset skeletonDataAsset;
-            if (animationDef.attachments.NullOrEmpty()){
+            if (animationDef.attachments.NullOrEmpty())
+            {
                 skeletonDataAsset = GetSkeletonDataFrom(animationDef);
             }
             //合并Skeleton 暂时不考虑做3.8的合并
-            else{
+            else
+            {
                 Log.Error("暂不支持Spine3.8骨架合并");
                 skeletonDataAsset = null;
             }
@@ -43,7 +45,7 @@ namespace SpriteEvo
             AnimationParams @params = animationDef.GetSkeletonParams(loop);//获取def属性
 
             SkeletonDataAsset skeletonDataAsset = EnsureInitializedSkeletonData(animationDef);
-            Utilities.FixRenderQueueInternal<AtlasAssetBase, SkeletonDataAsset>(skeletonDataAsset, animationDef.props.renderQueue);
+            skeletonDataAsset.FixRenderQueueInternal(animationDef.props.renderQueue);
             //单个Skeleton
             SkeletonAnimation animation = SkeletonAnimation.NewSkeletonAnimationGameObject(skeletonDataAsset);
             GameObject baseObj = animation.gameObject;
@@ -52,11 +54,17 @@ namespace SpriteEvo
             baseObj.name = animationDef.defName;
             //baseObj.layer = layer;
             baseObj.DisableProbe();//关闭反射器
-            //Vector3 rot = new(90f, 0f, 0f);
             baseObj.SetTransform(@params.position, @params.rotation, @params.scale);
 
             animation.Skeleton.SetSkin(@params.skin);//设置默认皮肤
-            animation.SetColor(@params.color, @params.slotSettings);//设置默认颜色
+            if (@params.skeletonColor != null)
+            {
+                animation.SetSkeletonColor(@params.skeletonColor.Value);
+            }
+            if (@params.slotSettings != null)
+            {
+                animation.SetSlotColor(@params.slotSettings);//设置默认颜色
+            }
             animation.InitializeAnimation(@params.defaultAnimation, @params.timeScale, @params.loop); ;
 
             baseObj.AddScriptsFrom(animationDef.scripts);
@@ -88,7 +96,14 @@ namespace SpriteEvo
 
             graphic.allowMultipleCanvasRenderers = true; //不开这个会导致多页材质的模型变成碎片
             graphic.Skeleton.SetSkin(@params.skin); //设置默认皮肤
-            graphic.SetColor(@params.color, @params.slotSettings); //设置默认颜色
+            if (@params.skeletonColor != null)
+            {
+                graphic.SetSkeletonColor(@params.skeletonColor.Value);
+            }
+            if (@params.slotSettings != null)
+            {
+                graphic.SetSlotColor(@params.slotSettings);//设置默认颜色
+            }
             graphic.InitializeAnimation(@params.defaultAnimation, @params.timeScale, @params.loop); //设置动画属性
 
             parentObj.AddScriptsFrom(animationDef.scripts);
@@ -98,25 +113,17 @@ namespace SpriteEvo
             return baseObj.gameObject;
         }
 
-        /*public static Vector3 GetBonePositon(this ISkeletonComponent instance, Transform transform, string name) 
-        {
-            Bone bone = instance.Skeleton.FindBone(name);
-            return bone.GetWorldPosition(transform);
-        }*/
-
         public static void InitializeAnimation(this SkeletonAnimation instance, string defaultAnimation, float timeScale, bool loop = true)
         {
             instance.AnimationName = defaultAnimation;
             instance.loop = loop;
             instance.timeScale = timeScale;
-            //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
         }
         public static void InitializeAnimation(this SkeletonGraphic instance, string defaultAnimation, float timeScale, bool loop = true)
         {
             instance.startingAnimation = defaultAnimation;
             instance.startingLoop = loop;
             instance.timeScale = timeScale;
-            //instance.AnimationState.SetAnimation(0, @params.defaultAnimation, @params.loop);
         }
 
         public static void DoFlipX(this ISkeletonComponent instance, bool IsFlip)
@@ -125,28 +132,47 @@ namespace SpriteEvo
             instance.Skeleton.ScaleX = x;
         }
 
-        /// <summary>
-        /// 在运行时对动画实例进行颜色修改，可以多次覆盖
-        /// </summary>
-        public static void SetColor(this ISkeletonComponent instance, Color color, List<SlotSettings> slotSettings)
+        public static void InitializeSkeletonData(this SkeletonDataAsset asset, float defaultMix, float defaultScale)
         {
-            instance.Skeleton.SetColor(color);
-            foreach (SlotSettings s in slotSettings) {
-                Slot slot = instance.Skeleton.FindSlot(s.slot);
-                slot?.SetColor(color);
+            asset.GetAnimationStateData().DefaultMix = defaultMix;
+            asset.scale = defaultScale;
+        }
+
+        public static void FixRenderQueueInternal(this SkeletonDataAsset asset, int renderQueue = 3000)
+        {
+            AtlasAssetBase[] atlasAssets = asset.atlasAssets;
+            foreach (var atlasAsset in atlasAssets)
+            {
+                atlasAsset.PrimaryMaterial.renderQueue = renderQueue;
             }
         }
 
-        public static void SetTransparency(this ISkeletonComponent instance, float alpha = 0f) 
+        /// <summary>
+        /// 在运行时对动画实例进行颜色修改，可以多次覆盖
+        /// </summary>
+        public static void SetSkeletonColor(this ISkeletonComponent instance, Color32 color)
         {
-            instance.Skeleton.a = alpha;
+            instance.Skeleton.SetColor(color);
+        }
+        public static void SetSlotColor(this ISkeletonComponent instance, List<SlotSetting> slotSettings)
+        {
+            foreach (SlotSetting s in slotSettings)
+            {
+                Slot slot = instance.Skeleton.FindSlot(s.slot);
+                slot?.SetColor(s.color);
+            }
         }
 
-        //直接对着动画组件用就行
-        public static TrackEntry SetAnimation(this IAnimationStateComponent instance, int trackIndex, string name, bool loop = true)
+        public static void SetCustomMix(this SkeletonDataAsset skeletonDataAsset, List<CustomMixSetting> mixSettings)
         {
-            return instance.AnimationState.SetAnimation(trackIndex, name, loop);
+            if (mixSettings.NullOrEmpty()) return;
+            AnimationStateData animationStateData = skeletonDataAsset.GetAnimationStateData();
+            foreach (var mix in mixSettings)
+            {
+                animationStateData.SetMix(mix.fromAnimation, mix.toAnimation, mix.duration);
+            }
         }
+
         /// <summary>
         /// 对Spine运行时骨架实例更新Skin.会重置骨骼和Slots的材质以及丢失之前的动画状态
         /// </summary>
@@ -171,7 +197,7 @@ namespace SpriteEvo
 
         public static void ReloadSkeletonFrom(this SkeletonGraphic instance, string skin = "default", SkeletonDataAsset newAsset = null)
         {
-            if (newAsset != null && newAsset.IsLoaded) 
+            if (newAsset != null && newAsset.IsLoaded)
                 instance.skeletonDataAsset = newAsset;
             instance.initialSkinName = skin;
             instance.Initialize(overwrite: true);
