@@ -31,6 +31,11 @@ namespace SpriteEvo
     }
     public static class Utilities
     {
+        public static string Highlighted(this string text) 
+        {
+            return $"<color=#F74902>{text}</color>";
+        }
+
         /// <summary>从AnimationDef中读取动画属性作为参数结构体返回</summary>
         public static AnimationParams GetSkeletonParams(this AnimationDef def, bool loop = true)
         {

@@ -10,8 +10,7 @@ namespace SpriteEvo
         public float drawDepth = 1;
 
         #region
-        //ref
-        protected virtual TSkeletonInstance SkeletonInstanceInt { get; private set; }
+        protected virtual TSkeletonInstance SkeletonInstanceInt { get; private set; } //ref
         #endregion
 
         protected override void Awake()

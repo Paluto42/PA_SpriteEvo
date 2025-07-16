@@ -40,6 +40,7 @@
   <ItemGroup>
     <Reference Include="0Harmony, Version=2.3.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lib.Harmony.2.3.3\lib\net48\0Harmony.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\Rely\Assembly-CSharp.dll</HintPath>
@@ -142,21 +143,27 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Spine38\Spine38.csproj">
-      <Project>{94144e22-2431-4a8f-ac04-dec22f7edd8f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Spine41\Spine41.csproj">
-      <Project>{1cd0dd43-6a5e-437c-9be7-3f12add470e6}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Spine42\Spine42.csproj">
-      <Project>{bb345dac-c7df-4a94-95dd-8fbda44b3a59}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="SpriteEvo.Unity\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\spine38\Spine38.csproj">
+      <Project>{94144e22-2431-4a8f-ac04-dec22f7edd8f}</Project>
+      <Name>Spine38</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\spine41\Spine41.csproj">
+      <Project>{1cd0dd43-6a5e-437c-9be7-3f12add470e6}</Project>
+      <Name>Spine41</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\spine42\Spine42.csproj">
+      <Project>{bb345dac-c7df-4a94-95dd-8fbda44b3a59}</Project>
+      <Name>Spine42</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

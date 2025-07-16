@@ -9,7 +9,8 @@ namespace SpriteEvo
     [StaticConstructorOnStartup]
     internal static class AssetLoadService
     {
-        private const string Spine_Dict = "Asset/";
+        public const string Spine_Dict = "Asset/";
+        private static readonly string Prefix = "SpriteEvo: ".Highlighted();
 
         private static bool AllAssetsLoaded = false;
         private static bool AllShadersLoaded = false;
@@ -46,6 +47,12 @@ namespace SpriteEvo
         {
             if (AllShadersLoaded) return;
             ModContentPack modbase = Mods.FirstOrDefault(mod => mod.PackageId == TypeDef.ModID.ToLower());
+            if (modbase == null)
+            {
+                Log.Error("SpriteEvo: Critical Error: Failed Loading Shaders from Invalid Mod RootDir, May Conflict with Local Version");
+                AllShadersLoaded = false;
+                return;
+            }
             string SpinePath = Path.Combine(modbase.RootDir, "Asset", "spine38");
             if (SpinePath == null)
             {
@@ -56,24 +63,24 @@ namespace SpriteEvo
             if (skeletonShader != null && Spine_Skeleton == null)
             {
                 Spine_Skeleton = skeletonShader;
-                Log.Message("SpriteEvo: Spine/Skeleton.Shader Loaded");
+                Log.Message(Prefix + "Spine/Skeleton.Shader Loaded");
             }
             Shader skeletonShader_Straight = ab.LoadAsset<Shader>("Spine-Skeleton#Straight");
             if (skeletonShader_Straight != null && Spine_Skeleton_Straight == null)
             {
                 Spine_Skeleton_Straight = skeletonShader_Straight;
-                Log.Message("SpriteEvo: Spine/Skeleton#Straight.Shader Loaded");
+                Log.Message(Prefix + "Spine/Skeleton#Straight.Shader Loaded");
             }
             Material SkeletonGraphic = ab.LoadAsset<Material>("SkeletonGraphicDefault");
             if (SkeletonGraphic != null && SkeletonGraphicDefault == null)
             {
-                Log.Message("SpriteEvo: Spine/SkeletonGraphicDefault.Material Loaded");
+                Log.Message(Prefix + "Spine/SkeletonGraphicDefault.Material Loaded");
                 SkeletonGraphicDefault = SkeletonGraphic;
             }
             Material SkeletonGraphic_Straight = ab.LoadAsset<Material>("SkeletonGraphicDefaul-Straight");
             if (SkeletonGraphic_Straight != null && SkeletonGraphicDefault == null)
             {
-                Log.Message("SpriteEvo: Spine/SkeletonGraphicDefault-Straight.Material Loaded");
+                Log.Message(Prefix + "Spine/SkeletonGraphicDefault-Straight.Material Loaded");
                 SkeletonGraphicDefaul_Straight = SkeletonGraphic_Straight;
             }
             //Shader[] shaders = ab.LoadAllAssets<Shader>();
@@ -93,12 +100,13 @@ namespace SpriteEvo
             if (Shader_DB.NullOrEmpty())
             {
                 AllShadersLoaded = false;
+                Log.Message(Prefix + "No Shader Loaded, Stop Initialize Assets...");
                 return;
             }
             else
             {
                 AllShadersLoaded = true;
-                Log.Message("SpriteEvo: All Shader Loaded, Initializing Assets...");
+                Log.Message(Prefix + "All Shader Loaded, Initializing Assets...");
             }
         }
 
@@ -113,13 +121,17 @@ namespace SpriteEvo
         {
             foreach (var assetBundle in AssetBundle_Loaded)
             {
-                assetBundle.Unload(false);
+                assetBundle?.Unload(false);
             }
         }
 
         private static void ResloveAllAssetBundle()
         {
-            if (!AllShadersLoaded) return;
+            if (!AllShadersLoaded) 
+            {
+                Log.Error("SpriteEvo: Critical Error: Failed Resloving Assets due to Shader is not Loaded");
+                return;
+            };
             //List<AssetBundle> AssetBundle_Loaded = new();
             //List<string> TextAsset_Loaded = new();
             //List<SpineAssetDef> packs = DefDatabase<SpineAssetDef>.AllDefsListForReading;
@@ -127,7 +139,7 @@ namespace SpriteEvo
             {
                 if (def.asset.version == null)
                 {
-                    Log.Error($"SpriteEvo: SpineAsset \"" + def.defName + "\" Has Invalid Version, Skiped");
+                    Log.Error(Prefix + "SpineAsset \"" + def.defName + "\" Has Invalid Version, Skiped");
                     continue;
                 }
                 TextAsset atlasAsset = null;
@@ -155,7 +167,7 @@ namespace SpriteEvo
                         ab = AssetBundle.LoadFromFile(abPath);
                         AssetBundle_Loaded.Add(ab);
                         if (SPE_ModSettings.debugOverride)
-                            Log.Warning("SpriteEvo: Loading (AssetBundle)" + " From : " + Spine_Dict + ab.name);
+                            Log.Message(Prefix + "Loading (AssetBundle)" + " From : " + Spine_Dict + ab.name);
                     }
                     else
                     {
@@ -238,7 +250,7 @@ namespace SpriteEvo
                         }
                         Loader_Mat matPack = new(def, atlasAsset, skeletonAsset, materials, usePMA: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, matPack);
-                        Log.Message("SpriteEvo: Successful Loaded (AssetBundle) \"" + def.defName + "\" with " + materials.Length + (materials.Length > 1 ? " Materials" : " Material"));
+                        Log.Message(Prefix + "Successful Loaded (AssetBundle) \"" + def.defName + "\" with " + materials.Length + (materials.Length > 1 ? " Materials" : " Material"));
                     }
                     else if (!texinfo.Empty())
                     {
@@ -278,7 +290,7 @@ namespace SpriteEvo
                         }
                         Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                         SavePackToVersionDatabase(def, texPack);
-                        Log.Message("SpriteEvo: Successful Loaded (AssetBundle) \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
+                        Log.Message(Prefix + "Successful Loaded (AssetBundle) \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                     }
                     else
                     {
@@ -301,7 +313,7 @@ namespace SpriteEvo
                         }
                         TextAsset_Loaded.Add(def.asset.filePath);
                         if (SPE_ModSettings.debugOverride)
-                            Log.Warning("SpriteEvo: Loading (TextAsset) From Directory : " + Spine_Dict + def.asset.filePath);
+                            Log.Message(Prefix + "Loading (TextAsset) From Directory : " + Spine_Dict + def.asset.filePath);
                     }
                     else
                     {
@@ -386,7 +398,7 @@ namespace SpriteEvo
                     Loader_Tex texPack = new(def, atlasAsset, skeletonAsset, textures, shader, useStraight: def.asset.StraightAlphaInput);
                     SavePackToVersionDatabase(def, texPack);
                     if (SPE_ModSettings.debugOverride)
-                        Log.Message("SpriteEvo: Successful Loaded (TextAsset) \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
+                        Log.Message(Prefix + "Successful Loaded (TextAsset) \"" + def.defName + "\" with " + textures.Length + (textures.Length > 1 ? " Textures" : " Texture"));
                 }
             }
             AllAssetsLoaded = true;
@@ -396,7 +408,7 @@ namespace SpriteEvo
             }
             else
             {
-                Log.Message("SpriteEvo: All Assets Initialized");
+                Log.Message(Prefix + "All Assets Initialized");
             }
         }
 

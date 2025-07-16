@@ -54,6 +54,7 @@ namespace SpriteEvo
         protected override void OnEnable()
         {
             base.OnEnable();
+            StopAllCoroutines();
             foreach (var queueSet in trackQueues)
             {
                 StartCoroutine(AnimationQueueHandlerTest(queueSet));
