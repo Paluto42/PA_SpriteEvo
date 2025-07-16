@@ -139,7 +139,7 @@ namespace SpriteEvo
             {
                 if (def.asset.version == null)
                 {
-                    Log.Error(Prefix + "SpineAsset \"" + def.defName + "\" Has Invalid Version, Skiped");
+                    Log.Error($"SpriteEvo: SpineAsset \"" + def.defName + "\" Has Invalid Version, Skiped");
                     continue;
                 }
                 TextAsset atlasAsset = null;
